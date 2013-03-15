@@ -190,6 +190,13 @@ public class Condenser extends FailableComponent {
     public Port outputPort() {
         return outputPort;
     }
+    
+    /**
+     * @return reactor input Port
+     */
+    public Port reacInputPort(){
+        return reactorInputPort;
+    }
 
     /**
      * @return coolant input port
