@@ -13,7 +13,7 @@ import dab.engine.simulator.views.ReactorView;
  */
 public class Reactor extends FailableComponent implements ReactorView {
 
-    private final Mass maximumWaterMass = kilograms(1000);
+    private Mass maximumWaterMass = kilograms(1000);
     private final Mass minimumWaterMass = kilograms(800);
     private final Volume reactorVolume = cubicMetres(2);
     @JsonProperty
@@ -115,7 +115,8 @@ public class Reactor extends FailableComponent implements ReactorView {
      * @throws GameOverException
      */
     public void step() throws GameOverException {
-
+       // if(temperature>=)
+        
         //System.out.println(inputPort.mass.inKilograms());
         if (steamMass.inKilograms() > inputPort.mass.inKilograms()) {
             steamMass = steamMass.minus(inputPort.mass);
@@ -287,6 +288,14 @@ public class Reactor extends FailableComponent implements ReactorView {
         if (waterMass.inKilograms() < 0) {
             waterMass = kilograms(0);
         }
+    }
+    
+    public void quench(){
+        maximumWaterMass = kilograms(1500); 
+        inputPort.temperature = kelvin(0);
+        inputPort.mass.plus(kilograms(500));
+        System.out.println("QUENCHED");
+        
     }
 }
 
