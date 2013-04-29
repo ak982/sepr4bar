@@ -4,7 +4,6 @@
  */
 package dab.engine.newsim;
 
-import com.sun.org.apache.xpath.internal.axes.WalkerFactory;
 
 /**
  *
@@ -12,8 +11,12 @@ import com.sun.org.apache.xpath.internal.axes.WalkerFactory;
  */
 public class Steam extends Matter {
 
-    public Steam(double temp, double mass) {
+    public Steam(double temp, Kilograms mass) {
         super(temp, mass);
+    }
+    
+    public Steam(double temp, int nrParticles) {
+        super(temp, nrParticles);
     }
     
      /**
@@ -29,6 +32,10 @@ public class Steam extends Matter {
     // pV = NKT
     public double getPressure(double volume) {
         return (getParticleNr() * getTemperature() *  BOLTZMAN_CONSTANT) / volume;
+    }
+    
+    public int getParticlesAtState(double pressure, double volume) {
+        return (int)((pressure * volume) / (BOLTZMAN_CONSTANT * getTemperature()));
     }
     
     @Override
@@ -48,7 +55,7 @@ public class Steam extends Matter {
     
     @Override
     public Steam remove(int qty) {
-        super.remove(particleNr);
+        super.remove(qty);
         return this;
     }
 

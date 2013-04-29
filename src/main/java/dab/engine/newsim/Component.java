@@ -11,35 +11,26 @@ import dab.engine.simulator.views.FailableComponentView;
  *
  * @author eduard
  */
-public abstract class Component implements FailableComponentView{
-    InputPort  inputPort;
-    OutputPort outputPort;
+public abstract class Component {
+    protected Component outputComponent = null;
     
-    Component() {
-        inputPort = new InputPort(this);
-        outputPort = new OutputPort();
+    public Component getOutputComponent() {
+        return outputComponent;
     }
     
-    public InputPort getInputPort() {
-        return inputPort;
+    public void setOutputComponent(Component c) {
+        this.outputComponent = c;
     }
-    
-    public OutputPort getOutputPort() {
-        return outputPort;
-    }
-    
-    public boolean hasFailed() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void fixDamage() throws CannotRepairException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public int getDamage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
     
     protected abstract HydraulicState getHydroState();
+    
+    protected abstract void receiveMatter(Matter m);
+    
+    protected void send(Matter m) {
+        if (outputComponent == null) {
+            throw new RuntimeException("Must first set output component before sending matter.");
+        } else {
+            outputComponent.receiveMatter(m);
+        }
+    }
 }

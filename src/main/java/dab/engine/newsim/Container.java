@@ -23,12 +23,16 @@ public abstract class Container extends Component  {
         this.steam = steam;
     }
     
-    public HydraulicState getHydroState() {
-        return new HydraulicState(getPressure(), getCompressibleVolume(), getTemperature());
-    }
-    
     public double getPressure() {
         return steam.getPressure(getCompressibleVolume());
+    }
+    
+    public Water getWater() {
+        return water;
+    }
+    
+    public Steam getSteam() {
+        return steam;
     }
     
     public double getCompressibleVolume() {
@@ -37,6 +41,15 @@ public abstract class Container extends Component  {
     
     public double getTemperature() {
         return steam.getTemperature();
+    }
+    
+    /**
+     *
+     * FIXME: using volume as the height (assumes that the area is 1 m^2).
+     * @return the pressure at the bottom of the container (steam pressure + hydrostatic pressure)
+     */
+    public double getBottomPressure() {
+        return getPressure() + water.getHydrostaticPressure(1);
     }
     
     protected double getEqualizedPressure(HydraulicState hydroValue) {
