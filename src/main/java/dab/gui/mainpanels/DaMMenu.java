@@ -15,12 +15,13 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 
 /**
- * The main menu for the game, has new game, load game, help and quit buttons.
+ * The main menu for the game, has new game, load game, two_player and quit buttons.
  * New game points onto an instance of Player.
  * Load Game displays a menu of existing save games, and loads a selected game.
  * Help ...
@@ -59,11 +60,11 @@ public class DaMMenu extends JPanel {
         load_game.setAlignmentX(Component.CENTER_ALIGNMENT);*/
 
 
-        JButton help = new JButton("bunny rabbit");
-        help.setContentAreaFilled(true);
-        help.setBorderPainted(true);
+        JButton two_player = new JButton("bunny rabbit");
+        two_player.setContentAreaFilled(true);
+        two_player.setBorderPainted(true);
         //help.setAlignmentX(Component.CENTER_ALIGNMENT);
-        help.addActionListener(new ActionListener() {
+        two_player.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
@@ -71,6 +72,24 @@ public class DaMMenu extends JPanel {
                 mainWindow.startTwoPlayer();
             }
         });
+        
+        
+        JButton options = new JButton("options");
+        options.setContentAreaFilled(true);
+        options.setBorderPainted(true);
+        //help.setAlignmentX(Component.CENTER_ALIGNMENT);
+        options.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e){
+                
+                mainWindow.showOptions();
+            }
+        });
+        
+        
+       
+        
         /*
         JButton exit_game = new JButton();
         exit_game.setContentAreaFilled(false);
@@ -88,12 +107,13 @@ public class DaMMenu extends JPanel {
         add(new_game);
         add(Box.createRigidArea(new Dimension(0, 5)));
         add(load_game);
-        add(help);
+        add(two_player);
         add(exit_game);
         setBackground(Color.BLACK);
         setVisible(true);*/
         setBackground(Color.BLACK);
         add(new_game);
-        add(help);
+        add(two_player);
+        add(options);
     }
 }

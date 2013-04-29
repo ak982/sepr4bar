@@ -85,6 +85,7 @@ public class GameInterface extends JPanel implements KeyListener {
         music = new Sounds("resources/music/backgroundSound.wav", true);
         //music.start();
         
+        
         //setMinimumSize(new Dimension(MAX_SIZE_WIDTH, MAX_SIZE_HEIGHT));
         //setLayout(new BorderLayout(0, 0));
         
@@ -159,7 +160,9 @@ public class GameInterface extends JPanel implements KeyListener {
     private void setupKeyboardActions() {
         // register an escape press listener
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        registerKeyboardAction(new EscapeListener(), stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        EscapeListener el = new EscapeListener();
+        registerKeyboardAction(el, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        
       
     
     }
@@ -513,5 +516,10 @@ public class GameInterface extends JPanel implements KeyListener {
                 }
             });
         }
+        public void aaaaa(){
+    }
+    
+    
+        
     }
 }

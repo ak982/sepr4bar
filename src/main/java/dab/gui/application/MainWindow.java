@@ -8,6 +8,7 @@ import dab.engine.simulator.Simulator;
 import dab.gui.intro.DaIntro;
 import dab.gui.mainpanels.DaMMenu;
 import dab.gui.mainpanels.GameInterface;
+import dab.gui.mainpanels.Options;
 import java.awt.Component;
 import javax.swing.JFrame;
 
@@ -34,6 +35,7 @@ public class MainWindow extends JFrame {
     }
     private DaMMenu menu;
     private Component currentComponent = null;
+    private Options options;
 
     public MainWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,6 +44,7 @@ public class MainWindow extends JFrame {
         
         // create the menu
         menu = new DaMMenu(this);
+        options = new Options(this);
         
     }
 
@@ -52,6 +55,11 @@ public class MainWindow extends JFrame {
 
     public void showMenu() {
         changeToPanel(menu);
+    }
+    
+    public void showOptions() {
+        changeToPanel(options);
+        System.out.println("options");
     }
 
     public void startSinglePlayer() {
@@ -71,16 +79,7 @@ public class MainWindow extends JFrame {
     }
 
     public void startTwoPlayer() {
-        //BunnyInterface bi = new BunnyInterface();
         Simulator sim = new Simulator();
-       // Environment env = new Environment(getWidth(), getHeight());
-       // hitboundsController = new HitBoundsController();
-       // BunnyController bc = new BunnyController(env, hitboundsController, new Point(100, 100));
-        
-        
-        //TwoPlayerScreen tps = new TwoPlayerScreen(bc, env, sim);
-        
-        //changeToPanel(tps);
         changeToPanel(new GameInterface(this, sim, false));
     }
 
