@@ -269,7 +269,7 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
      * @return water level percentage
      */
     @Override
-    public Percentage reactorWaterLevel() {
+    public double reactorWaterLevel() {
         return failureModel.reactorWaterLevel();
     }
 
@@ -316,15 +316,6 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
     @Override
     public Percentage condenserWaterLevel() {
         return failureModel.condenserWaterLevel();
-    }
-
-    /**
-     *
-     * @return minimum water level percentage
-     */
-    @Override
-    public Percentage reactorMinimumWaterLevel() {
-        return failureModel.reactorMinimumWaterLevel();
     }
 
     /**

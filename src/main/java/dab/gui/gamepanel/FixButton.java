@@ -6,7 +6,6 @@ package dab.gui.gamepanel;
 
 import dab.engine.simulator.CannotRepairException;
 import dab.engine.simulator.views.FailableComponentView;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
