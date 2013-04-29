@@ -5,9 +5,8 @@
 package dab.bigBunny;
 
 import dab.engine.simulator.FailableComponent;
+import dab.engine.simulator.views.FailableComponentView;
 import java.awt.Rectangle;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 
 /**
  *
@@ -17,7 +16,7 @@ public class Circle extends HittableComponent{
     
     private FailableComponent component;
     
-    public Circle(FailableComponent component, int x, int y, int width, int height){
+    public Circle(FailableComponentView component, int x, int y, int width, int height){
       super(component, x, y, width, height);
     }
     

@@ -13,7 +13,7 @@ import dab.engine.simulator.views.ValveView;
 public class ValveButton extends ControlButton {
     private ValveView valve;
     public ValveButton(ValveView valve) {
-        this.valve = valve;
+        this.valve = valve;       
     }
     
     @Override

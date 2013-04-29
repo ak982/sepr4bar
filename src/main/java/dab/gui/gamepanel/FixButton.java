@@ -39,6 +39,7 @@ public class FixButton extends JButton {
                 update();
             }
         });
+        setFocusable(false);
     }
     
     public void update() {

@@ -28,7 +28,7 @@ public abstract class ControlButton extends JToggleButton {
                 onClick();
             }
         });
-
+         setFocusable(false);
     }
 
     private void changeState(Icon icon, boolean enabled, boolean selected, String text) {

@@ -6,6 +6,7 @@ package dab.bigBunny;
 
 import dab.engine.simulator.Simulator;
 import dab.gui.gamepanel.GamePanel;
+import dab.gui.gamepanel.UIComponent;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,8 +14,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
@@ -24,7 +23,6 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
 
@@ -32,7 +30,7 @@ import javax.swing.Timer;
  *
  * @author eduard
  */
-public class TwoPlayerScreen extends GamePanel implements MouseListener, KeyListener, ActionListener {
+public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionListener {
 
     BufferedImage bunny;
     BunnyController controller;
@@ -51,18 +49,11 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, KeyList
         this.environment = en;
         this.hitboundsController = h;
         this.controller = bc;
-        
-        /*
-        environment = new Environment(400, 400);
-        hitboundsController = new HitBoundsController();
-        controller = new BunnyController(environment, hitboundsController, new Point(100, 100));
-        */
-        
-        controller.setBounds(new Rectangle(getWidth(), getHeight()));
 
+        controller.setBounds(new Rectangle(getWidth(), getHeight()));
+        environment.setBounds(getWidth(), getHeight());
         this.animator = new Timer(1000/30, this);
-        
-        
+
         setFocusable(true);
         //requestFocusInWindow();
         
@@ -81,16 +72,20 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, KeyList
         box.setBounds(500, 500, 40, 40);
         this.add(box);
         box.setVisible(true);
-     //   controller.setHitBounds(box.getBounds());
+        hitboundsController.addHitableComponent(new TheRectangle(uiComponents.get(0).getComponent(),500, 500, 40,40));
+        
+        for(UIComponent uc : uiComponents){
+                hitboundsController.addHitableComponent(uc.getComponent(),
+                        uc.getLocation().x, uc.getLocation().y, uc.getWidth(), uc.getHeight());          
+        }
 
         //to call this on the reactorPannel, not on this thing
         //bounds = new Rectangle(getWidth(), getHeight());
         
         //controller.setBounds(bounds);
 
-        //This needs to be added to the ReactorPannel, so that only on reactor pannel we could shoot
+ 
         addMouseListener(this);
-        addKeyListener(this);
 
         try {
             bunny = ImageIO.read(new File("resources/bunny.jpg"));
@@ -170,51 +165,6 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, KeyList
     public void mouseExited(MouseEvent e) {
     } //Do nothing
 
-    
-    @Override
-    public void keyPressed(KeyEvent e) {
-        System.out.println("keypress");
-        
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                controller.startForward();
-                break;
-            case KeyEvent.VK_LEFT:
-                controller.startRotateLeft();
-                break;
-            case KeyEvent.VK_RIGHT:
-                controller.startRotateRight();
-                break;
-            case KeyEvent.VK_DOWN:
-                controller.startBrake();
-                break;
-            case KeyEvent.VK_SPACE:
-                environment.startSoftwareFailure();
-                break;
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                controller.stopForward();
-                break;
-            case KeyEvent.VK_LEFT:
-                controller.stopRotateLeft();
-                break;
-            case KeyEvent.VK_RIGHT:
-                controller.stopRotateRight();
-                break;
-            case KeyEvent.VK_DOWN:
-                controller.stopBrake();
-                break;
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    } //Do nothing
     
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -4,8 +4,8 @@
  */
 package dab.gui.mainpanels;
 
-import dab.gui.gamepanel.GamePanel;
 import dab.engine.simulator.Simulator;
+import dab.gui.gamepanel.GamePanel;
 
 /**
  *

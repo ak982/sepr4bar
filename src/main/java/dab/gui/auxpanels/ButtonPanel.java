@@ -70,7 +70,7 @@ public class ButtonPanel extends JPanel {
         controlRodSlider = new ControlRodSlider(sim.getReactor());
         add(controlRodSlider);
         
-        
+       
 		
 	}
     

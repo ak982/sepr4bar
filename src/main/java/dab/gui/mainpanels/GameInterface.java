@@ -1,40 +1,41 @@
 package dab.gui.mainpanels;
 
-import dab.gui.gamepanel.GameOver;
-import dab.gui.application.MainWindow;
-import dab.gui.auxpanels.ObamaPanel;
-import dab.gui.auxpanels.ButtonPanel;
-import dab.gui.auxpanels.InfoPanel;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import dab.bigBunny.BunnyController;
+import dab.bigBunny.Environment;
+import dab.bigBunny.HitBoundsController;
+import dab.bigBunny.TwoPlayerScreen;
 import dab.engine.persistence.FileSystem;
 import dab.engine.simulator.CannotControlException;
-import dab.engine.simulator.CannotRepairException;
 import dab.engine.simulator.FailMode;
+import dab.engine.simulator.GameOverException;
 import dab.engine.simulator.KeyNotFoundException;
 import dab.engine.simulator.Simulator;
 import dab.engine.simulator.UserCommands;
-
-import dab.gui.sound.Sounds;
-
 import dab.engine.utilities.Percentage;
 import dab.engine.utilities.Pressure;
-
-import dab.engine.simulator.GameOverException;
-
+import dab.gui.application.MainWindow;
+import dab.gui.auxpanels.ButtonPanel;
+import dab.gui.auxpanels.InfoPanel;
+import dab.gui.auxpanels.ObamaPanel;
+import dab.gui.gamepanel.GameOver;
+import dab.gui.gamepanel.GamePanel;
+import dab.gui.sound.Sounds;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -49,20 +50,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import dab.bigBunny.BunnyController;
-import dab.bigBunny.Environment;
-import dab.bigBunny.HitBoundsController;
-import dab.bigBunny.TwoPlayerScreen;
-import dab.gui.gamepanel.GamePanel;
-import java.awt.FlowLayout;
-import java.awt.Point;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
 
 public class GameInterface extends JPanel implements KeyListener {
 
@@ -101,11 +90,11 @@ public class GameInterface extends JPanel implements KeyListener {
         
         setupPanels();
         setupTimer();
-      //  setupKeyboardActions();
+        setupKeyboardActions();
         
         // rock and roll baby!
         animator.start();
-        addKeyListener(this);
+        addKeyListener(this);      
     }
     
     private void setupPanels() {       
@@ -127,12 +116,10 @@ public class GameInterface extends JPanel implements KeyListener {
         
         if(onePlayerMode) {
             gamePanel = new SinglePlayerPanel(simulator);
-        } else {
-            
-            environment = new Environment(400, 400);
+        } else {            
+            environment = new Environment();
             hitboundsController = new HitBoundsController();
-            controller = new BunnyController(environment, hitboundsController, new Point(100, 100));
-             
+            controller = new BunnyController(environment, hitboundsController, new Point(100, 100));           
             gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller); 
         }
         
@@ -179,8 +166,6 @@ public class GameInterface extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("keypress");
-        
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
                 controller.startForward();
@@ -267,6 +252,7 @@ public class GameInterface extends JPanel implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 try {
+                    requestFocus();
                     simulator.step();
                     infoPanel.update();
                     obamaPanel.update();
@@ -295,7 +281,7 @@ public class GameInterface extends JPanel implements KeyListener {
     }
 
     public void screenUpdate() {
-
+        
         if (getFailed("Turbine") || (simulator.getSoftFailReport().getFailMode() != FailMode.WORKING)) {
             // if there is a software failure or the turbine has failed,
             // change the control rod slider to its actual position

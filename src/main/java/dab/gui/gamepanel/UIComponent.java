@@ -4,9 +4,7 @@
  */
 package dab.gui.gamepanel;
 
-import dab.engine.simulator.FailableComponent;
 import dab.engine.simulator.views.FailableComponentView;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -48,6 +46,10 @@ public class UIComponent extends JComponent {
     public void update() {
         fixButton.update();
         repaint();
+    }
+    
+    public FailableComponentView getComponent(){
+        return component;
     }
     
     @Override

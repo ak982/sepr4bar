@@ -4,19 +4,11 @@
  */
 package dab.gui.application;
 
-import dab.gui.intro.DaIntro;
-import dab.bigBunny.BunnyController;
-import dab.bigBunny.Environment;
-import dab.bigBunny.HitBoundsController;
-import dab.bigBunny.TwoPlayerScreen;
 import dab.engine.simulator.Simulator;
+import dab.gui.intro.DaIntro;
 import dab.gui.mainpanels.DaMMenu;
 import dab.gui.mainpanels.GameInterface;
-import dab.gui.mainpanels.GameInterface;
-import dab.gui.mainpanels.TwoPlayerPanel;
 import java.awt.Component;
-import java.awt.Point;
-import java.awt.Rectangle;
 import javax.swing.JFrame;
 
 
@@ -25,8 +17,6 @@ import javax.swing.JFrame;
  * @author eduard
  */
 public class MainWindow extends JFrame {
-
-    private HitBoundsController hitboundsController;
     
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -49,9 +39,10 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1366, 768);
         
-
+        
         // create the menu
         menu = new DaMMenu(this);
+        
     }
 
     public void showIntro() {

@@ -5,6 +5,7 @@
 package dab.bigBunny;
 
 import dab.engine.simulator.FailableComponent;
+import dab.engine.simulator.views.FailableComponentView;
 import java.awt.Rectangle;
 
 /**
@@ -13,7 +14,7 @@ import java.awt.Rectangle;
  */
 public class TheRectangle extends HittableComponent{
     
-    public TheRectangle(FailableComponent component, int x, int y, int width, int height){
+    public TheRectangle(FailableComponentView component, int x, int y, int width, int height){
         super(component, x, y, width, height);     
     }
       

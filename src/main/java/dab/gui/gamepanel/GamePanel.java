@@ -4,20 +4,14 @@
  */
 package dab.gui.gamepanel;
 
-import dab.engine.simulator.FailableComponent;
 import dab.engine.simulator.Simulator;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -67,6 +61,7 @@ public abstract class GamePanel extends JPanel {
             c.update();
         }
     }
+    
     
     @Override
     public void paintComponent(Graphics g) {

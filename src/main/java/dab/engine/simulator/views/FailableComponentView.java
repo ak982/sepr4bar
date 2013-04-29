@@ -14,4 +14,5 @@ public interface FailableComponentView {
     public boolean hasFailed();
     public void fixDamage() throws CannotRepairException;
     public int getDamage();
+    public void fail(int i);
 }
