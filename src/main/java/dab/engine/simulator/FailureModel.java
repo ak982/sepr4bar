@@ -76,6 +76,7 @@ public class FailureModel implements PlantController, PlantStatus {
         failStateCheck();
         checkCondenserPressure();
         checkTurbineFailure();
+        
     }
 
     @Override
