@@ -1,7 +1,7 @@
 package dab.gui.auxpanels;
 
 import dab.engine.simulator.Simulator;
-import dab.gui.mainpanels.SinglePlayerInterface;
+import dab.gui.mainpanels.GameInterface;
 import java.awt.Color;
 import java.awt.Font;
 
@@ -67,7 +67,7 @@ public class ObamaPanel extends JPanel {
             temp += "WARNING, " + simulator.getUsername() + ": REACTOR TEMPERATURE TOO HIGH" + "<br>";
         }
 
-        if (simulator.condenserPressure().greaterThan(SinglePlayerInterface.CONDENSER_WARNING_PRESSURE)) {
+        if (simulator.condenserPressure().greaterThan(GameInterface.CONDENSER_WARNING_PRESSURE)) {
             temp += "WARNING, " + simulator.getUsername() + ": CONDENSER PRESSURE TOO HIGH" + "<br>";
         }
 

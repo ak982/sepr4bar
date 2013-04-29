@@ -4,6 +4,8 @@
  */
 package dab.bigBunny;
 
+import dab.engine.simulator.Simulator;
+import dab.gui.gamepanel.GamePanel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -30,7 +32,7 @@ import javax.swing.Timer;
  *
  * @author eduard
  */
-public class TwoPlayerScreen extends JPanel implements MouseListener, KeyListener, ActionListener {
+public class TwoPlayerScreen extends GamePanel implements MouseListener, KeyListener, ActionListener {
 
     BufferedImage bunny;
     BunnyController controller;
@@ -40,11 +42,26 @@ public class TwoPlayerScreen extends JPanel implements MouseListener, KeyListene
     private JLabel box;
     private ImageIcon boxToHit;
     private Timer animator;
+    private HitBoundsController hitboundsController;
 
-    public TwoPlayerScreen(BunnyController controller, Environment environment) {
-        this.controller = controller;
-        this.environment = environment;
+    public TwoPlayerScreen(Simulator simulator, Environment en, HitBoundsController h,BunnyController bc) {
+        super(simulator);
+        
+        this.simulator = simulator;
+        this.environment = en;
+        this.hitboundsController = h;
+        this.controller = bc;
+        
+        /*
+        environment = new Environment(400, 400);
+        hitboundsController = new HitBoundsController();
+        controller = new BunnyController(environment, hitboundsController, new Point(100, 100));
+        */
+        
+        controller.setBounds(new Rectangle(getWidth(), getHeight()));
+
         this.animator = new Timer(1000/30, this);
+        
         
         setFocusable(true);
         //requestFocusInWindow();
@@ -137,6 +154,7 @@ public class TwoPlayerScreen extends JPanel implements MouseListener, KeyListene
             //Animation of shot bunny 
         } else {
             environment.addBullet(clicked); //bullet hole if missed
+         
         }
     }
 

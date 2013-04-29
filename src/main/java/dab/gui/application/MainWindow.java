@@ -11,8 +11,9 @@ import dab.bigBunny.HitBoundsController;
 import dab.bigBunny.TwoPlayerScreen;
 import dab.engine.simulator.Simulator;
 import dab.gui.mainpanels.DaMMenu;
-import dab.gui.mainpanels.SinglePlayerInterface;
-import dab.gui.mainpanels.SinglePlayerInterface;
+import dab.gui.mainpanels.GameInterface;
+import dab.gui.mainpanels.GameInterface;
+import dab.gui.mainpanels.TwoPlayerPanel;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -70,7 +71,7 @@ public class MainWindow extends JFrame {
     }
     
     public void startSinglePlayer(Simulator sim) {
-        changeToPanel(new SinglePlayerInterface(this, sim));
+        changeToPanel(new GameInterface(this, sim, true));
     }
     
     public void close() {
@@ -80,14 +81,16 @@ public class MainWindow extends JFrame {
 
     public void startTwoPlayer() {
         //BunnyInterface bi = new BunnyInterface();
-
-        Environment env = new Environment(getWidth(), getHeight());
-        hitboundsController = new HitBoundsController();
-        BunnyController bc = new BunnyController(env, hitboundsController, new Point(100, 100));
-        bc.setBounds(new Rectangle(getWidth(), getHeight()));
-        TwoPlayerScreen tps = new TwoPlayerScreen(bc, env);
+        Simulator sim = new Simulator();
+       // Environment env = new Environment(getWidth(), getHeight());
+       // hitboundsController = new HitBoundsController();
+       // BunnyController bc = new BunnyController(env, hitboundsController, new Point(100, 100));
         
-        changeToPanel(tps);
+        
+        //TwoPlayerScreen tps = new TwoPlayerScreen(bc, env, sim);
+        
+        //changeToPanel(tps);
+        changeToPanel(new GameInterface(this, sim, false));
     }
 
     private void changeToPanel(Component p) {

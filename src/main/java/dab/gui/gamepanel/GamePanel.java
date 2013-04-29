@@ -24,7 +24,7 @@ import javax.swing.JPanel;
  *
  * @author eduard
  */
-public class GamePanel extends JPanel {
+public abstract class GamePanel extends JPanel {
     protected Simulator simulator;
     protected BufferedImage background;
     protected ArrayList<UIComponent> uiComponents;
