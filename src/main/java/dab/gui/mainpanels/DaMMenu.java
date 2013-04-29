@@ -9,8 +9,8 @@ package dab.gui.mainpanels;
  * @author eduard
  */
 
-import dab.gui.application.MainWindow;
 import dab.engine.simulator.Simulator;
+import dab.gui.application.MainWindow;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
