@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.comuv.dab</groupId>
-  <artifactId>SEPR4BAR</artifactId>
+  <artifactId>BunnyAttack</artifactId>
   <version>0.5</version>
   <packaging>jar</packaging>
 
@@ -19,7 +19,22 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
+		
             </plugin>
+	
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-jar-plugin</artifactId>
+			<configuration>
+				<archive>
+					<manifest>
+						<mainClass>dab.gui.application.VisualTestBench</mainClass>
+					</manifest>
+				</archive>
+			</configuration>
+			<version>2.4</version>
+		</plugin>
+
         </plugins>
     </build>
   <properties>

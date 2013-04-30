@@ -3,9 +3,6 @@
  * and open the template in the editor.
  */
 package dab.engine.newsim;
-
-import static dab.engine.newsim.Reactor.ROOM_TEMP;
-
 /**
  *
  * @author eduard
@@ -15,23 +12,26 @@ public class Condenser extends Container {
     private HeatSink heatSink;
     
     public Condenser(double volume) {
-        super(new Water(ROOM_TEMP, new Kilograms(100)), new Steam(ROOM_TEMP, new Kilograms(1)), volume);
+        super(
+                new Water(Constants.ROOM_TEMP, new Kilograms((volume / 10) * Constants.WATER_NORMAL_DENSITY)),
+                new Steam(Constants.ROOM_TEMP, (int)((9 * volume / 10) * Constants.NORMAL_STEAM_PARTICLES_PER_VOLUME)),
+                volume);
         heatSink = new HeatSink();
     }
     
     public void step() {
         // update heatsink
-        heatSink.step();
+        //heatSink.step();
         
         // cool steam down
         heatSink.combine(steam);
         
         // if pressure is smaller than atmosferic one, then we don't condense anything,
         // otherwise we condense such that we reach the boiling point at that pressure
-        if (getPressure() > Water.ATMOSPHERIC_PRESSURE) {
+        if (getPressure() > Constants.ATMOSPHERIC_PRESSURE) {
             double boilingPoint = Water.getBoilingTemperature(getPressure());
             if (boilingPoint > steam.getTemperature()) { // remove steam such that it equalizes to the boiling point
-                double newSteamPressure = Math.max(Water.getBoilingPressure(steam.getTemperature()), Water.ATMOSPHERIC_PRESSURE);
+                double newSteamPressure = Math.max(Water.getBoilingPressure(steam.getTemperature()), Constants.ATMOSPHERIC_PRESSURE);
                 int newQuantity = steam.getParticlesAtState(newSteamPressure, getCompressibleVolume());
                 int deltaQuantity = steam.getParticleNr() - newQuantity;
                 steam.remove(deltaQuantity);
@@ -60,7 +60,7 @@ public class Condenser extends Container {
         double otherPressure = getHydroState().getPressure();
         double ourPressure   = getBottomPressure();
         if (otherPressure < ourPressure) {
-            int deltaQty = Math.min(water.getParticleNr(), (int)((ourPressure - otherPressure)/1));
+            int deltaQty = Math.min(water.getParticleNr(), (int)((ourPressure - otherPressure)));
             water.remove(deltaQty);
             outputComponent.receiveMatter(new Water(water.getTemperature(), deltaQty));
         }

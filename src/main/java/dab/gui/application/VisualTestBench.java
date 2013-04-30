@@ -5,6 +5,7 @@
 package dab.gui.application;
 
 import dab.engine.newsim.Condenser;
+import dab.engine.newsim.Constants;
 import dab.engine.newsim.Pump;
 import dab.engine.newsim.Reactor;
 import dab.engine.newsim.Turbine;
@@ -44,14 +45,14 @@ public class VisualTestBench implements ActionListener {
     JLabel rView, cView, tView, pView;
     
     public VisualTestBench() {
-        timer = new Timer(100, this);
+        timer = new Timer(1000 / Constants.TICKS_PER_SECOND, this);
         
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         reactor = new Reactor(1);
-        condenser = new Condenser(1);
+        condenser = new Condenser(10);
         turbine = new Turbine();
-        pump = new Pump(0);
+        pump = new Pump(10000);
         
         reactor.setOutputComponent(turbine);
         turbine.setOutputComponent(condenser);

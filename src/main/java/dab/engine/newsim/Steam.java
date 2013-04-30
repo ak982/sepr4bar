@@ -10,7 +10,7 @@ package dab.engine.newsim;
  * @author eduard
  */
 public class Steam extends Matter {
-
+    
     public Steam(double temp, Kilograms mass) {
         super(temp, mass);
     }
@@ -26,16 +26,16 @@ public class Steam extends Matter {
      */
     @Override
     double getSpecificHeat() {
-        return 2;
+        return Constants.SPECIFIC_HEAT_STEAM;
     }
     
     // pV = NKT
     public double getPressure(double volume) {
-        return (getParticleNr() * getTemperature() *  BOLTZMAN_CONSTANT) / volume;
+        return (getParticleNr() * getTemperature() *  Constants.BOLTZMAN_CONSTANT) / volume;
     }
     
     public int getParticlesAtState(double pressure, double volume) {
-        return (int)((pressure * volume) / (BOLTZMAN_CONSTANT * getTemperature()));
+        return (int)((pressure * volume) / (Constants.BOLTZMAN_CONSTANT * getTemperature()));
     }
     
     @Override
@@ -61,7 +61,7 @@ public class Steam extends Matter {
 
     @Override
     public double getMolarMass() {
-        return Water.MOLAR_MASS;
+        return Constants.MOLAR_MASS;
     }
     
 

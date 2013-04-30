@@ -15,9 +15,6 @@ public abstract class Matter {
 
     protected double temperature;
     protected int particleNr;
-    public static final int AVOGADRO_NUMBER = 600;
-    public static final double GAS_CONSTANT_R = 8.314;
-    public static final double BOLTZMAN_CONSTANT = GAS_CONSTANT_R / AVOGADRO_NUMBER;
 
     protected Matter(double temperature, Kilograms mass) {
         this.temperature = temperature;
@@ -57,7 +54,7 @@ public abstract class Matter {
     }
 
     public final double getMoles() {
-        return (double) getParticleNr() / (double) AVOGADRO_NUMBER;
+        return (double) getParticleNr() / (double) Constants.AVOGADRO_NUMBER;
     }
 
     public double getTemperature() {
@@ -84,7 +81,7 @@ public abstract class Matter {
     abstract double getSpecificHeat();
 
     public final int getParticlesPerKilo() {
-        return (int) (AVOGADRO_NUMBER / getMolarMass());
+        return (int) (Constants.AVOGADRO_NUMBER / getMolarMass());
     }
 
     public final double getMass() {

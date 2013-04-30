@@ -15,14 +15,15 @@ import dab.engine.utilities.Temperature;
  * @author eduard
  */
 public class Reactor extends Container {
-
-    public static final double ROOM_TEMP = 300;
     
     Percentage rodPosition;
     
     public Reactor(double volume) {
-        super(new Water(ROOM_TEMP, new Kilograms(100)), new Steam(ROOM_TEMP, new Kilograms(1)), volume);
-        rodPosition = new Percentage(0);
+        super(
+                new Water(Constants.ROOM_TEMP + 40, new Kilograms((6 * volume / 10) * Constants.WATER_NORMAL_DENSITY)),
+                new Steam(Constants.ROOM_TEMP, (int) ((4 * volume / 10) * Constants.NORMAL_STEAM_PARTICLES_PER_VOLUME)),
+                volume);
+        rodPosition = new Percentage(30);
     }
 
     public void moveControlRods(Percentage extracted) {
@@ -33,8 +34,9 @@ public class Reactor extends Container {
         return rodPosition;
     }
     
+    // from 1000 (1MW) to 1001000 kj per second (1GW)
     private double getEnergyGenerated() {
-        return rodPosition.ratio() * 1000 + 100;
+        return ((rodPosition.ratio() * 10) * 1000 + 1000) / Constants.TICKS_PER_SECOND;
     }
     
     public void step() {
