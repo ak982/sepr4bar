@@ -36,6 +36,7 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
     private PhysicalModel physicalModel;
     private FailureModel failureModel;
     private String userName;
+    private int difficulty;
 
     public Simulator() {
         physicalModel = new PhysicalModel();
@@ -370,4 +371,10 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
     public String getUsername() {
         return userName;
     }
+    
+    public void setDifficulty(int i){
+        failureModel.setDifficulty(i);
+    }
+    
+    
 }

@@ -12,8 +12,10 @@ package dab.gui.mainpanels;
 import dab.engine.simulator.Simulator;
 import dab.gui.application.MainWindow;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -33,17 +35,13 @@ import javax.swing.JPanel;
 public class DaMMenu extends JPanel {
     MainWindow mainWindow;
     
+    
     public DaMMenu(MainWindow mw) {
         this.mainWindow = mw;
         
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-        JButton new_game = new JButton("new game");
-        new_game.setContentAreaFilled(true);
-        new_game.setBorderPainted(true);
-        //new_game.setBorder(BorderFactory.createEmptyBorder());
-        //new_game.setContentAreaFilled(false);
-        //new_game.setBorderPainted(false);
-        //new_game.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        JButton new_game = new JButton(new ImageIcon("resources/menu/NewGameButton.png") {});           
         new_game.addActionListener(new ActionListener() {
 
             @Override
@@ -54,16 +52,7 @@ public class DaMMenu extends JPanel {
             }
         });
 
-        /*JButton load_game = new JButton();
-        load_game.setContentAreaFilled(false);
-        load_game.setBorderPainted(false);
-        load_game.setAlignmentX(Component.CENTER_ALIGNMENT);*/
-
-
-        JButton two_player = new JButton("bunny rabbit");
-        two_player.setContentAreaFilled(true);
-        two_player.setBorderPainted(true);
-        //help.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton two_player = new JButton("two player");
         two_player.addActionListener(new ActionListener() {
 
             @Override
@@ -75,9 +64,6 @@ public class DaMMenu extends JPanel {
         
         
         JButton options = new JButton("options");
-        options.setContentAreaFilled(true);
-        options.setBorderPainted(true);
-        //help.setAlignmentX(Component.CENTER_ALIGNMENT);
         options.addActionListener(new ActionListener() {
 
             @Override
@@ -90,11 +76,8 @@ public class DaMMenu extends JPanel {
         
        
         
-        /*
-        JButton exit_game = new JButton();
-        exit_game.setContentAreaFilled(false);
-        exit_game.setBorderPainted(false);
-        exit_game.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        JButton exit_game = new JButton("exit");
         exit_game.addActionListener(new ActionListener() {
 
             @Override
@@ -102,18 +85,18 @@ public class DaMMenu extends JPanel {
                 System.exit(0);
             }
         });
-        add(Box.createRigidArea(new Dimension(0,280)));
-        // add all of the buttons to the Menu
-        add(new_game);
-        add(Box.createRigidArea(new Dimension(0, 5)));
-        add(load_game);
-        add(two_player);
-        add(exit_game);
+   
+        
         setBackground(Color.BLACK);
-        setVisible(true);*/
+        setVisible(true);
         setBackground(Color.BLACK);
+        //Dimension dimension = new Dimension((this.getWidth()/2) - (new_game.WIDTH/2), 0);
+        //add(Box.createRigidArea(dimension));
+        //this.setAlignmentX(this.CENTER_ALIGNMENT);
+        //new_game.setAlignmentX(CENTER_ALIGNMENT);
         add(new_game);
         add(two_player);
         add(options);
+        add(exit_game);
     }
 }

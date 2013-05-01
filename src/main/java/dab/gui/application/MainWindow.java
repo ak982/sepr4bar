@@ -8,6 +8,7 @@ import dab.engine.simulator.Simulator;
 import dab.gui.intro.DaIntro;
 import dab.gui.mainpanels.DaMMenu;
 import dab.gui.mainpanels.GameInterface;
+import dab.gui.mainpanels.HelpScreen;
 import dab.gui.mainpanels.Options;
 import java.awt.Component;
 import javax.swing.JFrame;
@@ -36,15 +37,21 @@ public class MainWindow extends JFrame {
     private DaMMenu menu;
     private Component currentComponent = null;
     private Options options;
+    private HelpScreen helpScreen;
+    private int difficulty;
+    private boolean music;
+    private Simulator simulator;
 
     public MainWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1366, 768);
         
-        
+        difficulty = 1;
         // create the menu
         menu = new DaMMenu(this);
         options = new Options(this);
+        helpScreen = new HelpScreen(this);
+        music = true;
         
     }
 
@@ -59,14 +66,17 @@ public class MainWindow extends JFrame {
     
     public void showOptions() {
         changeToPanel(options);
-        System.out.println("options");
     }
 
+      public void showHelp() {
+          
+        changeToPanel(helpScreen);
+    }
+    
     public void startSinglePlayer() {
-        Simulator sim = new Simulator();
-        sim.setUsername("willy-wanka");
-        startSinglePlayer(sim);
-        
+        simulator = new Simulator();
+        simulator.setUsername("willy-wanka");
+        startSinglePlayer(simulator);        
     }
     
     public void startSinglePlayer(Simulator sim) {
@@ -79,8 +89,8 @@ public class MainWindow extends JFrame {
     }
 
     public void startTwoPlayer() {
-        Simulator sim = new Simulator();
-        changeToPanel(new GameInterface(this, sim, false));
+        simulator = new Simulator();
+        changeToPanel(new GameInterface(this, simulator, false));
     }
 
     private void changeToPanel(Component p) {
@@ -95,5 +105,24 @@ public class MainWindow extends JFrame {
         // put the new component in focus
         p.requestFocusInWindow();
 
+    }
+    
+    public void setDifficulty (int i) {      
+        if(simulator != null){   
+            simulator.setDifficulty(i);
+        }
+        difficulty = i;       
+    }
+    
+    public int getDifficulty(){
+        return difficulty;
+    }
+    
+    public void setMusic() {
+        music = !music;
+    }
+    
+    public boolean getMusic(){
+        return music;
     }
 }

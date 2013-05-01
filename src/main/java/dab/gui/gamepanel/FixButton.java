@@ -48,7 +48,7 @@ public class FixButton extends JButton {
             setVisible(true);
             
         } else {
-            setVisible(true);
+            setVisible(false);
         }
         
     }

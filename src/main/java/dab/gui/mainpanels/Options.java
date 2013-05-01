@@ -5,6 +5,7 @@
 package dab.gui.mainpanels;
 
 import dab.gui.application.MainWindow;
+import java.awt.Menu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
@@ -18,71 +19,80 @@ import javax.swing.JPanel;
  */
 public class Options extends JPanel{
     MainWindow mainWindow;
-    private int difficulty;
-    private boolean music;
+    
     
     
     public Options(MainWindow mw) {
         this.mainWindow = mw;
-        difficulty = 1;
-        music = true;
+     
         
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
         
         JButton easy = new JButton("easy");
-        easy.setContentAreaFilled(true);
-        easy.setBorderPainted(true);
         easy.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
-                difficulty = 1;
+                mainWindow.setDifficulty(1);
             }
         });
         
         JButton normal = new JButton("normal");
-        normal.setContentAreaFilled(true);
-        normal.setBorderPainted(true);
         normal.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
-                difficulty = 2;
+                mainWindow.setDifficulty(2);
             }
         });
         
         JButton hard = new JButton("hard");
-        hard.setContentAreaFilled(true);
-        hard.setBorderPainted(true);
         hard.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
-                difficulty = 3;
+                mainWindow.setDifficulty(3);
             }
         });
         
-         JButton sound = new JButton("sound");
-        sound.setContentAreaFilled(true);
-        sound.setBorderPainted(true);
+        JButton sound = new JButton("sound");
         sound.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
-                music = !music;
+                mainWindow.setMusic();
             }
         });
         
+        JButton back = new JButton("back");
+        back.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e){
+                mainWindow.showMenu();
+            }
+        });
+        
+        JButton help = new JButton("help");
+         help.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e){
+               mainWindow.showHelp();
+
+            }
+        });
+        
+      add(help);   
       add(easy);
       add(normal);
       add(hard);
       add(sound);
+      add(back);
+      
         
     }
     
-    public boolean sound() {
-        return music;
-    }
     
     
     

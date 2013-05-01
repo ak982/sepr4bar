@@ -373,4 +373,8 @@ public class FailureModel implements PlantController, PlantStatus {
     public SoftFailReport getSoftFailReport() {
         return lastFailReport.getCopy();
     }
+    
+    public void setDifficulty(int i) {
+        difficulty = i;
+    }
 }

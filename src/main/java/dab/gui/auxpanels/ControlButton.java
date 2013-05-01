@@ -34,6 +34,7 @@ public abstract class ControlButton extends JToggleButton {
     private void changeState(Icon icon, boolean enabled, boolean selected, String text) {
         setIcon(icon);
         setEnabled(enabled);
+
         setSelected(selected);
         setText(text);
     }

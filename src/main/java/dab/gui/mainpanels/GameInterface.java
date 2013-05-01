@@ -81,9 +81,12 @@ public class GameInterface extends JPanel implements KeyListener {
         this.mainWindow = mainWindow;
         this.simulator = simulator;
         this.onePlayerMode = onePlayerMode;
-
+        
         music = new Sounds("resources/music/backgroundSound.wav", true);
-        //music.start();
+                   
+        if(mainWindow.getMusic()){
+            music.start();
+        }
         
         
         //setMinimumSize(new Dimension(MAX_SIZE_WIDTH, MAX_SIZE_HEIGHT));
@@ -139,22 +142,7 @@ public class GameInterface extends JPanel implements KeyListener {
         topLevelSplitPane.setRightComponent(rightPane);
         add(topLevelSplitPane);
         
-        //topLevelSplitPane.setBorder(new EmptyBorder(0, 0, 0, 0));
-        //topLevelSplitPane.setPreferredSize(new Dimension(MAX_SIZE_WIDTH, MAX_SIZE_HEIGHT));
-        //topLevelSplitPane.setMinimumSize(new Dimension(MAX_SIZE_WIDTH, MAX_SIZE_HEIGHT));
-        //topLevelSplitPane.setResizeWeight(0.73);
-        
-
-        
-        //leftPane.setBorder(new EmptyBorder(0, 0, 0, 0));
-        //leftPane.setResizeWeight(0.8);
-        
-        
-
-
-        //rightSplitPane.setBorder(new EmptyBorder(0, 0, 0, 0));
-        //rightPane.setResizeWeight(0.4);
-
+       
     }
 
     private void setupKeyboardActions() {
@@ -261,7 +249,9 @@ public class GameInterface extends JPanel implements KeyListener {
                     obamaPanel.update();
                     gamePanel.updateComponents();
                     buttonPanel.update();
-
+                    handleMusic();
+                    
+                    
                     // soon there will be no need to screenUpdate
                     //screenUpdate();
                     //repaint();
@@ -277,6 +267,19 @@ public class GameInterface extends JPanel implements KeyListener {
         };
         //game loop updates every 100 ms
         animator = new Timer(100, taskStep);
+    }
+    
+    public void handleMusic(){    
+        try {      
+            if(music.isAlive() && !mainWindow.getMusic()) {
+                music.stopIt();
+            } else if(!music.isAlive() && mainWindow.getMusic()) {
+                music.start();
+            } 
+        } catch (IllegalThreadStateException e) {
+            //do nothing
+        }
+        
     }
 
     public static void rewrite() {
@@ -338,6 +341,19 @@ public class GameInterface extends JPanel implements KeyListener {
         public void actionPerformed(ActionEvent e) {
             // pause the game loop when esc is pressed
             animator.stop();
+           
+            
+            JMenuItem options = new JMenuItem();
+            options.setIcon(new ImageIcon("resources/menu/NewGameButton.png"));
+            options.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    mainWindow.showOptions();
+                }
+            });
+            
+            
+            
             JMenuItem new_game = new JMenuItem();
             new_game.setOpaque(true);
             new_game.setIconTextGap(0);
@@ -350,6 +366,7 @@ public class GameInterface extends JPanel implements KeyListener {
                     String old_username = simulator.getUsername();
                     Simulator new_simulator = new Simulator();
                     new_simulator.setUsername(old_username);
+                    music.interrupt();
                     mainWindow.startSinglePlayer(new_simulator);
                 }
             });
@@ -476,16 +493,7 @@ public class GameInterface extends JPanel implements KeyListener {
             exit_menu.setContentAreaFilled(false);
             exit_menu.setIcon(new ImageIcon("resources/menu/QuitButton.png"));
             JPopupMenu popupMenu = new JPopupMenu() {
-                /**
-                 *
-                 */
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void paintComponent(Graphics g) {
-                    Image img = new ImageIcon("resources/menu/Background.png").getImage();
-                    g.drawImage(img, 0, 0, 500, 500, null);
-                }
+                
             };
             popupMenu.setBorder(BorderFactory.createEmptyBorder());
             popupMenu.menuSelectionChanged(false);
@@ -495,6 +503,7 @@ public class GameInterface extends JPanel implements KeyListener {
             popupMenu.add(load_menu);
             popupMenu.add(help_menu);
             popupMenu.add(exit_menu);
+            popupMenu.add(options);
             add(popupMenu);
 
             //show the popupMenu (when esc is pressed)
@@ -508,7 +517,7 @@ public class GameInterface extends JPanel implements KeyListener {
                 @Override
                 public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
                     //start the game loop when the in game pause menu is not visible
-                    animator.start();
+                    animator.start();                 
                 }
 
                 @Override
@@ -516,8 +525,7 @@ public class GameInterface extends JPanel implements KeyListener {
                 }
             });
         }
-        public void aaaaa(){
-    }
+        
     
     
         

@@ -1,6 +1,5 @@
 package dab.bigBunny;
 
-import dab.engine.simulator.FailableComponent;
 import dab.engine.simulator.views.FailableComponentView;
 import java.awt.Point;
 import java.awt.Rectangle;

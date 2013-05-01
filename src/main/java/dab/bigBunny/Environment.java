@@ -25,7 +25,7 @@ public class Environment {
     private int sfTime, sfCantFailTime;
     private boolean headache;
     private int headacheTime;
-    private final int DEFAULT_HEADACHE_TIME = 500;
+    private final int DEFAULT_HEADACHE_TIME = 100;
 
     public Environment() {
         slimes = new TemporaryObjectList<>();
