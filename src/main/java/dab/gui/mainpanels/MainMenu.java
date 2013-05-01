@@ -6,7 +6,6 @@ package dab.gui.mainpanels;
 
 import dab.engine.simulator.Simulator;
 import dab.gui.application.MainWindow;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -19,9 +18,7 @@ import javax.swing.JPopupMenu;
  */
 public class MainMenu extends JPopupMenu{
     private MainWindow mainWindow;
-    
-    
-    
+
     public MainMenu(MainWindow mw) {
         this.mainWindow = mw;
               
@@ -43,19 +40,18 @@ public class MainMenu extends JPopupMenu{
 
             @Override
             public void actionPerformed(ActionEvent e){                
+                mainWindow.stopMusic();
                 mainWindow.startTwoPlayer();
                 setVisible(false);
             }
         });
-        
         
         JButton options = new JButton("options");
         options.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){               
-                mainWindow.showOptions();
-                setVisible(false);
+                mainWindow.changeMenu(new Options(mainWindow));
             }
         });
         

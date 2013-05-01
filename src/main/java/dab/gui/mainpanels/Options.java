@@ -5,35 +5,30 @@
 package dab.gui.mainpanels;
 
 import dab.gui.application.MainWindow;
-import java.awt.Menu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 /**
  *
  * @author Aiste
  */
-public class Options extends JPanel{
-    MainWindow mainWindow;
-    
-    
-    
+public class Options extends JPopupMenu{
+    private MainWindow mainWindow;
+    private final int EASY = 1;
+    private final int NORMAL = 2;
+    private final int HARD = 3;
+
     public Options(MainWindow mw) {
         this.mainWindow = mw;
-     
-        
-        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
         
         JButton easy = new JButton("easy");
         easy.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
-                mainWindow.setDifficulty(1);
+                mainWindow.setDifficulty(EASY);
             }
         });
         
@@ -42,7 +37,7 @@ public class Options extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent e){
-                mainWindow.setDifficulty(2);
+                mainWindow.setDifficulty(NORMAL);
             }
         });
         
@@ -51,7 +46,7 @@ public class Options extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent e){
-                mainWindow.setDifficulty(3);
+                mainWindow.setDifficulty(HARD);
             }
         });
         
@@ -63,23 +58,22 @@ public class Options extends JPanel{
                 mainWindow.setMusic();
             }
         });
-        
-        JButton back = new JButton("back");
-        back.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e){
-                mainWindow.showMenu();
-            }
-        });
-        
+           
         JButton help = new JButton("help");
          help.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
-               mainWindow.showHelp();
+               mainWindow.changeMenu(new HelpScreen(mainWindow));
+            }
+        });
+         
+        JButton back = new JButton("back");
+        back.addActionListener(new ActionListener() {
 
+            @Override
+            public void actionPerformed(ActionEvent e){
+                mainWindow.changeMenu(new MainMenu(mainWindow));
             }
         });
         
@@ -89,15 +83,7 @@ public class Options extends JPanel{
       add(hard);
       add(sound);
       add(back);
-      
-        
+   
     }
-    
-    
-    
-    
-    
-    
-    
-    
+      
 }

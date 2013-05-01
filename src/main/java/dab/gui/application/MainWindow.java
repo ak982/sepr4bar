@@ -8,10 +8,10 @@ import dab.engine.simulator.Simulator;
 import dab.gui.intro.DaIntro;
 import dab.gui.mainpanels.DaMMenu;
 import dab.gui.mainpanels.GameInterface;
-import dab.gui.mainpanels.HelpScreen;
-import dab.gui.mainpanels.Options;
+import dab.gui.mainpanels.MainMenu;
 import java.awt.Component;
 import javax.swing.JFrame;
+import javax.swing.JPopupMenu;
 
 
 /**
@@ -36,13 +36,11 @@ public class MainWindow extends JFrame {
     }
     private DaMMenu menu;
     private Component currentComponent = null;
-    private Options options;
-    private HelpScreen helpScreen;
     private int difficulty;
     private boolean music;
     private Simulator simulator;
     private GameInterface gameInterface;
-
+    
     public MainWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1366, 768);
@@ -50,10 +48,11 @@ public class MainWindow extends JFrame {
         difficulty = 1;
         // create the menu
         menu = new DaMMenu(this);
-        options = new Options(this);
-        helpScreen = new HelpScreen(this);
-        music = true;
-        
+        music = true;      
+    }
+    
+    public void showMainMenu(){
+        changeToPanel(new MainMenu(this));
     }
 
     public void showIntro() {
@@ -66,15 +65,6 @@ public class MainWindow extends JFrame {
         menu.showMenu();
     }
     
-    public void showOptions() {
-        changeToPanel(options);
-    }
-
-      public void showHelp() {
-          
-        changeToPanel(helpScreen);
-    }
-    
     public void startSinglePlayer() {
         simulator = new Simulator();
         simulator.setUsername("willy-wanka");
@@ -82,6 +72,7 @@ public class MainWindow extends JFrame {
     }
     
     public void startSinglePlayer(Simulator sim) {
+        simulator = sim;
         gameInterface = new GameInterface(this, sim, true);
         changeToPanel(gameInterface);
     }
@@ -108,11 +99,15 @@ public class MainWindow extends JFrame {
         
         // put the new component in focus
         p.requestFocusInWindow();
-
+    }
+    
+    public void changeMenu(JPopupMenu menu){
+        menu.show(this, 300, 300);
     }
     
     public void setDifficulty (int i) {      
         if(simulator != null){   
+            
             simulator.setDifficulty(i);
         }
         difficulty = i;       

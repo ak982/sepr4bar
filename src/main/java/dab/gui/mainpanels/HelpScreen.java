@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 /**
  * Displays the Help Screen. Image is located in Resources/Menu/
@@ -19,7 +20,7 @@ import javax.swing.JPanel;
  *
  */
 
-public class HelpScreen extends JPanel {
+public class HelpScreen extends JPopupMenu {
 
     private MainWindow mainWindow;
     
@@ -33,16 +34,14 @@ public class HelpScreen extends JPanel {
        helpImage.setIcon(new ImageIcon("resources/menu/HelpImage.png"));
        helpImage.setBounds(0, 0, 700, 500);
        setVisible(true);
-        JButton back = new JButton("Back");
-        back.setBackground(Color.PINK);
-        System.out.println("help");
-        back.addActionListener(new ActionListener() {
+       JButton back = new JButton("Back");
+       back.setBackground(Color.PINK);
+       back.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                //go back to the caller (main menu) when pressed
-                mainWindow.showOptions();
+                //go back to the caller (options) when pressed
+                mainWindow.changeMenu(new Options(mainWindow));
             }
         });
         back.setBounds(10, 10, 70, 30);
