@@ -62,6 +62,7 @@ public class MainWindow extends JFrame {
 
     public void showMenu() {
         changeToPanel(menu);
+        menu.showMenu();
     }
     
     public void showOptions() {
