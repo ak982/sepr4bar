@@ -88,10 +88,6 @@ public class GameInterface extends JPanel implements KeyListener {
             music.start();
         }
         
-        
-        //setMinimumSize(new Dimension(MAX_SIZE_WIDTH, MAX_SIZE_HEIGHT));
-        //setLayout(new BorderLayout(0, 0));
-        
         setupPanels();
         setupTimer();
         setupKeyboardActions();
@@ -140,19 +136,14 @@ public class GameInterface extends JPanel implements KeyListener {
         
         topLevelSplitPane.setLeftComponent(leftPane);
         topLevelSplitPane.setRightComponent(rightPane);
-        add(topLevelSplitPane);
-        
-       
+        add(topLevelSplitPane);  
     }
 
     private void setupKeyboardActions() {
         // register an escape press listener
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         EscapeListener el = new EscapeListener();
-        registerKeyboardAction(el, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        
-      
-    
+        registerKeyboardAction(el, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);   
     }
 
     @Override
@@ -195,11 +186,9 @@ public class GameInterface extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-    } //Do nothing
+    public void keyTyped(KeyEvent e) {   } //Do nothing
     
-    
-    
+
     private void showGameOverScreen() {
         animator.stop();
         ImageIcon icon = new ImageIcon("resources/endGame.gif");
@@ -250,8 +239,7 @@ public class GameInterface extends JPanel implements KeyListener {
                     gamePanel.updateComponents();
                     buttonPanel.update();
                     handleMusic();
-                    
-                    
+                          
                     // soon there will be no need to screenUpdate
                     //screenUpdate();
                     //repaint();
@@ -262,7 +250,6 @@ public class GameInterface extends JPanel implements KeyListener {
                     music.interrupt();
                     showGameOverScreen();
                 }
-
             }
         };
         //game loop updates every 100 ms
@@ -278,8 +265,7 @@ public class GameInterface extends JPanel implements KeyListener {
             } 
         } catch (IllegalThreadStateException e) {
             //do nothing
-        }
-        
+        }       
     }
 
     public static void rewrite() {
@@ -341,174 +327,9 @@ public class GameInterface extends JPanel implements KeyListener {
         public void actionPerformed(ActionEvent e) {
             // pause the game loop when esc is pressed
             animator.stop();
-           
-            
-            JMenuItem options = new JMenuItem();
-            options.setIcon(new ImageIcon("resources/menu/NewGameButton.png"));
-            options.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    mainWindow.showOptions();
-                }
-            });
-            
-            
-            
-            JMenuItem new_game = new JMenuItem();
-            new_game.setOpaque(true);
-            new_game.setIconTextGap(0);
-            new_game.setContentAreaFilled(false);
-            new_game.setIcon(new ImageIcon("resources/menu/NewGameButton.png"));
-            new_game.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    //initialize a new game with the old username
-                    String old_username = simulator.getUsername();
-                    Simulator new_simulator = new Simulator();
-                    new_simulator.setUsername(old_username);
-                    music.interrupt();
-                    mainWindow.startSinglePlayer(new_simulator);
-                }
-            });
-            JMenuItem save_menu = new JMenuItem();
-            save_menu.setOpaque(true);
-            save_menu.setIconTextGap(0);
-            save_menu.setContentAreaFilled(false);
-            save_menu.setIcon(new ImageIcon("resources/menu/saveButton.png"));
-            save_menu.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        simulator.saveGame();
-                        JOptionPane.showMessageDialog(null, "Game Saved");
-                    } catch (JsonProcessingException e1) {
-                        e1.printStackTrace();
-                    }
 
-                }
-            });
-            JMenuItem load_menu = new JMenuItem();
-            load_menu.setOpaque(true);
-            load_menu.setIconTextGap(0);
-            load_menu.setContentAreaFilled(false);
-            load_menu.setIcon(new ImageIcon("resources/menu/LoadGameButton.png"));
-            load_menu.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    ArrayList<String> saved_games_array = new ArrayList<String>();
-                    String[] saved_games = FileSystem.listSaveGames();
-                    for (String game : saved_games) {
-                        String[] bits = game.split("\\.");
-                        game = game.replace(".", "?");
-                        Timestamp t = new Timestamp(Long.parseLong(bits[3]));
-                        Date d = new Date(t.getTime());
-                        SimpleDateFormat date = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
-                        //an array of the saved games in the format : username/date of save
-                        saved_games_array.add(bits[2] + " " + date.format(d));
-                    }
-                    JMenuItem save_menu = new JMenuItem();
-                    save_menu.setOpaque(true);
-                    save_menu.setIconTextGap(0);
-                    save_menu.setContentAreaFilled(false);
-                    save_menu.setIcon(new ImageIcon("resources/menu/LoadGameButton.png"));
-
-                    //a jlist of saved games to be used
-                    final JList sampleJList = new JList(saved_games_array.toArray(new String[saved_games_array.size()]));
-                    sampleJList.setVisibleRowCount(8);
-                    //make a the jlist scrollable
-                    JScrollPane listPane = new JScrollPane(sampleJList);
-
-                    final JPopupMenu popupMenu = new JPopupMenu();
-
-                    popupMenu.setBorder(BorderFactory.createEmptyBorder());
-                    JButton load = new JButton("Load");
-                    load.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            //load the selected game
-                            simulator.loadGame(sampleJList.getSelectedIndex());
-                            popupMenu.setVisible(false);
-                            //set the control rods in the control panel to the new rods value
-                            buttonPanel.setSliderValue(2 * Integer.parseInt(simulator.controlRodPosition().toString()));
-                            animator.start();
-                        }
-                    });
-                    getParent().add(popupMenu);
-                    popupMenu.add(listPane);
-                    popupMenu.add(load);
-                    add(popupMenu);
-                    popupMenu.show(GameInterface.this, 650, 350);
-                    animator.stop();
-                }
-            });
-
-            /*
-             * The item on the popup menu which will offer information on how to play the game.
-             * The settings draw the button.
-             */
-            JMenuItem help_menu = new JMenuItem();
-            help_menu.setOpaque(true);
-            help_menu.setIconTextGap(0);
-            help_menu.setContentAreaFilled(false);
-            help_menu.setIcon(new ImageIcon("resources/menu/HelpButton.png"));
-
-            help_menu.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    //pause game loop
-                    animator.stop();
-                    final JPanel helpPanel = new JPanel();
-                    helpPanel.setLayout(new BorderLayout());
-                    JLabel helpImage = new JLabel();
-                    helpImage.setIcon(new ImageIcon("resources/menu/HelpImage.png"));
-                    helpImage.setBounds(0, 0, 700, 500);
-                    setVisible(false);
-                    JButton back = new JButton("Back");
-                    back.setBackground(Color.PINK);
-                    back.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            // go back to the game and resume the game loop
-                            setVisible(true);
-                            helpPanel.setVisible(false);
-                            animator.start();
-                        }
-                    });
-                    back.setBounds(10, 10, 70, 30);
-                    helpPanel.add(back, BorderLayout.CENTER);
-                    helpPanel.add(helpImage, BorderLayout.CENTER);
-                    getParent().add(helpPanel);
-                    getParent().setVisible(true);
-                }
-            });
-            JMenuItem exit_menu = new JMenuItem();
-            exit_menu.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mainWindow.close();
-                }
-            });
-            exit_menu.setIconTextGap(0);
-            exit_menu.setOpaque(true);
-            exit_menu.setContentAreaFilled(false);
-            exit_menu.setIcon(new ImageIcon("resources/menu/QuitButton.png"));
-            JPopupMenu popupMenu = new JPopupMenu() {
-                
-            };
-            popupMenu.setBorder(BorderFactory.createEmptyBorder());
-            popupMenu.menuSelectionChanged(false);
-            //add all of the menu items to the pop up menu
-            popupMenu.add(new_game);
-            popupMenu.add(save_menu);
-            popupMenu.add(load_menu);
-            popupMenu.add(help_menu);
-            popupMenu.add(exit_menu);
-            popupMenu.add(options);
-            add(popupMenu);
-
-            //show the popupMenu (when esc is pressed)
-            popupMenu.show(GameInterface.this, 300, 200);
-
+            MainMenu popupMenu = new MainMenu(mainWindow);
+            popupMenu.show(GameInterface.this, 300, 300);
             popupMenu.addPopupMenuListener(new PopupMenuListener() {
                 @Override
                 public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
@@ -524,10 +345,10 @@ public class GameInterface extends JPanel implements KeyListener {
                 public void popupMenuCanceled(PopupMenuEvent arg0) {
                 }
             });
-        }
-        
+        }  
+    }
     
-    
-        
+    public void stopMusic() {
+        music.interrupt();
     }
 }

@@ -16,14 +16,7 @@ import javax.swing.JPanel;
 
 
 /**
- * The main menu for the game, has new game, load game, two_player and quit buttons.
- * New game points onto an instance of Player.
- * Load Game displays a menu of existing save games, and loads a selected game.
- * Help ...
- * Quit exits the JRE.
- * 
- * @author Team Haddock
- *
+ * The panel to be used as a background for mainMenu
  */
 public class DaMMenu extends JPanel {
     MainMenu mainMenu;

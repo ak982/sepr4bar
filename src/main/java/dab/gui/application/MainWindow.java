@@ -41,6 +41,7 @@ public class MainWindow extends JFrame {
     private int difficulty;
     private boolean music;
     private Simulator simulator;
+    private GameInterface gameInterface;
 
     public MainWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -81,7 +82,8 @@ public class MainWindow extends JFrame {
     }
     
     public void startSinglePlayer(Simulator sim) {
-        changeToPanel(new GameInterface(this, sim, true));
+        gameInterface = new GameInterface(this, sim, true);
+        changeToPanel(gameInterface);
     }
     
     public void close() {
@@ -91,7 +93,8 @@ public class MainWindow extends JFrame {
 
     public void startTwoPlayer() {
         simulator = new Simulator();
-        changeToPanel(new GameInterface(this, simulator, false));
+        gameInterface = new GameInterface(this, simulator, false);
+        changeToPanel(gameInterface);
     }
 
     private void changeToPanel(Component p) {
@@ -125,5 +128,11 @@ public class MainWindow extends JFrame {
     
     public boolean getMusic(){
         return music;
+    }
+    
+    public void stopMusic(){
+        if(gameInterface != null) {
+            gameInterface.stopMusic();
+        }
     }
 }
