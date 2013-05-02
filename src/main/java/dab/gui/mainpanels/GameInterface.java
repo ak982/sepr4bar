@@ -1,11 +1,9 @@
 package dab.gui.mainpanels;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import dab.bigBunny.BunnyController;
 import dab.bigBunny.Environment;
 import dab.bigBunny.HitBoundsController;
 import dab.bigBunny.TwoPlayerScreen;
-import dab.engine.persistence.FileSystem;
 import dab.engine.simulator.CannotControlException;
 import dab.engine.simulator.FailMode;
 import dab.engine.simulator.GameOverException;
@@ -22,8 +20,6 @@ import dab.gui.gamepanel.GameOver;
 import dab.gui.gamepanel.GamePanel;
 import dab.gui.sound.Sounds;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -32,21 +28,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
@@ -328,7 +313,7 @@ public class GameInterface extends JPanel implements KeyListener {
             // pause the game loop when esc is pressed
             animator.stop();
 
-            MainMenu popupMenu = new MainMenu(mainWindow);
+            MainMenu popupMenu = new MainMenu(mainWindow, GameInterface.this);
             popupMenu.show(GameInterface.this, 300, 300);
             popupMenu.addPopupMenuListener(new PopupMenuListener() {
                 @Override

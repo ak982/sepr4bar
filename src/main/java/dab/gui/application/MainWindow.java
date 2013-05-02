@@ -11,6 +11,7 @@ import dab.gui.mainpanels.GameInterface;
 import dab.gui.mainpanels.MainMenu;
 import java.awt.Component;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 
@@ -37,6 +38,7 @@ public class MainWindow extends JFrame {
     private DaMMenu menu;
     private Component currentComponent = null;
     private int difficulty;
+    private final int DEFAULT_DIFFICULTY =1;    //to check with the one in options
     private boolean music;
     private Simulator simulator;
     private GameInterface gameInterface;
@@ -45,15 +47,12 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1366, 768);
         
-        difficulty = 1;
+        difficulty = DEFAULT_DIFFICULTY;
         // create the menu
         menu = new DaMMenu(this);
         music = true;      
     }
     
-    public void showMainMenu(){
-        changeToPanel(new MainMenu(this));
-    }
 
     public void showIntro() {
         DaIntro intro = new DaIntro(this);
@@ -68,12 +67,14 @@ public class MainWindow extends JFrame {
     public void startSinglePlayer() {
         simulator = new Simulator();
         simulator.setUsername("willy-wanka");
-        startSinglePlayer(simulator);        
+        startSinglePlayer(simulator);
+        simulator.setDifficulty(difficulty);
     }
     
     public void startSinglePlayer(Simulator sim) {
         simulator = sim;
         gameInterface = new GameInterface(this, sim, true);
+        simulator.setDifficulty(difficulty);
         changeToPanel(gameInterface);
     }
     
@@ -85,6 +86,7 @@ public class MainWindow extends JFrame {
     public void startTwoPlayer() {
         simulator = new Simulator();
         gameInterface = new GameInterface(this, simulator, false);
+        simulator.setDifficulty(difficulty);
         changeToPanel(gameInterface);
     }
 
@@ -101,13 +103,12 @@ public class MainWindow extends JFrame {
         p.requestFocusInWindow();
     }
     
-    public void changeMenu(JPopupMenu menu){
-        menu.show(this, 300, 300);
+    public void changeMenu(JPopupMenu menu, JPanel invoker){
+        menu.show(invoker, 300, 300);
     }
     
     public void setDifficulty (int i) {      
-        if(simulator != null){   
-            
+        if(simulator != null){               
             simulator.setDifficulty(i);
         }
         difficulty = i;       

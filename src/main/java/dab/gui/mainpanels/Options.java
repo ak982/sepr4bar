@@ -8,7 +8,10 @@ import dab.gui.application.MainWindow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
+import javax.swing.JToggleButton;
 
 /**
  *
@@ -19,38 +22,51 @@ public class Options extends JPopupMenu{
     private final int EASY = 1;
     private final int NORMAL = 2;
     private final int HARD = 3;
+    private JPanel invoker;
+    private JToggleButton easy, normal, hard;
+    
 
-    public Options(MainWindow mw) {
+    public Options(MainWindow mw, final JPanel invoker) {
         this.mainWindow = mw;
+        this.invoker = invoker;
         
-        JButton easy = new JButton("easy");
+        
+        easy = new JToggleButton("easy");
+        normal = new JToggleButton("normal");
+        hard = new JToggleButton("hard");
+        setSelected();
+        
         easy.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
                 mainWindow.setDifficulty(EASY);
+                setSelected();              
             }
         });
         
-        JButton normal = new JButton("normal");
+        
         normal.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
                 mainWindow.setDifficulty(NORMAL);
+                setSelected(); 
             }
         });
         
-        JButton hard = new JButton("hard");
+        
         hard.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
                 mainWindow.setDifficulty(HARD);
+                setSelected(); 
             }
         });
         
-        JButton sound = new JButton("sound");
+        JToggleButton sound = new JToggleButton("sound");
+        sound.setSelected(mainWindow.getMusic());
         sound.addActionListener(new ActionListener() {
 
             @Override
@@ -64,7 +80,7 @@ public class Options extends JPopupMenu{
 
             @Override
             public void actionPerformed(ActionEvent e){
-               mainWindow.changeMenu(new HelpScreen(mainWindow));
+               mainWindow.changeMenu(new HelpScreen(mainWindow, invoker), invoker);
             }
         });
          
@@ -73,7 +89,7 @@ public class Options extends JPopupMenu{
 
             @Override
             public void actionPerformed(ActionEvent e){
-                mainWindow.changeMenu(new MainMenu(mainWindow));
+                mainWindow.changeMenu(new MainMenu(mainWindow, invoker), invoker);
             }
         });
         
@@ -83,7 +99,21 @@ public class Options extends JPopupMenu{
       add(hard);
       add(sound);
       add(back);
-   
-    }
+     
+     }
       
+    private void setSelected(){
+      easy.setSelected(false);
+      normal.setSelected(false);
+      hard.setSelected(false);
+      if(mainWindow.getDifficulty()==EASY){
+          easy.setSelected(true);
+      } else if (mainWindow.getDifficulty() == NORMAL){
+          normal.setSelected(true);
+      } else {
+          hard.setSelected(true);
+      }
+      
+    }
+    
 }

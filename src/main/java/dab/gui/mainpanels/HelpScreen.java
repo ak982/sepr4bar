@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,10 +22,13 @@ import javax.swing.JPopupMenu;
 public class HelpScreen extends JPopupMenu {
 
     private MainWindow mainWindow;
+    private JPanel invoker;
     
-    public HelpScreen(MainWindow mw)
+    public HelpScreen(MainWindow mw, final JPanel invoker)
     {
         this.mainWindow = mw;
+        this.invoker = invoker;
+       
         
         //initialize the help screen with back button and an image
        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
@@ -36,17 +38,20 @@ public class HelpScreen extends JPopupMenu {
        setVisible(true);
        JButton back = new JButton("Back");
        back.setBackground(Color.PINK);
+       requestFocus();
        back.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 //go back to the caller (options) when pressed
-                mainWindow.changeMenu(new Options(mainWindow));
+                mainWindow.changeMenu(new Options(mainWindow, invoker), invoker);
+                
             }
         });
         back.setBounds(10, 10, 70, 30);
         add(back, BorderLayout.CENTER);
         add(helpImage, BorderLayout.CENTER);
+        
         
     }
 

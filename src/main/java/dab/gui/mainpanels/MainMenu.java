@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 /**
@@ -18,9 +19,13 @@ import javax.swing.JPopupMenu;
  */
 public class MainMenu extends JPopupMenu{
     private MainWindow mainWindow;
+    private JPanel invoker;
 
-    public MainMenu(MainWindow mw) {
+    public MainMenu(MainWindow mw, final JPanel invoker) {
         this.mainWindow = mw;
+        this.invoker = invoker;
+        
+        System.out.println(this.getInvoker());
               
         JButton new_game = new JButton(new ImageIcon("resources/menu/NewGameButton.png") {});           
         new_game.addActionListener(new ActionListener() {
@@ -51,7 +56,7 @@ public class MainMenu extends JPopupMenu{
 
             @Override
             public void actionPerformed(ActionEvent e){               
-                mainWindow.changeMenu(new Options(mainWindow));
+                mainWindow.changeMenu(new Options(mainWindow, invoker), invoker);
             }
         });
         
