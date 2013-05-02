@@ -46,7 +46,7 @@ public class Water extends Matter {
     // approximate function in kg / m^3
     // see http://www.engineeringtoolbox.com/water-thermal-properties-d_162.html
     // for details
-    private double getDensity() {
+    public double getDensity() {
         final double BOILING_DENSITY = Constants.WATER_NORMAL_DENSITY - (Constants.NORMAL_BOILING_POINT - Constants.NORMAL_FREEZING_POINT) / 2;
         if (getTemperature() < Constants.NORMAL_BOILING_POINT) {
             if (getTemperature() < Constants.NORMAL_FREEZING_POINT) {
@@ -96,6 +96,11 @@ public class Water extends Matter {
     @Override
     double getSpecificHeat() {
         return Constants.SPECIFIC_HEAT_WATER;
+    }
+    
+    @Override
+    public String toString() {
+        return "Wtr: " + super.toString();
     }
     
 }

@@ -89,4 +89,9 @@ public abstract class Matter {
     }
 
     public abstract double getMolarMass();
+    
+    @Override
+    public String toString() {
+        return String.format("PNo: %d\tM: %f\tT: %f\t", getParticleNr(), getMass(), getTemperature());
+    }
 }

@@ -34,6 +34,9 @@ public class VisualTestBench implements ActionListener {
                 vtb.start();
             }
         });
+        //VisualTestBench vtb = new VisualTestBench();
+        //vtb.start();
+        //System.out.println(vtb.reactor);
     }
     
     Timer timer;
@@ -49,10 +52,11 @@ public class VisualTestBench implements ActionListener {
         
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        reactor = new Reactor(1);
-        condenser = new Condenser(10);
+        reactor = new Reactor(1, 1);
+        condenser = new Condenser(10, 2.5);
+        condenser.toggleDebugMode();
         turbine = new Turbine();
-        pump = new Pump(10000);
+        pump = new Pump(1000);
         
         reactor.setOutputComponent(turbine);
         turbine.setOutputComponent(condenser);
@@ -86,6 +90,21 @@ public class VisualTestBench implements ActionListener {
         
         
         //System.exit(0);
+        /*for (int i = 1; i < 400; ++i) {
+            reactor.step();
+            condenser.step();
+        }
+        condenser.toggleDebugMode();
+        for (int i = 1; i < 10; ++i) {
+            System.out.println(i);
+            System.out.println(reactor.toString());
+            System.out.println(condenser.toString());
+            reactor.step();
+            System.out.println(reactor.toString());
+            System.out.println(condenser.toString());
+            condenser.step();
+        }*/
+        
     }
     
     public void start() {
@@ -95,8 +114,11 @@ public class VisualTestBench implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         reactor.step();
+        System.out.println(reactor);
+        System.out.println(condenser);
         condenser.step();
-        
+        System.out.println(reactor);
+        System.out.println(condenser);
         
         System.out.println("Turbine: " + turbine.getLastEnergy());
         System.out.println(String.format("RT: %f\tRP: %f\tRPartS: %d\tRPartW: %d\tRTempW: %f", 

@@ -24,6 +24,6 @@ public class Constants {
     public static final double NORMAL_STEAM_PARTICLES_PER_VOLUME = Constants.ATMOSPHERIC_PRESSURE / (Constants.BOLTZMAN_CONSTANT * Constants.ROOM_TEMP);
     public static final double SPECIFIC_HEAT_WATER = 4.2; // kj / kgK;
     public static final double SPECIFIC_HEAT_STEAM = 2;
-    public static final int    TICKS_PER_SECOND = 10;
+    public static final int    TICKS_PER_SECOND = 5;
     
 }

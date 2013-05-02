@@ -64,6 +64,10 @@ public class Steam extends Matter {
         return Constants.MOLAR_MASS;
     }
     
+    @Override
+    public String toString() {
+        return "Stm " + super.toString();
+    }
 
     
 }

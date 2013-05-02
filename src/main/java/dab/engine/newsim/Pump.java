@@ -25,8 +25,8 @@ public class Pump extends Component {
     
     @Override
     protected HydraulicState getHydroState() {
-        HydraulicState hs = getOutputComponent().getHydroState();
-        return new HydraulicState(hs.getPressure() - power, hs.getCompressibleVolume());
+        ContainerHydroState chs = (ContainerHydroState)getOutputComponent().getHydroState();
+        return new ContainerHydroState(chs.getPressure() - power, chs.getCompressibleVolume(), chs.getArea());
     }
 
     @Override

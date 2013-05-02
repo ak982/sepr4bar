@@ -13,6 +13,7 @@ import dab.engine.simulator.views.FailableComponentView;
  */
 public abstract class Component {
     protected Component outputComponent = null;
+    protected boolean debugMode = false;
     
     public Component getOutputComponent() {
         return outputComponent;
@@ -20,6 +21,11 @@ public abstract class Component {
     
     public void setOutputComponent(Component c) {
         this.outputComponent = c;
+    }
+    
+    public boolean toggleDebugMode() {
+        debugMode = !debugMode;
+        return debugMode;
     }
     
     protected abstract HydraulicState getHydroState();

@@ -15,12 +15,13 @@ import dab.engine.utilities.Temperature;
 public abstract class Container extends Component  {
     protected Water water;
     protected Steam steam;
-    protected double volume;
+    protected double area, height;
     
-    public Container(Water water, Steam steam, double volume) {
-        this.volume = volume;
-        this.water = water;
-        this.steam = steam;
+    public Container(Water water, Steam steam, double area, double height) {
+        this.water  = water;
+        this.steam  = steam;
+        this.area   = area;
+        this.height = height;
     }
     
     public double getPressure() {
@@ -35,8 +36,15 @@ public abstract class Container extends Component  {
         return steam;
     }
     
+    public double getTotalVolume() {
+        return height * area;
+    }
+    
     public double getCompressibleVolume() {
-        return volume - water.getVolume();
+        double vol = getTotalVolume() - water.getVolume();
+        if (vol < 0)
+            throw new RuntimeException("Can not have negative volumes");
+        return vol;
     }
     
     public double getTemperature() {
@@ -49,13 +57,11 @@ public abstract class Container extends Component  {
      * @return the pressure at the bottom of the container (steam pressure + hydrostatic pressure)
      */
     public double getBottomPressure() {
-        return getPressure() + water.getHydrostaticPressure(1);
+        return getPressure() + water.getHydrostaticPressure(area);
     }
     
-    protected double getEqualizedPressure(HydraulicState hydroValue) {
-        double v1 = getCompressibleVolume(), v2 = hydroValue.getCompressibleVolume();
-        double p1 = getPressure(), p2 = hydroValue.getPressure();
-        return (v1 * p1 + v2 * p2) / (v1 + v2);
+    @Override
+    public String toString() {
+        return String.format("BP: %f\t%s%s", getBottomPressure(), steam.toString(), water.toString());
     }
-    
 }
