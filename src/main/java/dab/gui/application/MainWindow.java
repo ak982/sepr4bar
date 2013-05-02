@@ -11,6 +11,8 @@ import dab.gui.mainpanels.GameInterface;
 import dab.gui.mainpanels.MainMenu;
 import java.awt.Component;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
@@ -60,8 +62,7 @@ public class MainWindow extends JFrame {
     }
 
     public void showMenu() {
-        changeToPanel(menu);
-        menu.showMenu();
+        changeToPanel(menu);      
     }
     
     public void startSinglePlayer() {
@@ -103,8 +104,8 @@ public class MainWindow extends JFrame {
         p.requestFocusInWindow();
     }
     
-    public void changeMenu(JPopupMenu menu, JPanel invoker){
-        menu.show(invoker, 300, 300);
+    public void changeMenu(JPanel menu, JPanel invoker){
+        menu.setVisible(true);
     }
     
     public void setDifficulty (int i) {      

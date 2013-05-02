@@ -6,10 +6,14 @@ package dab.gui.mainpanels;
 
 import dab.engine.simulator.Simulator;
 import dab.gui.application.MainWindow;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
@@ -17,17 +21,21 @@ import javax.swing.JPopupMenu;
  *
  * @author Aiste
  */
-public class MainMenu extends JPopupMenu{
+public class MainMenu extends JPanel{
     private MainWindow mainWindow;
     private JPanel invoker;
 
     public MainMenu(MainWindow mw, final JPanel invoker) {
+        
+        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS)); 
+        setLocation(300, 300);
         this.mainWindow = mw;
         this.invoker = invoker;
-        
-        System.out.println(this.getInvoker());
+        setVisible(true);
+      
               
-        JButton new_game = new JButton(new ImageIcon("resources/menu/NewGameButton.png") {});           
+        JButton new_game = new JButton(new ImageIcon("resources/menu/NewGameButton.png") {});    
+        
         new_game.addActionListener(new ActionListener() {
 
             @Override
@@ -69,10 +77,13 @@ public class MainMenu extends JPopupMenu{
             }
         });
    
+        
         add(new_game);
         add(two_player);
         add(options);
         add(exit_game);
+        
+       
         
         /*
 

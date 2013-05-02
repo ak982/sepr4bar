@@ -8,6 +8,8 @@ import dab.gui.application.MainWindow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
@@ -17,7 +19,7 @@ import javax.swing.JToggleButton;
  *
  * @author Aiste
  */
-public class Options extends JPopupMenu{
+public class Options extends JPanel{
     private MainWindow mainWindow;
     private final int EASY = 1;
     private final int NORMAL = 2;
@@ -89,7 +91,7 @@ public class Options extends JPopupMenu{
 
             @Override
             public void actionPerformed(ActionEvent e){
-                mainWindow.changeMenu(new MainMenu(mainWindow, invoker), invoker);
+                mainWindow.changeMenu(new MainMenu(mainWindow, invoker), invoker );
             }
         });
         

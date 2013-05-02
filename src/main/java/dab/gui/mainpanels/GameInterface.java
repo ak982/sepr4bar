@@ -307,7 +307,7 @@ public class GameInterface extends JPanel implements KeyListener, MouseListener 
         if (!animator.isRunning()) {
             animator.start();
         } else {
-            popupMenu.show(GameInterface.this, 300, 300);
+           // popupMenu.show(GameInterface.this, 300, 300);
             GameInterface.this.requestFocus(true);
             animator.stop();
         }

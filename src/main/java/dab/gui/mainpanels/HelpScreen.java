@@ -9,6 +9,8 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
@@ -19,7 +21,7 @@ import javax.swing.JPopupMenu;
  *
  */
 
-public class HelpScreen extends JPopupMenu {
+public class HelpScreen extends JPanel {
 
     private MainWindow mainWindow;
     private JPanel invoker;
