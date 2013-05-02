@@ -26,19 +26,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.KeyStroke;
 import javax.swing.Timer;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 
-public class GameInterface extends JPanel implements KeyListener {
+public class GameInterface extends JPanel implements KeyListener, MouseListener {
 
     private Simulator simulator;
     private MainWindow mainWindow;
@@ -75,11 +73,12 @@ public class GameInterface extends JPanel implements KeyListener {
         
         setupPanels();
         setupTimer();
-        setupKeyboardActions();
+     
         
         // rock and roll baby!
         animator.start();
         addKeyListener(this);      
+        addMouseListener(this);
     }
     
     private void setupPanels() {       
@@ -124,13 +123,6 @@ public class GameInterface extends JPanel implements KeyListener {
         add(topLevelSplitPane);  
     }
 
-    private void setupKeyboardActions() {
-        // register an escape press listener
-        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        EscapeListener el = new EscapeListener();
-        registerKeyboardAction(el, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);   
-    }
-
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
@@ -167,13 +159,15 @@ public class GameInterface extends JPanel implements KeyListener {
             case KeyEvent.VK_DOWN:
                 controller.stopBrake();
                 break;
+            case KeyEvent.VK_ESCAPE:
+                handelEscape();
+                break;
         }
     }
 
     @Override
     public void keyTyped(KeyEvent e) {   } //Do nothing
     
-
     private void showGameOverScreen() {
         animator.stop();
         ImageIcon icon = new ImageIcon("resources/endGame.gif");
@@ -306,34 +300,45 @@ public class GameInterface extends JPanel implements KeyListener {
         screenUpdate();
     }
 
-    class EscapeListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // pause the game loop when esc is pressed
-            animator.stop();
-
-            MainMenu popupMenu = new MainMenu(mainWindow, GameInterface.this);
+    private void handelEscape() {
+        // pause the game loop when esc is pressed
+        MainMenu popupMenu = new MainMenu(mainWindow, GameInterface.this);
+        
+        if (!animator.isRunning()) {
+            animator.start();
+        } else {
             popupMenu.show(GameInterface.this, 300, 300);
-            popupMenu.addPopupMenuListener(new PopupMenuListener() {
-                @Override
-                public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-                }
-
-                @Override
-                public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-                    //start the game loop when the in game pause menu is not visible
-                    animator.start();                 
-                }
-
-                @Override
-                public void popupMenuCanceled(PopupMenuEvent arg0) {
-                }
-            });
-        }  
+            GameInterface.this.requestFocus(true);
+            animator.stop();
+        }
     }
-    
+
     public void stopMusic() {
         music.interrupt();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+   
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+          System.out.println("click");
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        
     }
 }

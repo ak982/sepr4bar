@@ -67,7 +67,7 @@ public class DaMMenu extends JPanel implements KeyListener, MouseListener{
     @Override
     public void mousePressed(MouseEvent e) {
         showMenu();  
-        System.out.println("click");
+        
     }
 
     @Override
