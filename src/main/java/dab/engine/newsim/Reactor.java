@@ -17,7 +17,7 @@ import dab.engine.utilities.Temperature;
 public class Reactor extends Container {
 
     private static final double MIN_POWER = 1000;
-    private static final double MAX_POWER = 1000000;
+    private static final double MAX_POWER = 10000;
     Percentage rodPosition;
 
     public Reactor(double volume, double area) {
@@ -26,7 +26,7 @@ public class Reactor extends Container {
                 new Steam(Constants.ROOM_TEMP, (int) ((4 * volume / 10) * Constants.NORMAL_STEAM_PARTICLES_PER_VOLUME)),
                 area,
                 volume / area);
-        rodPosition = new Percentage(80);
+        rodPosition = new Percentage(17);
     }
 
     public void moveControlRods(Percentage extracted) {
@@ -37,9 +37,7 @@ public class Reactor extends Container {
         return rodPosition;
     }
 
-    // from 1000 (1MW) to 1001000 kj per second (1GW)
     private double getEnergyGenerated() {
-        //return 100;
         return (MIN_POWER + (MAX_POWER - MIN_POWER) * rodPosition.ratio()) / Constants.TICKS_PER_SECOND;
     }
 

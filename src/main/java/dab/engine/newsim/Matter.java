@@ -74,7 +74,7 @@ public abstract class Matter {
 
     public double energyNeededToTemperature(double temperature) {
         //neededEnergy = (boilingPtAtPressure - temperature.inKelvin()) * waterMass.inKilograms() * specificHeatOfWater;
-        // E = Temp * Mol * specificHeat
+        // E = Temp * mass * specificHeat
         return (temperature - getTemperature()) * getMass() * getSpecificHeat();
     }
 

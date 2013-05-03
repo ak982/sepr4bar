@@ -56,7 +56,7 @@ public class VisualTestBench implements ActionListener {
         condenser = new Condenser(10, 2.5);
         condenser.toggleDebugMode();
         turbine = new Turbine();
-        pump = new Pump(1000);
+        pump = new Pump(2500);
         
         reactor.setOutputComponent(turbine);
         turbine.setOutputComponent(condenser);
