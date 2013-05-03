@@ -200,12 +200,7 @@ public class PhysicalModel implements PlantController, PlantStatus {
     }
 
     /**
-     *
-     * @return minimum water mass for the reactor
-     */
-    public Mass reactorMinimumWaterMass() {
-        return reactor.minimumWaterMass();
-    }
+ 
 
     /**
      *
@@ -213,11 +208,6 @@ public class PhysicalModel implements PlantController, PlantStatus {
      */
     public Mass reactorMaximumWaterMass() {
         return reactor.maximumWaterMass();
-    }
-
-    @Override
-    public Percentage reactorMinimumWaterLevel() {
-        return reactor.minimumWaterLevel();
     }
 
     @Override
@@ -281,7 +271,7 @@ public class PhysicalModel implements PlantController, PlantStatus {
      * @return water leavel of the reactor
      */
     @Override
-    public Percentage reactorWaterLevel() {
+    public double reactorWaterLevel() {
         return reactor.waterLevel();
     }
 

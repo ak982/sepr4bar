@@ -216,6 +216,7 @@ public class Condenser extends FailableComponent implements CondenserView {
     public void repair() throws CannotRepairException {
         super.repair();
         initializeVariables();
+        System.out.println("repairing condenser");
     }
 
     /**
@@ -223,8 +224,8 @@ public class Condenser extends FailableComponent implements CondenserView {
      */
     private void initializeVariables() {
         pressure = pascals(101325);
-        waterMass = kilograms(0);
-        steamMass = kilograms(0);
+        //waterMass = kilograms(0);
+        //steamMass = kilograms(0);
         /*
          steamInputPort.mass = kilograms(0);
          reactorInputPort.mass = kilograms(0);

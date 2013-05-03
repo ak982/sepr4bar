@@ -5,7 +5,7 @@
 package dab.gui.intro;
 
 import dab.gui.application.MainWindow;
-import dab.gui.mainpanels.SinglePlayerInterface;
+import dab.gui.mainpanels.GameInterface;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;

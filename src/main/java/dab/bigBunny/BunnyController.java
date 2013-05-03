@@ -1,6 +1,6 @@
 package dab.bigBunny;
 
-import dab.engine.simulator.FailableComponent;
+import dab.engine.simulator.views.FailableComponentView;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -129,7 +129,7 @@ public class BunnyController {
         }
            
         //to check if intersectig with something - be that bounds or components       
-     //   newLocation = checkIntersects(newLocation);
+        newLocation = checkIntersects(newLocation);
         
         //let the bunny rotate if it was trying to (i.e. if arrows were pressed)
         rotate();
@@ -182,7 +182,7 @@ public class BunnyController {
        for (HittableComponent h : hitController.getHittableComponents()){
             if(h.getClass().getSimpleName().equals("Circle")){
                 newLocation = checkIntersectsCircle(newLocation, h);
-            } else{
+            } else{               
                 newLocation = checkIntersectsSquare(newLocation, h);
             }
        }
@@ -492,7 +492,7 @@ public class BunnyController {
         return thisOrientation;
     }
     
-    private void breakComponent(FailableComponent c){
+    private void breakComponent(FailableComponentView c){
         if(!environment.getHeadache()){       
             int damage = (int)(speed * HIT_DAMAGE);
             if (damage>MAX_DAMAGE) {damage = MAX_DAMAGE;}         

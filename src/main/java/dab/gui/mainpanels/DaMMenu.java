@@ -1,99 +1,32 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package dab.gui.mainpanels;
 
-/**
- *
- * @author eduard
- */
-
 import dab.gui.application.MainWindow;
-import dab.engine.simulator.Simulator;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.GridBagLayout;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 
 /**
- * The main menu for the game, has new game, load game, help and quit buttons.
- * New game points onto an instance of Player.
- * Load Game displays a menu of existing save games, and loads a selected game.
- * Help ...
- * Quit exits the JRE.
- * 
- * @author Team Haddock
- *
+ * The panel to be used as a background for menus before the 
+ * game starts
  */
-public class DaMMenu extends JPanel {
-    MainWindow mainWindow;
+public class DaMMenu extends JLayeredPane {
+    private MainMenu mainMenu;
+    private MainWindow mw;
     
-    public DaMMenu(MainWindow mw) {
-        this.mainWindow = mw;
+    
+    public DaMMenu(MainWindow mw) {        
+        //setLayout(new GridBagLayout());      
+       // setLayout(new BoxLayout(this,BoxLayout.Y_AXIS)); 
+        this.mw = mw;
+       
+        setVisible(true); 
         
-        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-        JButton new_game = new JButton("new game");
-        new_game.setContentAreaFilled(true);
-        new_game.setBorderPainted(true);
-        //new_game.setBorder(BorderFactory.createEmptyBorder());
-        //new_game.setContentAreaFilled(false);
-        //new_game.setBorderPainted(false);
-        //new_game.setAlignmentX(Component.CENTER_ALIGNMENT);
-        new_game.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e){
-                Simulator sim = new Simulator();
-                sim.setUsername("muah");
-                mainWindow.startSinglePlayer(sim);
-            }
-        });
-
-        /*JButton load_game = new JButton();
-        load_game.setContentAreaFilled(false);
-        load_game.setBorderPainted(false);
-        load_game.setAlignmentX(Component.CENTER_ALIGNMENT);*/
-
-
-        JButton help = new JButton("bunny rabbit");
-        help.setContentAreaFilled(true);
-        help.setBorderPainted(true);
-        //help.setAlignmentX(Component.CENTER_ALIGNMENT);
-        help.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e){
-                
-                mainWindow.startTwoPlayer();
-            }
-        });
-        /*
-        JButton exit_game = new JButton();
-        exit_game.setContentAreaFilled(false);
-        exit_game.setBorderPainted(false);
-        exit_game.setAlignmentX(Component.CENTER_ALIGNMENT);
-        exit_game.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e){
-                System.exit(0);
-            }
-        });
-        add(Box.createRigidArea(new Dimension(0,280)));
-        // add all of the buttons to the Menu
-        add(new_game);
-        add(Box.createRigidArea(new Dimension(0, 5)));
-        add(load_game);
-        add(help);
-        add(exit_game);
-        setBackground(Color.BLACK);
-        setVisible(true);*/
-        setBackground(Color.BLACK);
-        add(new_game);
-        add(help);
+        mainMenu = new MainMenu(mw, this);
+        mw.changeMenu(mainMenu, this);       
     }
+
 }

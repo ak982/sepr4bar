@@ -26,8 +26,11 @@ public abstract class FailableComponent implements FailableComponentView {
     @JsonProperty
     private int damage;
     @JsonProperty
-    private double maxDamage = 1;  //this should be different for two player mode
-    private double damageIncrease = 1;
+    private double maxDamage;  //this should be different for two player mode
+    @JsonProperty
+    private double damageIncrease;
+    private final int THE_BIGGEST_DAMAGE = 20;
+    private final int THE_MAX_DAMAGE = 15;
 
     /**
      * Constructor for the FailableComponent. Sets default percentage to 0 and a
@@ -52,8 +55,11 @@ public abstract class FailableComponent implements FailableComponentView {
         if (hasFailed()) {
             damage--;
             if (damage <= 0) {
-                maxDamage += damageIncrease;
+                if(maxDamage<THE_MAX_DAMAGE) {
+                    maxDamage += damageIncrease;
+                }
                 damage = 0;
+                repair();
             }
         }
     }
@@ -75,7 +81,9 @@ public abstract class FailableComponent implements FailableComponentView {
     public void fail(int i) {
         stepWear();
         damage = (int) (damage + i + maxDamage);
-
+        if(damage>=THE_BIGGEST_DAMAGE) {
+            damage = THE_BIGGEST_DAMAGE;
+        }
         System.out.println("damage" + damage);
     }
 

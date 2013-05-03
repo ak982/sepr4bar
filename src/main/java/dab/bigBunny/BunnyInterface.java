@@ -43,7 +43,8 @@ public class BunnyInterface extends JFrame implements KeyListener {
         
         
         //resolution = new Dimension(800, 600);
-        environment = new Environment(panelSize.width, panelSize.height);
+        environment = new Environment();
+        environment.setBounds(panelSize.width, panelSize.height);
         
         //this Has to be before the bunnyController initialisation
         hitBoundsController = new HitBoundsController();

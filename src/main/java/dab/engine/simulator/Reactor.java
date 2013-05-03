@@ -13,8 +13,7 @@ import dab.engine.simulator.views.ReactorView;
  */
 public class Reactor extends FailableComponent implements ReactorView {
 
-    private final Mass maximumWaterMass = kilograms(1000);
-    private final Mass minimumWaterMass = kilograms(800);
+    private Mass maximumWaterMass = kilograms(1000);
     private final Volume reactorVolume = cubicMetres(2);
     @JsonProperty
     private FuelPile fuelPile = new FuelPile();
@@ -39,6 +38,9 @@ public class Reactor extends FailableComponent implements ReactorView {
     private double boilingPtAtPressure;
     @JsonProperty
     private double neededEnergy;
+    
+    @JsonProperty
+    private boolean quenched;
 
     /**
      *
@@ -50,6 +52,7 @@ public class Reactor extends FailableComponent implements ReactorView {
         steamMass = kilograms(0);
         temperature = kelvin(350);
         pressure = pascals(101325);
+        quenched = false;
     }
 
     /**
@@ -90,8 +93,8 @@ public class Reactor extends FailableComponent implements ReactorView {
      *
      * @return water level percentage
      */
-    public Percentage waterLevel() {
-        return new Percentage((waterMass.inKilograms() / maximumWaterMass.inKilograms()) * 100);
+    public double waterLevel() {
+        return waterMass.inKilograms() ;
     }
 
     /**
@@ -115,7 +118,10 @@ public class Reactor extends FailableComponent implements ReactorView {
      * @throws GameOverException
      */
     public void step() throws GameOverException {
-
+        if(temperature.inKelvin() >=365) {
+            quench();
+        }
+        
         //System.out.println(inputPort.mass.inKilograms());
         if (steamMass.inKilograms() > inputPort.mass.inKilograms()) {
             steamMass = steamMass.minus(inputPort.mass);
@@ -242,13 +248,7 @@ public class Reactor extends FailableComponent implements ReactorView {
     public Mass maximumWaterMass() {
         return maximumWaterMass;
     }
-    /**
-     *
-     * @return minimum water Mass
-     */
-    public Mass minimumWaterMass() {
-        return minimumWaterMass;
-    }
+
     /**
      *
      * @param input Port
@@ -267,13 +267,6 @@ public class Reactor extends FailableComponent implements ReactorView {
         return new Percentage(0);
     }
 
-    /**
-     *
-     * @return minimum water level percentage
-     */
-    public Percentage minimumWaterLevel() {
-        return new Percentage((this.minimumWaterMass.inKilograms() / this.maximumWaterMass.inKilograms()) * 100);
-    }
 
     /**
      *
@@ -283,10 +276,24 @@ public class Reactor extends FailableComponent implements ReactorView {
     private void correctWaterMass() {
         if (waterMass.inKilograms() > maximumWaterMass.inKilograms()) {
             waterMass = maximumWaterMass;
+            System.out.println("correcting water level" + waterMass);
         }
         if (waterMass.inKilograms() < 0) {
             waterMass = kilograms(0);
         }
+    }
+    
+    public void quench(){
+        if(!quenched){
+            maximumWaterMass = kilograms(1500); 
+            waterMass = waterMass.plus(kilograms(500));
+            temperature = new Temperature(300);
+            System.out.println("QUENCHED " + maximumWaterMass + " and water mass " + waterMass );
+        }
+        
+        quenched = true;
+        
+        
     }
 }
 

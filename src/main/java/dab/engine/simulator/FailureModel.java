@@ -6,7 +6,6 @@ import dab.engine.utilities.Percentage;
 import dab.engine.utilities.Pressure;
 import dab.engine.utilities.Temperature;
 import static dab.engine.utilities.Units.percent;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -58,10 +57,6 @@ public class FailureModel implements PlantController, PlantStatus {
             PlantStatus plantStatus) {
         this.controller = plantController;
         this.status = plantStatus;
-       // onePlayerMode = controller.getPlayerMode();
-        onePlayerMode = true; //THIS IS TEMP FOR TESTING. use above or sth else to set mode
-        //difficulty = controller.getDifficulty();
-        difficulty = 1; 
         setDamagesToComponents();
     }
 
@@ -73,10 +68,10 @@ public class FailureModel implements PlantController, PlantStatus {
      */
     public void step() throws GameOverException {
         controller.step(1);
-        //failStateCheck();
-        //checkReactorWaterLevel();
-        //checkCondenserPressure();
-        //checkTurbineFailure();
+        failStateCheck();
+        checkCondenserPressure();
+        checkTurbineFailure();
+        
     }
 
     @Override
@@ -201,7 +196,7 @@ public class FailureModel implements PlantController, PlantStatus {
     }
 
     @Override
-    public Percentage reactorWaterLevel() {
+    public double reactorWaterLevel() {
         return status.reactorWaterLevel();
     }
 
@@ -236,11 +231,6 @@ public class FailureModel implements PlantController, PlantStatus {
     }
 
     @Override
-    public Percentage reactorMinimumWaterLevel() {
-        return status.reactorMinimumWaterLevel();
-    }
-
-    @Override
     public void failCondenser() {
         controller.failCondenser();
     }
@@ -258,21 +248,6 @@ public class FailureModel implements PlantController, PlantStatus {
     @Override
     public ArrayList<FailableComponent> components() {
         return status.components();
-    }
-
-    /**
-     * Fail reactor according to water level
-     */
-    private void checkReactorWaterLevel() {
-        if (status.reactorWaterLevel().points() < status.reactorMinimumWaterLevel().points()) {
-            // System.out.println(numberOfTimesWaterLevelIsTooLow);
-            numberOfTimesWaterLevelIsTooLow += 1;
-            if (numberOfTimesWaterLevelIsTooLow > reactorOverheatThreshold) {
-                controller.failReactor();
-            }
-        } else {
-            numberOfTimesWaterLevelIsTooLow = 0;
-        }
     }
 
     /**
@@ -392,5 +367,13 @@ public class FailureModel implements PlantController, PlantStatus {
      */
     public SoftFailReport getSoftFailReport() {
         return lastFailReport.getCopy();
+    }
+    
+    public void setDifficulty(int i) {
+        difficulty = i;
+    }
+    
+    public void setPlayerMode(boolean onePlayerMode){
+        this.onePlayerMode = onePlayerMode;
     }
 }

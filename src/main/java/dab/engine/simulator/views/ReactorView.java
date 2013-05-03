@@ -16,9 +16,8 @@ public interface ReactorView extends FailableComponentView {
     public void moveControlRods(Percentage extracted);
     public Percentage controlRodPosition();
     
-    public Percentage waterLevel();
+    public double waterLevel();
     public Temperature temperature();
     public Pressure pressure();
-    
-    public Percentage minimumWaterLevel();
+   
 }

@@ -7,19 +7,16 @@ import dab.engine.utilities.Percentage;
 import dab.engine.utilities.Pressure;
 import dab.engine.utilities.Temperature;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dab.engine.simulator.views.CondenserView;
-import dab.engine.simulator.views.FailableComponentView;
 import dab.engine.simulator.views.PumpView;
 import dab.engine.simulator.views.ReactorView;
 import dab.engine.simulator.views.TurbineView;
 import dab.engine.simulator.views.ValveView;
-import java.util.HashMap;
 
 
 /**
@@ -35,12 +32,14 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
 
     private PhysicalModel physicalModel;
     private FailureModel failureModel;
-    private String userName;
+    private String userName, userName2;
+    private int difficulty;
 
     public Simulator() {
         physicalModel = new PhysicalModel();
         failureModel = new FailureModel(physicalModel, physicalModel);
         userName = "";
+        userName2 = "";
     }
     
     public TurbineView getTurbine(){
@@ -77,6 +76,10 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
     @Override
     public void setUsername(String userName) {
         this.userName = userName;
+    }
+    
+    public void setUsername2(String userName2){
+        this.userName2 = userName2;
     }
 
     /**
@@ -259,7 +262,7 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
      * @return water level percentage
      */
     @Override
-    public Percentage reactorWaterLevel() {
+    public double reactorWaterLevel() {
         return failureModel.reactorWaterLevel();
     }
 
@@ -306,15 +309,6 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
     @Override
     public Percentage condenserWaterLevel() {
         return failureModel.condenserWaterLevel();
-    }
-
-    /**
-     *
-     * @return minimum water level percentage
-     */
-    @Override
-    public Percentage reactorMinimumWaterLevel() {
-        return failureModel.reactorMinimumWaterLevel();
     }
 
     /**
@@ -378,5 +372,18 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
     @Override
     public String getUsername() {
         return userName;
+    }
+    
+     
+    public String getUsername2(){
+        return userName2;
+    }
+    
+    public void setDifficulty(int i){
+        failureModel.setDifficulty(i);
+    }
+    
+    public void setPlayerMode(boolean onePlayerMode){
+        failureModel.setPlayerMode(onePlayerMode);
     }
 }

@@ -25,19 +25,23 @@ public class Environment {
     private int sfTime, sfCantFailTime;
     private boolean headache;
     private int headacheTime;
-    private final int DEFAULT_HEADACHE_TIME = 50;
+    private final int DEFAULT_HEADACHE_TIME = 100;
 
-    public Environment(int width, int height) {
+    public Environment() {
         slimes = new TemporaryObjectList<>();
         bullets = new TemporaryObjectList<>();
-        this.width = width;
-        this.height = height;
+        
         softwareFailure = false;
         sfTime = 0;
         sfCantFailTime = 0;
 
         headache = false;
         headacheTime = 0;
+    }
+    
+    public void setBounds(int width, int height){
+        this.width = width;
+        this.height = height;
     }
 
     // idea: keep them sorted them by freshness
