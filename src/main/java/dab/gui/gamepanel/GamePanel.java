@@ -12,18 +12,22 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 /**
  *
  * @author eduard
  */
-public abstract class GamePanel extends JPanel {
+public abstract class GamePanel extends JLayeredPane {
     protected Simulator simulator;
     protected BufferedImage background;
     protected ArrayList<UIComponent> uiComponents;
     
     public GamePanel(Simulator simulator) {
+        // setLayout(new BoxLayout(this,BoxLayout.Y_AXIS)); 
         this.simulator = simulator;
         uiComponents = new ArrayList<>();
         
@@ -35,6 +39,8 @@ public abstract class GamePanel extends JPanel {
         }
         //setBackground(Color.WHITE); // default color should be white
         //setOpaque(true);
+        
+        //add(new JLabel(background), DEFAULT_LAYER);
         Dimension panelSize = new Dimension(background.getWidth(), background.getHeight());
         setPreferredSize(panelSize);
         setMinimumSize(panelSize);
@@ -50,8 +56,10 @@ public abstract class GamePanel extends JPanel {
         uiComponents.add(new UIComponent(this, simulator.getCondenser(),    new Point(200, 400), "pump1.png", "pump2.gif"));
         uiComponents.add(new UIComponent(this, simulator.getReactor(),      new Point(200, 500), "pump1.png", "pump2.gif"));
         
+        
+        
         for (UIComponent c : uiComponents) {
-            add(c);
+            add(c, PALETTE_LAYER);
             c.setVisible(true);
         }
     }
@@ -69,4 +77,5 @@ public abstract class GamePanel extends JPanel {
         //paintComponents(g);
         g.drawImage(background, 0, 0, null);
     }
+    
 }

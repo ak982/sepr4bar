@@ -6,16 +6,13 @@ package dab.gui.mainpanels;
 
 import dab.engine.simulator.Simulator;
 import dab.gui.application.MainWindow;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 
 /**
  *
@@ -23,19 +20,17 @@ import javax.swing.JPopupMenu;
  */
 public class MainMenu extends JPanel{
     private MainWindow mainWindow;
-    private JPanel invoker;
+    private JLayeredPane invoker;
+    
 
-    public MainMenu(MainWindow mw, final JPanel invoker) {
+    public MainMenu(MainWindow mw, final JLayeredPane invoker) {
         
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS)); 
-        setLocation(300, 300);
         this.mainWindow = mw;
         this.invoker = invoker;
-        setVisible(true);
-      
-              
-        JButton new_game = new JButton(new ImageIcon("resources/menu/NewGameButton.png") {});    
         
+           
+        JButton new_game = new JButton(new ImageIcon("resources/menu/NewGameButton.png") {});         
         new_game.addActionListener(new ActionListener() {
 
             @Override
@@ -44,7 +39,8 @@ public class MainMenu extends JPanel{
                 Simulator sim = new Simulator();
                 sim.setUsername("muah");
                 mainWindow.startSinglePlayer(sim);
-                setVisible(false);               
+                //setVisible(false);
+                mainWindow.removeMenu(MainMenu.this, invoker);
             }
         });
 
@@ -63,10 +59,22 @@ public class MainMenu extends JPanel{
         options.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e){               
-                mainWindow.changeMenu(new Options(mainWindow, invoker), invoker);
+            public void actionPerformed(ActionEvent e){                
+                mainWindow.changeMenu(new Options(mainWindow, invoker), invoker);                
             }
         });
+     
+        JButton resume = new JButton("resume");
+        resume.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e){                
+               mainWindow.removeMenu(MainMenu.this, invoker);
+                mainWindow.resume();
+              
+            }
+        });
+     
         
         JButton exit_game = new JButton("exit");
         exit_game.addActionListener(new ActionListener() {
@@ -78,12 +86,19 @@ public class MainMenu extends JPanel{
         });
    
         
+        if(!invoker.toString().contains("Menu")) {
+        
+        add(resume);
+        }
         add(new_game);
         add(two_player);
         add(options);
         add(exit_game);
         
-       
+        
+        setBounds(400, 200, (int)new_game.getMinimumSize().getWidth(),
+                (int)new_game.getMinimumSize().getHeight()*getComponentCount());
+        
         
         /*
 
@@ -162,4 +177,5 @@ public class MainMenu extends JPanel{
             */
         
     }
+    
 }

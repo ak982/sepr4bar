@@ -5,14 +5,13 @@
 package dab.gui.mainpanels;
 
 import dab.gui.application.MainWindow;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 
 /**
@@ -24,14 +23,15 @@ public class Options extends JPanel{
     private final int EASY = 1;
     private final int NORMAL = 2;
     private final int HARD = 3;
-    private JPanel invoker;
+    private JLayeredPane invoker;
     private JToggleButton easy, normal, hard;
+    private Dimension size;
     
 
-    public Options(MainWindow mw, final JPanel invoker) {
+    public Options(MainWindow mw, final JLayeredPane invoker) {
         this.mainWindow = mw;
         this.invoker = invoker;
-        
+        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS)); 
         
         easy = new JToggleButton("easy");
         normal = new JToggleButton("normal");
@@ -102,6 +102,8 @@ public class Options extends JPanel{
       add(sound);
       add(back);
      
+      setBounds(400, 200, (int)back.getMinimumSize().getWidth(),
+                (int)back.getMinimumSize().getHeight()*getComponentCount());
      }
       
     private void setSelected(){

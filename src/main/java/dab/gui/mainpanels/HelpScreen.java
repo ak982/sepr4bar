@@ -3,16 +3,16 @@ package dab.gui.mainpanels;
 import dab.gui.application.MainWindow;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BoxLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 
 /**
  * Displays the Help Screen. Image is located in Resources/Menu/
@@ -24,23 +24,26 @@ import javax.swing.JPopupMenu;
 public class HelpScreen extends JPanel {
 
     private MainWindow mainWindow;
-    private JPanel invoker;
+    private JLayeredPane invoker;
+    private Dimension size;
     
-    public HelpScreen(MainWindow mw, final JPanel invoker)
+    public HelpScreen(MainWindow mw, final JLayeredPane invoker)
     {
         this.mainWindow = mw;
         this.invoker = invoker;
        
         
         //initialize the help screen with back button and an image
-       setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+       //setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
        JLabel helpImage = new JLabel();
-       helpImage.setIcon(new ImageIcon("resources/menu/HelpImage.png"));
-       helpImage.setBounds(0, 0, 700, 500);
-       setVisible(true);
+       ImageIcon icon = new ImageIcon("resources/menu/HelpImage.png");
+       helpImage.setIcon(icon);
+       setBounds(0,0,icon.getIconWidth(), icon.getIconHeight());
+       
+       
+       //requestFocus();
        JButton back = new JButton("Back");
        back.setBackground(Color.PINK);
-       requestFocus();
        back.addActionListener(new ActionListener() {
 
             @Override
@@ -54,7 +57,6 @@ public class HelpScreen extends JPanel {
         add(back, BorderLayout.CENTER);
         add(helpImage, BorderLayout.CENTER);
         
-        
     }
-
+    
 }

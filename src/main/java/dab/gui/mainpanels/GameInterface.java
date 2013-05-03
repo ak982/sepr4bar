@@ -26,8 +26,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.ImageIcon;
@@ -36,7 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.Timer;
 
-public class GameInterface extends JPanel implements KeyListener, MouseListener {
+public class GameInterface extends JPanel implements KeyListener {
 
     private Simulator simulator;
     private MainWindow mainWindow;
@@ -67,9 +65,7 @@ public class GameInterface extends JPanel implements KeyListener, MouseListener 
         
         music = new Sounds("resources/music/backgroundSound.wav", true);
                    
-        if(mainWindow.getMusic()){
-            music.start();
-        }
+        
         
         setupPanels();
         setupTimer();
@@ -78,7 +74,6 @@ public class GameInterface extends JPanel implements KeyListener, MouseListener 
         // rock and roll baby!
         animator.start();
         addKeyListener(this);      
-        addMouseListener(this);
     }
     
     private void setupPanels() {       
@@ -106,8 +101,7 @@ public class GameInterface extends JPanel implements KeyListener, MouseListener 
             controller = new BunnyController(environment, hitboundsController, new Point(100, 100));           
             gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller); 
         }
-        
-        
+         
         obamaPanel = new ObamaPanel(simulator);
         infoPanel = new InfoPanel(simulator);
         buttonPanel = new ButtonPanel(simulator);
@@ -239,8 +233,9 @@ public class GameInterface extends JPanel implements KeyListener, MouseListener 
         try {      
             if(music.isAlive() && !mainWindow.getMusic()) {
                 music.stopIt();
-            } else if(!music.isAlive() && mainWindow.getMusic()) {
+            } else if(!music.isAlive() && mainWindow.getMusic()&&animator.isRunning()) {
                 music.start();
+               
             } 
         } catch (IllegalThreadStateException e) {
             //do nothing
@@ -300,45 +295,26 @@ public class GameInterface extends JPanel implements KeyListener, MouseListener 
         screenUpdate();
     }
 
-    private void handelEscape() {
+    private void handelEscape()  {
         // pause the game loop when esc is pressed
-        MainMenu popupMenu = new MainMenu(mainWindow, GameInterface.this);
         
-        if (!animator.isRunning()) {
-            animator.start();
-        } else {
-           // popupMenu.show(GameInterface.this, 300, 300);
-            GameInterface.this.requestFocus(true);
-            animator.stop();
-        }
+        animator.stop();
+        music.stopIt();
+        mainWindow.changeMenu(new MainMenu(mainWindow, gamePanel), gamePanel);       
+        
     }
 
     public void stopMusic() {
         music.interrupt();
     }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-   
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-          System.out.println("click");
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
+    
+    public void resume() {
+    System.out.println("resume");
+        animator.start();
         
+  //      handleMusic();
     }
+    
+    
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        
-    }
 }

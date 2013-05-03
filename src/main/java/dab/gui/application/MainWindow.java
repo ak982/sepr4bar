@@ -8,13 +8,12 @@ import dab.engine.simulator.Simulator;
 import dab.gui.intro.DaIntro;
 import dab.gui.mainpanels.DaMMenu;
 import dab.gui.mainpanels.GameInterface;
-import dab.gui.mainpanels.MainMenu;
 import java.awt.Component;
+import java.awt.GridBagLayout;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 
 
 /**
@@ -37,13 +36,14 @@ public class MainWindow extends JFrame {
             }
         });
     }
-    private DaMMenu menu;
+   // private DaMMenu menu;
     private Component currentComponent = null;
     private int difficulty;
     private final int DEFAULT_DIFFICULTY =1;    //to check with the one in options
     private boolean music;
     private Simulator simulator;
     private GameInterface gameInterface;
+    private JPanel currentMenu = null;
     
     public MainWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,7 +51,7 @@ public class MainWindow extends JFrame {
         
         difficulty = DEFAULT_DIFFICULTY;
         // create the menu
-        menu = new DaMMenu(this);
+        
         music = true;      
     }
     
@@ -62,6 +62,7 @@ public class MainWindow extends JFrame {
     }
 
     public void showMenu() {
+        DaMMenu menu = new DaMMenu(this);
         changeToPanel(menu);      
     }
     
@@ -91,7 +92,7 @@ public class MainWindow extends JFrame {
         changeToPanel(gameInterface);
     }
 
-    private void changeToPanel(Component p) {
+    public void changeToPanel(Component p) {
         if (currentComponent != null) {
             currentComponent.setVisible(false);
             getContentPane().remove(currentComponent);
@@ -104,8 +105,23 @@ public class MainWindow extends JFrame {
         p.requestFocusInWindow();
     }
     
-    public void changeMenu(JPanel menu, JPanel invoker){
-        menu.setVisible(true);
+    public void changeMenu(JPanel p, JLayeredPane invoker){
+        if (currentMenu != null) {
+            currentMenu.setVisible(false);
+            invoker.remove(currentMenu);
+        }
+       
+        
+       //p.setLayout(new BoxLayout(invoker,BoxLayout.Y_AXIS)); 
+        invoker.add(p, JLayeredPane.POPUP_LAYER);
+        currentMenu = p;
+        p.setVisible(true);    
+    }
+    
+    public void removeMenu(JPanel p, JLayeredPane invoker){
+        p.setVisible(false);
+        invoker.remove(p);
+        currentMenu = null;
     }
     
     public void setDifficulty (int i) {      
@@ -121,6 +137,9 @@ public class MainWindow extends JFrame {
     
     public void setMusic() {
         music = !music;
+        if(gameInterface!=null) {
+            gameInterface.handleMusic();
+        }
     }
     
     public boolean getMusic(){
@@ -132,4 +151,9 @@ public class MainWindow extends JFrame {
             gameInterface.stopMusic();
         }
     }
+    
+    public void resume() {
+        gameInterface.resume();
+    }
+    
 }
