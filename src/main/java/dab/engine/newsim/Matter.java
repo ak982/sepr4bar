@@ -32,20 +32,22 @@ public abstract class Matter {
      *
      * @return this object for easier chaining of objects
      */
-    protected Matter add(Matter x) {
+    protected void add(Matter x) {
         int newParticleNr = particleNr + x.getParticleNr();
         double newTemperature = (particleNr * temperature + x.getParticleNr() * x.getTemperature()) / newParticleNr;
         particleNr = newParticleNr;
         temperature = newTemperature;
-        return this;
+    }
+    
+    public void oneWayThermalTransfer(Matter x) {
+        temperature = (particleNr * temperature + x.getParticleNr() * x.getTemperature()) / (particleNr + x.getParticleNr());
     }
 
-    public Matter remove(int particlesRemoved) {
+    public void remove(int particlesRemoved) {
         if (this.particleNr < particlesRemoved) {
             throw new RuntimeException("Can not remove more than there is");
         } else {
             this.particleNr -= particlesRemoved;
-            return this;
         }
     }
 
@@ -61,7 +63,7 @@ public abstract class Matter {
         return temperature;
     }
 
-    protected Matter addEnergy(double energy) {
+    protected void addEnergy(double energy) {
         // specific heat = ammount of *energy* required to raise it by 1 degree / mole = energy / (mol * temp)
         // specificHeat = Energy / (kg * K)
         // K(temp) = Energy / (kg * specificH)
@@ -69,7 +71,6 @@ public abstract class Matter {
             throw new RuntimeException("Can not add energy to nothing");
         }
         temperature += energy / (getMass() * getSpecificHeat());
-        return this;
     }
 
     public double energyNeededToTemperature(double temperature) {
@@ -92,6 +93,6 @@ public abstract class Matter {
     
     @Override
     public String toString() {
-        return String.format("PNo: %d\tM: %f\tT: %f\t", getParticleNr(), getMass(), getTemperature());
+        return String.format("M: %f\tT: %f\t", getMass(), getTemperature());
     }
 }

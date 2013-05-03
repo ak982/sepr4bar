@@ -20,7 +20,7 @@ public class Water extends Matter {
     
     @Override
     public double getMolarMass() {
-        return Constants.MOLAR_MASS;
+        return Constants.MOLAR_MASS_WATER;
     }
     
     // approximate function
@@ -46,17 +46,21 @@ public class Water extends Matter {
     // approximate function in kg / m^3
     // see http://www.engineeringtoolbox.com/water-thermal-properties-d_162.html
     // for details
-    public double getDensity() {
-        final double BOILING_DENSITY = Constants.WATER_NORMAL_DENSITY - (Constants.NORMAL_BOILING_POINT - Constants.NORMAL_FREEZING_POINT) / 2;
-        if (getTemperature() < Constants.NORMAL_BOILING_POINT) {
-            if (getTemperature() < Constants.NORMAL_FREEZING_POINT) {
-                return Constants.WATER_NORMAL_DENSITY;
+    public static double getDensityAt(double temperature) {
+        final double BOILING_DENSITY = Constants.NORMAL_DENSITY_WATER - (Constants.NORMAL_BOILING_POINT - Constants.NORMAL_FREEZING_POINT) / 2;
+        if (temperature < Constants.NORMAL_BOILING_POINT) {
+            if (temperature < Constants.NORMAL_FREEZING_POINT) {
+                return Constants.NORMAL_DENSITY_WATER;
             } else {
-                return Constants.WATER_NORMAL_DENSITY - (getTemperature() - Constants.NORMAL_FREEZING_POINT) / 2;
+                return Constants.NORMAL_DENSITY_WATER - (temperature - Constants.NORMAL_FREEZING_POINT) / 2;
             }
         } else {
-            return BOILING_DENSITY - (getTemperature() - Constants.NORMAL_BOILING_POINT);
+            return BOILING_DENSITY - (temperature - Constants.NORMAL_BOILING_POINT);
         }
+    }
+    
+    public double getDensity() {
+        return getDensityAt(getTemperature());
     }
     
     public double getVolume() {
@@ -78,7 +82,7 @@ public class Water extends Matter {
         } else {
             double deltaEnergy = energy - energyNeeded;
             super.addEnergy(energyNeeded);
-            double steamMass = deltaEnergy / Constants.LATENT_HEAT;
+            double steamMass = deltaEnergy / Constants.LATENT_HEAT_WATER;
             Steam generated = new Steam(getTemperature(), new Kilograms(steamMass));
             int deltaQty = Math.min(getParticleNr(), generated.getParticleNr());
             remove(deltaQty);

@@ -52,8 +52,6 @@ public abstract class Container extends Component  {
     }
     
     /**
-     *
-     * FIXME: using volume as the height (assumes that the area is 1 m^2).
      * @return the pressure at the bottom of the container (steam pressure + hydrostatic pressure)
      */
     public double getBottomPressure() {
@@ -62,6 +60,6 @@ public abstract class Container extends Component  {
     
     @Override
     public String toString() {
-        return String.format("BP: %f\t%s%s", getBottomPressure(), steam.toString(), water.toString());
+        return String.format("P: %f\tBP: %f\tCV%%%f: \t%s%s", getPressure(), getBottomPressure(), getCompressibleVolume() / getTotalVolume(), steam.toString(), water.toString());
     }
 }

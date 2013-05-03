@@ -53,7 +53,7 @@ public class VisualTestBench implements ActionListener {
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         reactor = new Reactor(1, 1);
-        condenser = new Condenser(10, 2.5);
+        condenser = new Condenser(2, 1.5);
         condenser.toggleDebugMode();
         turbine = new Turbine();
         pump = new Pump(2500);
@@ -104,6 +104,8 @@ public class VisualTestBench implements ActionListener {
             System.out.println(condenser.toString());
             condenser.step();
         }*/
+        reactor.step();
+        condenser.step();
         
     }
     
@@ -121,23 +123,15 @@ public class VisualTestBench implements ActionListener {
         System.out.println(condenser);
         
         System.out.println("Turbine: " + turbine.getLastEnergy());
-        System.out.println(String.format("RT: %f\tRP: %f\tRPartS: %d\tRPartW: %d\tRTempW: %f", 
-                reactor.getTemperature(),
-                reactor.getPressure(),
-                reactor.getSteam().getParticleNr(),
-                reactor.getWater().getParticleNr(),
-                reactor.getWater().getTemperature()
+
+        System.out.println("TotalParticles: " + (
+                reactor.getSteam().getParticleNr() + 
+                reactor.getWater().getParticleNr() + 
+                condenser.getSteam().getParticleNr() + 
+                condenser.getWater().getParticleNr()
                 ));
-        System.out.println(String.format("CT: %f\tCP: %f\tCPartS: %d\tCPartW: %d\tCTempW: %f", 
-                condenser.getTemperature(),
-                condenser.getPressure(),
-                condenser.getSteam().getParticleNr(),
-                condenser.getWater().getParticleNr(),
-                condenser.getWater().getTemperature()
-                ));
-        System.out.println("TotalParticles: " + (reactor.getSteam().getParticleNr() + reactor.getWater().getParticleNr() + condenser.getSteam().getParticleNr() + condenser.getWater().getParticleNr()));
         
-        System.out.println(String.format("BpresR: %f\tBPresC: %f", reactor.getBottomPressure(), condenser.getBottomPressure()));
+        
         
         System.out.println();
         

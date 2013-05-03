@@ -38,30 +38,19 @@ public class Steam extends Matter {
         return (int)((pressure * volume) / (Constants.BOLTZMAN_CONSTANT * getTemperature()));
     }
     
-    @Override
-    public Steam addEnergy(double energy) {
-        super.addEnergy(energy);
-        return this;
-    }
     
     public Water removeEnergy(double energy) {
         throw new UnsupportedOperationException();
     }
     
-    public Steam add(Steam s) {
+    public void add(Steam s) {
         super.add(s);
-        return this;
     }
     
-    @Override
-    public Steam remove(int qty) {
-        super.remove(qty);
-        return this;
-    }
 
     @Override
     public double getMolarMass() {
-        return Constants.MOLAR_MASS;
+        return Constants.MOLAR_MASS_WATER;
     }
     
     @Override

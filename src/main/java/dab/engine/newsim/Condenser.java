@@ -9,12 +9,13 @@ package dab.engine.newsim;
  */
 public class Condenser extends Container {
 
+    private static final double INITIAL_WATER_RATIO = 0.1;
     private HeatSink heatSink;
     
     public Condenser(double volume, double area) {
         super(
-                new Water(Constants.ROOM_TEMP, new Kilograms((volume / 10) * Constants.WATER_NORMAL_DENSITY)),
-                new Steam(Constants.ROOM_TEMP, (int)((9 * volume / 10) * Constants.NORMAL_STEAM_PARTICLES_PER_VOLUME)),
+                new Water(Constants.ROOM_TEMP, new Kilograms((volume * INITIAL_WATER_RATIO) * Constants.NORMAL_DENSITY_WATER)),
+                new Steam(Constants.ROOM_TEMP, (int)((volume * (1 - INITIAL_WATER_RATIO)) * Constants.NORMAL_PARTICLES_PER_VOLUME_STEAM)),
                 area,
                 volume / area);
         heatSink = new HeatSink();
@@ -50,11 +51,11 @@ public class Condenser extends Container {
         // send water until we have equalized
         for (int i = 0; i < 10; ++i) {
             if (outputComponent.getHydroState().getPressure() < getBottomPressure()) {
-                Water deltaWater = new Water(water.getTemperature(), Math.min(8 * water.getParticlesPerKilo(), water.getParticleNr()));
-                System.out.println("Before: " + outputComponent.getHydroState().getPressure() + " " + getBottomPressure());
+                Water deltaWater = new Water(water.getTemperature(), Math.min(3 * water.getParticlesPerKilo(), water.getParticleNr()));
+                //System.out.println("C: Before: " + outputComponent.getHydroState().getPressure() + " " + getBottomPressure());
                 send(deltaWater);
                 water.remove(deltaWater.getParticleNr());
-                System.out.println("After: " + outputComponent.getHydroState().getPressure() + " " + getBottomPressure());
+                //System.out.println("C: After: " + outputComponent.getHydroState().getPressure() + " " + getBottomPressure());
                 
                 
             } else {
