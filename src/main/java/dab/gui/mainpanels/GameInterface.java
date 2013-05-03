@@ -189,7 +189,7 @@ public class GameInterface extends JPanel implements KeyListener {
                     String old_username = simulator.getUsername();
                     Simulator new_simulator = new Simulator();
                     new_simulator.setUsername(old_username);
-                    mainWindow.startSinglePlayer(new_simulator);
+                    mainWindow.startGame(new_simulator, true);
                 }
                 if ((value == 1)) {
                     mainWindow.showMenu();

@@ -6,7 +6,6 @@ import dab.engine.utilities.Percentage;
 import dab.engine.utilities.Pressure;
 import dab.engine.utilities.Temperature;
 import static dab.engine.utilities.Units.percent;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -58,10 +57,6 @@ public class FailureModel implements PlantController, PlantStatus {
             PlantStatus plantStatus) {
         this.controller = plantController;
         this.status = plantStatus;
-       // onePlayerMode = controller.getPlayerMode();
-        onePlayerMode = true; //THIS IS TEMP FOR TESTING. use above or sth else to set mode
-        //difficulty = controller.getDifficulty();
-        difficulty = 1; 
         setDamagesToComponents();
     }
 
@@ -376,5 +371,9 @@ public class FailureModel implements PlantController, PlantStatus {
     
     public void setDifficulty(int i) {
         difficulty = i;
+    }
+    
+    public void setPlayerMode(boolean onePlayerMode){
+        this.onePlayerMode = onePlayerMode;
     }
 }

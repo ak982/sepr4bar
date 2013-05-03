@@ -25,7 +25,6 @@ public class Options extends JPanel{
     private final int HARD = 3;
     private JLayeredPane invoker;
     private JToggleButton easy, normal, hard;
-    private Dimension size;
     
 
     public Options(MainWindow mw, final JLayeredPane invoker) {

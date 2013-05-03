@@ -35,12 +35,7 @@ public class MainMenu extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent e){
-                mainWindow.stopMusic();
-                Simulator sim = new Simulator();
-                sim.setUsername("muah");
-                mainWindow.startSinglePlayer(sim);
-                //setVisible(false);
-                mainWindow.removeMenu(MainMenu.this, invoker);
+               startGame(true);
             }
         });
 
@@ -49,9 +44,7 @@ public class MainMenu extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent e){                
-                mainWindow.stopMusic();
-                mainWindow.startTwoPlayer();
-                setVisible(false);
+                startGame(false);
             }
         });
         
@@ -70,8 +63,7 @@ public class MainMenu extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e){                
                mainWindow.removeMenu(MainMenu.this, invoker);
-                mainWindow.resume();
-              
+               mainWindow.resume();             
             }
         });
      
@@ -176,6 +168,13 @@ public class MainMenu extends JPanel{
 
             */
         
+    }
+    
+    private void startGame(boolean playerMode){
+         mainWindow.stopMusic();
+         Simulator sim = new Simulator();         
+         mainWindow.changeMenu(new NameMenu(sim, mainWindow, invoker, playerMode), invoker);
+         mainWindow.removeMenu(MainMenu.this, invoker);
     }
     
 }
