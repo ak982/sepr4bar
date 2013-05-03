@@ -174,7 +174,6 @@ public class MainMenu extends JPanel{
          mainWindow.stopMusic();
          Simulator sim = new Simulator();         
          mainWindow.changeMenu(new NameMenu(sim, mainWindow, invoker, playerMode), invoker);
-         mainWindow.removeMenu(MainMenu.this, invoker);
     }
     
 }

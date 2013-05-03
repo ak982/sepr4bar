@@ -110,7 +110,17 @@ public class NameMenu extends JPanel{
         });
         enter_name2.setText(mainWindow.getUserName2());
         
-        
+        //ok button has the same functionality as when the user presses enter
+        JButton back = new JButton("back");       
+        back.setBorder(BorderFactory.createEmptyBorder());
+        back.setContentAreaFilled(false);
+        back.setBorderPainted(false);
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               mainWindow.changeMenu(new MainMenu(mainWindow, invoker), invoker );
+            }
+        });
         
        
  
@@ -126,6 +136,7 @@ public class NameMenu extends JPanel{
             setBounds(400,200,theOk.getIconWidth(),150);
         }
         add(ok); 
+        add(back);
     };
 
     private void tryStart() {
