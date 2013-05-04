@@ -48,8 +48,7 @@ public class GameOverMenu extends MenuHandler implements KeyListener{
         Image newimg = img.getScaledInstance(330, 300, java.awt.Image.SCALE_DEFAULT);
         ImageIcon newIcon = new ImageIcon(newimg);
         JLabel image = new JLabel(newIcon);
-       
-       
+           
         add(image);
         add(Box.createRigidArea(new Dimension(10,0)));
  
@@ -82,8 +81,7 @@ public class GameOverMenu extends MenuHandler implements KeyListener{
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode()== KeyEvent.VK_ESCAPE || e.getKeyCode()== KeyEvent.VK_ENTER){
                 mainWindow.changeMenu(new MainMenu(mainWindow, invoker));
-            }   
-       
+            }       
     }
 
     @Override

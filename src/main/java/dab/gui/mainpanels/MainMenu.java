@@ -151,8 +151,7 @@ public class MainMenu extends MenuHandler{
                mainWindow.removeMenu(MainMenu.this, invoker);
                mainWindow.resume();             
             }
-        });
-     
+        });  
         
         JButton exit_game = new JButton("exit");
         exit_game.addActionListener(new ActionListener() {
@@ -187,17 +186,9 @@ public class MainMenu extends MenuHandler{
         add(options);
         add(load_menu);
         add(exit_game);
-        
-        
+                
         setBounds(400, 200, (int)new_game.getMinimumSize().getWidth(),
                 (int)new_game.getMinimumSize().getHeight()*getComponentCount());
-        
-        
-       
-
-            
-          
-        
     }
     
     private void startGame(boolean playerMode){

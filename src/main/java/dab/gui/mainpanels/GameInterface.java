@@ -80,7 +80,7 @@ public abstract class GameInterface extends JPanel implements KeyListener {
         rightPane = new JSplitPane();
         rightPane.setDividerSize(5);
         rightPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-        rightPane.setResizeWeight(0.5);
+        rightPane.setResizeWeight(0.2);
          
         obamaPanel = new ObamaPanel(simulator);
         infoPanel = new InfoPanel(simulator);
