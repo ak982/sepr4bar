@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dab.engine.newsim;
+package dab.engine.newsim.utils;
 
 /**
  *
@@ -71,6 +71,10 @@ public class Water extends Matter {
         return energyNeededToTemperature(getBoilingTemperature(pressure));
     }
     
+    public void add(Water w) {
+        super.add(w);
+    }
+    
     // latent heat = ammount of energy required to transform 
     // L = E / m; m = E / L
     // return the ammount of steam created after energy has beeen added
@@ -91,9 +95,9 @@ public class Water extends Matter {
     }
     
     /*
-     * 
+     * pressure at bottom if this water was put in a cilinder with a certain area
      */
-    protected double getHydrostaticPressure(double area) {
+    public double getHydrostaticPressure(double area) {
         return getDensity() * Constants.GRAVITATIONAL_ACCELERATION * (getVolume() / area);
     }
     

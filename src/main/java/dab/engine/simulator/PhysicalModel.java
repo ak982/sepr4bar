@@ -405,7 +405,7 @@ public class PhysicalModel implements PlantController, PlantStatus {
      */
     @Override
     public Percentage condenserWaterLevel() {
-        return condenser.getWaterLevel();
+        return condenser.waterLevel();
     }
 
     /**

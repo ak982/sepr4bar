@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dab.engine.newsim;
+package dab.engine.newsim.utils;
 
 /**
  * Note about particleNr: pV = NRT. Considering Avogadro's number (number of
@@ -39,8 +39,8 @@ public abstract class Matter {
         temperature = newTemperature;
     }
     
-    public void oneWayThermalTransfer(Matter x) {
-        temperature = (particleNr * temperature + x.getParticleNr() * x.getTemperature()) / (particleNr + x.getParticleNr());
+    public double calculateTemperatureEqulibrium(Matter x) {
+        return (particleNr * temperature + x.getParticleNr() * x.getTemperature()) / (particleNr + x.getParticleNr());
     }
 
     public void remove(int particlesRemoved) {

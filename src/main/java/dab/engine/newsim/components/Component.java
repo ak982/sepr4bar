@@ -2,17 +2,22 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dab.engine.newsim;
+package dab.engine.newsim.components;
 
-import dab.engine.simulator.CannotRepairException;
-import dab.engine.simulator.views.FailableComponentView;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import dab.engine.newsim.utils.HydraulicState;
+import dab.engine.newsim.utils.Matter;
 
 /**
  *
  * @author eduard
  */
 public abstract class Component {
+    
+    @JsonProperty
     protected Component outputComponent = null;
+    
+    @JsonProperty
     protected boolean debugMode = false;
     
     public Component getOutputComponent() {

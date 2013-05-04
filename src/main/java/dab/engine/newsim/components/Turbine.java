@@ -2,13 +2,18 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dab.engine.newsim;
+package dab.engine.newsim.components;
+
+import dab.engine.newsim.utils.BlockedHydroState;
+import dab.engine.newsim.utils.HydraulicState;
+import dab.engine.newsim.utils.Steam;
+import dab.engine.newsim.utils.Matter;
 
 /**
  *
  * @author eduard
  */
-public class Turbine extends Component {
+public class Turbine extends FailableComponent {
     
     double totalEnergyGenerated;
     double energyGeneratedLast;
@@ -22,9 +27,17 @@ public class Turbine extends Component {
         return energyGeneratedLast;
     }
     
+    public void step() {
+       ; // FIXME: don't do nothing currently
+    }
+    
     @Override
     protected HydraulicState getHydroState() {
-        return outputComponent.getHydroState();
+        if (hasFailed()) {
+            return new BlockedHydroState();
+        } else {
+            return outputComponent.getHydroState();
+        }
     }
 
     /*
@@ -32,6 +45,7 @@ public class Turbine extends Component {
      */
     @Override
     protected void receiveMatter(Matter m) {
+        if (hasFailed()) throw new RuntimeException("turbine failed, shouldn't receive any steam");
         Steam steamReceived = (Steam)m;
         energyGeneratedLast = steamReceived.getMass() * 100;
         totalEnergyGenerated += energyGeneratedLast;

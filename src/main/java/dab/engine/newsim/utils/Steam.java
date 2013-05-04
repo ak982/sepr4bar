@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dab.engine.newsim;
+package dab.engine.newsim.utils;
 
 
 /**
@@ -38,10 +38,6 @@ public class Steam extends Matter {
         return (int)((pressure * volume) / (Constants.BOLTZMAN_CONSTANT * getTemperature()));
     }
     
-    
-    public Water removeEnergy(double energy) {
-        throw new UnsupportedOperationException();
-    }
     
     public void add(Steam s) {
         super.add(s);

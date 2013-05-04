@@ -2,8 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dab.engine.newsim;
+package dab.engine.newsim.components;
 
+import dab.engine.newsim.utils.Constants;
+import dab.engine.newsim.utils.RadioactiveMatter;
+import dab.engine.newsim.utils.Ratio;
+import dab.engine.newsim.utils.Water;
+import dab.engine.newsim.utils.Kilograms;
 import dab.engine.utilities.Percentage;
 
 /**

@@ -203,7 +203,7 @@ public class Condenser extends FailableComponent implements CondenserView {
      * Returns the water level of the condenser
      * @return Percentage
      */
-    public Percentage getWaterLevel() {
+    public Percentage waterLevel() {
         return waterLevel;
     }
 

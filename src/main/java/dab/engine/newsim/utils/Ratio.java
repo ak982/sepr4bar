@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dab.engine.newsim;
+package dab.engine.newsim.utils;
 
 /**
  * class to hold ratio type - double value between 0 and 1.

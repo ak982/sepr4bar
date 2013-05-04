@@ -2,8 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dab.engine.newsim;
+package dab.engine.newsim.components;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import dab.engine.newsim.interfaces.ContainerView;
+import dab.engine.newsim.utils.Steam;
+import dab.engine.newsim.utils.Water;
 import dab.engine.utilities.Percentage;
 import dab.engine.utilities.Pressure;
 import dab.engine.utilities.Temperature;
@@ -12,9 +16,15 @@ import dab.engine.utilities.Temperature;
  *
  * @author eduard
  */
-public abstract class Container extends Component  {
+public abstract class Container extends Component implements ContainerView  {
+    
+    @JsonProperty
     protected Water water;
+    
+    @JsonProperty
     protected Steam steam;
+    
+    @JsonProperty
     protected double area, height;
     
     public Container(Water water, Steam steam, double area, double height) {
@@ -24,7 +34,7 @@ public abstract class Container extends Component  {
         this.height = height;
     }
     
-    public double getPressure() {
+    protected double getPressure() {
         return steam.getPressure(getCompressibleVolume());
     }
     
@@ -38,6 +48,10 @@ public abstract class Container extends Component  {
     
     public double getTotalVolume() {
         return height * area;
+    }
+    
+    public double getWaterLevelRatio() {
+        return getWater().getVolume() / getTotalVolume();
     }
     
     public double getCompressibleVolume() {
@@ -62,4 +76,22 @@ public abstract class Container extends Component  {
     public String toString() {
         return String.format("P: %f\tBP: %f\tCV%%%f: \t%s%s", getPressure(), getBottomPressure(), getCompressibleVolume() / getTotalVolume(), steam.toString(), water.toString());
     }
+
+    //<editor-fold desc="Implemented interfaces">
+    @Override
+    public Percentage waterLevel() {
+        return new Percentage(getWaterLevelRatio());
+    }
+
+    @Override
+    public Temperature temperature() {
+        return new Temperature(getTemperature());
+    }
+
+    @Override
+    public Pressure pressure() {
+        return new Pressure(getPressure());
+    }
+    //</editor-fold>
+
 }

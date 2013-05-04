@@ -4,12 +4,12 @@
  */
 package dab.gui.application;
 
-import dab.engine.newsim.Condenser;
-import dab.engine.newsim.Constants;
-import dab.engine.newsim.Pump;
-import dab.engine.newsim.Reactor;
-import dab.engine.newsim.Turbine;
-import dab.engine.newsim.Water;
+import dab.engine.newsim.components.Condenser;
+import dab.engine.newsim.utils.Constants;
+import dab.engine.newsim.components.Pump;
+import dab.engine.newsim.components.Reactor;
+import dab.engine.newsim.components.Turbine;
+import dab.engine.newsim.utils.Water;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,6 +48,8 @@ public class VisualTestBench implements ActionListener {
     JLabel rView, cView, tView, pView;
     
     public VisualTestBench() {
+        System.out.println("Running");
+        System.out.flush();
         timer = new Timer(1000 / Constants.TICKS_PER_SECOND, this);
         
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package dab.engine.newsim;
+package dab.engine.newsim.utils;
 
 /**
  *
@@ -21,11 +21,17 @@ public class RadioactiveMatter extends Matter {
         return 2;
     }
 
+    
     // the chemistry geeks will note this as being the actual value for uranium
     //  not really used unfortunately
     @Override
     public double getMolarMass() {
         return 238;
+    }
+
+    @Override
+    public void addEnergy(double energy) {
+        super.addEnergy(energy);
     }
     
     public void equilibrateTemperature(Ratio transferDifficulty, double otherTemp) {
