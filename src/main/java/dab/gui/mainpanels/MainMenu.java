@@ -4,7 +4,8 @@
  */
 package dab.gui.mainpanels;
 
-import dab.engine.simulator.Simulator;
+import dab.engine.newsim.Simulator;
+import dab.engine.newsim.SinglePlayerSimulator;
 import dab.gui.application.MainWindow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -172,7 +173,7 @@ public class MainMenu extends JPanel{
     
     private void startGame(boolean playerMode){
          mainWindow.stopMusic();
-         Simulator sim = new Simulator();         
+         Simulator sim = new SinglePlayerSimulator();         
          mainWindow.changeMenu(new NameMenu(sim, mainWindow, invoker, playerMode), invoker);
     }
     

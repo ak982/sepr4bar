@@ -4,7 +4,7 @@
  */
 package dab.bigBunny;
 
-import dab.engine.simulator.Simulator;
+import dab.engine.newsim.Simulator;
 import dab.gui.gamepanel.GamePanel;
 import dab.gui.gamepanel.UIComponent;
 import java.awt.Color;

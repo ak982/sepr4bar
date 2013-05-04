@@ -10,6 +10,7 @@ import dab.engine.newsim.interfaces.PumpView;
 import dab.engine.newsim.utils.Constants;
 import dab.engine.newsim.utils.Steam;
 import dab.engine.newsim.utils.Water;
+import javax.naming.Name;
 
 /**
  *
@@ -28,12 +29,16 @@ public class HeatSink implements FailableObject, PumpView {
     
     @JsonProperty
     private FailureController failController;
+    
+    @JsonProperty
+    private String name;
    
-    public HeatSink() {
+    public HeatSink(String name) {
         steamTemp = Constants.ROOM_TEMP;
         waterTemp = Constants.ROOM_TEMP;
         failController = new FailureController();
         isRunning = true;
+        this.name = name;
        
     }
     
@@ -57,8 +62,13 @@ public class HeatSink implements FailableObject, PumpView {
         toBeCooled.add(new Steam(steamTemp, STEAM_PARTICLES));
         toBeCooled.remove(STEAM_PARTICLES);
     }
-
+    
     //<editor-fold desc="Implemented interfaces">
+    @Override
+    public String getName() {
+        return name;
+    }
+    
     @Override
     public FailureController getFailureController() {
         return failController;

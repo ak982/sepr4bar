@@ -12,12 +12,13 @@ import dab.engine.newsim.interfaces.FailableObject;
  *
  * @author eduard
  */
-public abstract class FailableComponent extends Component implements FailableObject, FailableComponentView {
+public abstract class FailableComponent extends Component implements FailableObject {
 
     @JsonProperty
     private FailureController failController;
     
-    public FailableComponent() {
+    public FailableComponent(String name) {
+        super(name);
         failController = new FailureController();
     }
     

@@ -4,12 +4,14 @@
  */
 package dab.gui.application;
 
+import dab.engine.newsim.PowerPlant;
 import dab.engine.newsim.components.Condenser;
 import dab.engine.newsim.utils.Constants;
 import dab.engine.newsim.components.Pump;
 import dab.engine.newsim.components.Reactor;
 import dab.engine.newsim.components.Turbine;
 import dab.engine.newsim.utils.Water;
+import dab.engine.simulator.GameOverException;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,10 +42,7 @@ public class VisualTestBench implements ActionListener {
     }
     
     Timer timer;
-    Reactor reactor;
-    Condenser condenser;
-    Turbine turbine;
-    Pump pump;
+    PowerPlant plant;
     
     JLabel rView, cView, tView, pView;
     
@@ -54,16 +53,7 @@ public class VisualTestBench implements ActionListener {
         
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        reactor = new Reactor(1, 1);
-        condenser = new Condenser(2, 1.5);
-        condenser.toggleDebugMode();
-        turbine = new Turbine();
-        pump = new Pump(2500);
-        
-        reactor.setOutputComponent(turbine);
-        turbine.setOutputComponent(condenser);
-        condenser.setOutputComponent(pump);
-        pump.setOutputComponent(reactor);
+        plant = new PowerPlant();
         
         //BoxLayout b = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS);
         //setLayout(new FlowLayout());
@@ -106,8 +96,6 @@ public class VisualTestBench implements ActionListener {
             System.out.println(condenser.toString());
             condenser.step();
         }*/
-        reactor.step();
-        condenser.step();
         
     }
     
@@ -117,21 +105,16 @@ public class VisualTestBench implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-        reactor.step();
-        System.out.println(reactor);
-        System.out.println(condenser);
-        condenser.step();
-        System.out.println(reactor);
-        System.out.println(condenser);
+        try {
+        plant.step();
+        } catch (GameOverException e) {
+            System.out.println("game over: " + e);
+            timer.stop();
+        }
+        System.out.println(plant.getReactor());
+        System.out.println(plant.getCondenser());
         
-        System.out.println("Turbine: " + turbine.getLastEnergy());
-
-        System.out.println("TotalParticles: " + (
-                reactor.getSteam().getParticleNr() + 
-                reactor.getWater().getParticleNr() + 
-                condenser.getSteam().getParticleNr() + 
-                condenser.getWater().getParticleNr()
-                ));
+        System.out.println("Turbine: " + plant.getTurbine().getLastEnergy());
         
         
         

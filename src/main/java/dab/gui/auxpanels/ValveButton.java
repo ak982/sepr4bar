@@ -4,7 +4,7 @@
  */
 package dab.gui.auxpanels;
 
-import dab.engine.simulator.views.ValveView;
+import dab.engine.newsim.interfaces.ValveView;
 
 /**
  *

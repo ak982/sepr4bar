@@ -1,6 +1,6 @@
 package dab.gui.auxpanels;
 
-import dab.engine.simulator.views.PumpView;
+import dab.engine.newsim.interfaces.PumpView;
 
 /**
  *

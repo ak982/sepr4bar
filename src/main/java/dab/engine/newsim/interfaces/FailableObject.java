@@ -10,6 +10,6 @@ import dab.engine.newsim.components.FailureController;
  *
  * @author eduard
  */
-public interface FailableObject {
+public interface FailableObject extends FailableComponentView {
     public FailureController getFailureController();
 }

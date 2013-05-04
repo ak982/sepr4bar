@@ -4,7 +4,7 @@
  */
 package dab.gui.mainpanels;
 
-import dab.engine.simulator.Simulator;
+import dab.engine.newsim.Simulator;
 import dab.gui.application.MainWindow;
 import java.awt.Color;
 import java.awt.Dimension;

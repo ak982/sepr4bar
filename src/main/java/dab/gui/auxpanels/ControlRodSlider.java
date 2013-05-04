@@ -1,7 +1,7 @@
 package dab.gui.auxpanels;
 
 import dab.engine.simulator.UserCommands;
-import dab.engine.simulator.views.ReactorView;
+import dab.engine.newsim.interfaces.ReactorView;
 import dab.engine.utilities.Percentage;
 
 import java.awt.Graphics;

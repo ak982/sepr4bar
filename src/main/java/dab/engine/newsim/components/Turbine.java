@@ -4,6 +4,7 @@
  */
 package dab.engine.newsim.components;
 
+import dab.engine.newsim.interfaces.TurbineView;
 import dab.engine.newsim.utils.BlockedHydroState;
 import dab.engine.newsim.utils.HydraulicState;
 import dab.engine.newsim.utils.Steam;
@@ -13,12 +14,13 @@ import dab.engine.newsim.utils.Matter;
  *
  * @author eduard
  */
-public class Turbine extends FailableComponent {
+public class Turbine extends FailableComponent implements TurbineView {
     
     double totalEnergyGenerated;
     double energyGeneratedLast;
     
-    public Turbine() {
+    public Turbine(String name) {
+        super(name);
         totalEnergyGenerated = 0;
         energyGeneratedLast  = 0;
     }
@@ -27,13 +29,15 @@ public class Turbine extends FailableComponent {
         return energyGeneratedLast;
     }
     
+    
+    
     public void step() {
        ; // FIXME: don't do nothing currently
     }
     
     @Override
     protected HydraulicState getHydroState() {
-        if (hasFailed()) {
+        if (hasFailed() || outputComponent.getHydroState() instanceof BlockedHydroState) {
             return new BlockedHydroState();
         } else {
             return outputComponent.getHydroState();
@@ -51,6 +55,11 @@ public class Turbine extends FailableComponent {
         totalEnergyGenerated += energyGeneratedLast;
         // even maybe remove some of the actual energy?
         outputComponent.receiveMatter(m);
+    }
+
+    @Override
+    public double outputPower() {
+        return totalEnergyGenerated;
     }
 
 }

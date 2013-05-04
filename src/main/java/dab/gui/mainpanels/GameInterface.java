@@ -187,7 +187,7 @@ public class GameInterface extends JPanel implements KeyListener {
                 if ((value == 0)) {
                     //create a new simulator with the old username
                     String old_username = simulator.getUsername();
-                    Simulator new_simulator = new Simulator();
+                    Simulator new_simulator = new Simulator() ;
                     new_simulator.setUsername(old_username);
                     mainWindow.startGame(new_simulator, true);
                 }

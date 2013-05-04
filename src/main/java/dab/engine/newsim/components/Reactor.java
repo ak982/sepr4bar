@@ -16,6 +16,7 @@ import dab.engine.newsim.utils.Water;
 import dab.engine.newsim.utils.Kilograms;
 import dab.engine.newsim.utils.Matter;
 import dab.engine.simulator.CannotRepairException;
+import dab.engine.simulator.GameOverException;
 import dab.engine.utilities.Percentage;
 import dab.engine.utilities.Pressure;
 import dab.engine.utilities.Temperature;
@@ -36,8 +37,9 @@ public class Reactor extends Container implements ReactorView {
     @JsonProperty
     private ReactorCore core;
 
-    public Reactor(double volume, double area) {
+    public Reactor(String name, double volume, double area) {
         super(
+                name,
                 new Water(INIT_WATER_TEMP, new Kilograms((volume * INITIAL_WATER_RATIO) * Water.getDensityAt(INIT_WATER_TEMP))),
                 new Steam(Constants.ROOM_TEMP, (int) ((volume * (1 - INITIAL_WATER_RATIO)) * Constants.NORMAL_PARTICLES_PER_VOLUME_STEAM)),
                 area,
@@ -116,7 +118,7 @@ public class Reactor extends Container implements ReactorView {
         return new ContainerHydroState(getBottomPressure(), getCompressibleVolume(), area);
     }
     
-    public void step() {
+    public void step() throws GameOverException {
         // heatup water, convert some of it into steam
         steam.add(getWater().addEnergy(core.getEnergyPerTick(getCoreSubmersedLevel()), steam.getPressure(getCompressibleVolume())));
 

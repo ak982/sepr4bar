@@ -13,4 +13,5 @@ public interface FailableComponentView {
     public void fixDamage();
     public int getDamage();
     public void fail(int dmg);
+    public String getName();
 }

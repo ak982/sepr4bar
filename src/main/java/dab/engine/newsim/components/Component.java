@@ -18,7 +18,22 @@ public abstract class Component {
     protected Component outputComponent = null;
     
     @JsonProperty
+    protected String name;
+    
+    @JsonProperty
     protected boolean debugMode = false;
+    
+    protected Component(String name) {
+        this.name = name;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
     
     public Component getOutputComponent() {
         return outputComponent;

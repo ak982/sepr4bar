@@ -22,7 +22,8 @@ public class Pump extends FailableComponent implements PumpView {
     @JsonProperty
     private boolean status;
     
-    public Pump(double power) {
+    public Pump(String name, double power) {
+        super(name);
         this.power = power;
     }
     
@@ -40,7 +41,7 @@ public class Pump extends FailableComponent implements PumpView {
     
     @Override
     protected HydraulicState getHydroState() {
-        if (getStatus() == false) {
+        if (getStatus() == false || getOutputComponent().getHydroState() instanceof BlockedHydroState) {
             return new BlockedHydroState();
         } else {
             ContainerHydroState chs = (ContainerHydroState) getOutputComponent().getHydroState();

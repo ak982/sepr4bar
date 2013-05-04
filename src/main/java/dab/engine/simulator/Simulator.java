@@ -89,12 +89,12 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
      */
     @Override
     public void saveGame() throws JsonProcessingException {
-        SaveGame saveGame = new SaveGame(physicalModel, failureModel, userName);
+        /*SaveGame saveGame = new SaveGame(physicalModel, failureModel, userName);
         try {
             saveGame.save();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } 
+        } */
     }
     /**
      *
@@ -103,14 +103,14 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
      */
     @Override
     public void loadGame(int gameNumber) {
-        try {
+        /*try {
             SaveGame saveGame = SaveGame.load(listGames()[gameNumber]);
             this.physicalModel = saveGame.getPhysicalModel();
             this.failureModel = new FailureModel(physicalModel, physicalModel);
             this.userName = saveGame.getUserName();
         } catch (JsonParseException ex) {
         } catch (IOException ex) {
-        }
+        }*/
     }
 
     /**

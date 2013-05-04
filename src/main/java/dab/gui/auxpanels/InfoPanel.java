@@ -1,6 +1,6 @@
 package dab.gui.auxpanels;
 
-import dab.engine.simulator.Simulator;
+import dab.engine.newsim.Simulator;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;

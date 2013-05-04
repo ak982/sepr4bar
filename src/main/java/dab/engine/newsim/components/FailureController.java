@@ -54,6 +54,10 @@ public class FailureController {
             }
         }
     }
+    
+    public void repair() {
+        damage = 0;
+    }
 
     /**
      * @return hasFailed boolean

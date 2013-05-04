@@ -32,13 +32,14 @@ public class Condenser extends Container implements FailableObject, CondenserVie
     @JsonProperty
     private FailureController failController;
     
-    public Condenser(double volume, double area) {
+    public Condenser(String name, double volume, double area) {
         super(
+                name,
                 new Water(Constants.ROOM_TEMP, new Kilograms((volume * INITIAL_WATER_RATIO) * Constants.NORMAL_DENSITY_WATER)),
                 new Steam(Constants.ROOM_TEMP, (int)((volume * (1 - INITIAL_WATER_RATIO)) * Constants.NORMAL_PARTICLES_PER_VOLUME_STEAM)),
                 area,
                 volume / area);
-        heatSink = new HeatSink();
+        heatSink = new HeatSink(name + " Cooling Pump");
         failController = new FailureController();
     }
     

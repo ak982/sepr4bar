@@ -4,7 +4,7 @@
  */
 package dab.gui.application;
 
-import dab.engine.simulator.Simulator;
+import dab.engine.newsim.Simulator;
 import dab.gui.intro.DaIntro;
 import dab.gui.mainpanels.DaMMenu;
 import dab.gui.mainpanels.GameInterface;
@@ -73,7 +73,7 @@ public class MainWindow extends JFrame {
         }
         gameInterface = new GameInterface(this, sim, onePlayerMode);
         simulator.setDifficulty(difficulty);
-        simulator.setPlayerMode(onePlayerMode);
+        //simulator.setPlayerMode(onePlayerMode);
         changeToPanel(gameInterface);
     }
     

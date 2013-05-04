@@ -52,31 +52,4 @@ public class Persistence {
                                                                       IOException {
         return mapper.readValue(representation, SaveGame.class);
     }
-
-    /**
-     *
-     * @param representation
-     *
-     * @return
-     *
-     * @throws JsonParseException
-     * @throws JsonMappingException
-     * @throws IOException
-     */
-    public PhysicalModel deserializePhysicalModel(String representation) throws JsonParseException, JsonMappingException,
-                                                                                IOException {
-        return mapper.readValue(representation, PhysicalModel.class);
-    }
-
-    /**
-     *
-     * @param representation
-     *
-     * @return
-     *
-     * @throws IOException
-     */
-    public Percentage deserializePercentage(String representation) throws IOException {
-        return mapper.readValue(representation, Percentage.class);
-    }
 }
