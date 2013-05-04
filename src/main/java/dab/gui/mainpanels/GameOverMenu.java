@@ -67,34 +67,10 @@ public class GameOverMenu extends MenuHandler implements KeyListener{
             text = "The bunny has died! " + mainWindow.getUserName2() + ", you lost ";  
         }
         
-        JLabel forTheText = new JLabel("<html><p>" +text + "</p></html>");        
-               
-       // forTheText.setPreferredSize(new Dimension(50, 50));
-       // forTheText.setMaximumSize(new Dimension(50, 50));
-       // forTheText.setMinimumSize(new Dimension(50, 50));
-        //forTheText.setText("The Reactor has failed, " + mainWindow.getUserName() + "! \n" + "You generated "
-        //        + power + " of power." + "\n");
+        JLabel forTheText = new JLabel("<html><p>" +text + " Press ENTER or ESCAPE to continue </p></html>");        
+       
         add(forTheText, BorderLayout.EAST);
          setBounds(200, 200, 600, 300);
-        
-            /*
-        ImageIcon icon = new ImageIcon("resources/endGame.gif");
-        Image img = icon.getImage();
-        // load the game over gif and scale it to fit in the game over dialog
-        Image newimg = img.getScaledInstance(330, 300, java.awt.Image.SCALE_DEFAULT);
-        ImageIcon newIcon = new ImageIcon(newimg);
-        //create an option pane for the game over dialog
-        final JOptionPane optionPane = new JOptionPane(
-                "The Reactor has failed, " + simulator.getUsername() + "! \n" + "You generated "
-                + simulator.energyGenerated() + " of power." + "\n"
-                + "Would you like to start a new game?",
-                JOptionPane.QUESTION_MESSAGE,
-                JOptionPane.YES_NO_OPTION, newIcon);
-        //create a new gameOver dialog, passing the option pane to it
-         
-                
-
-       */
     }
 
     @Override
