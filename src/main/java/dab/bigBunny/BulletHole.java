@@ -15,6 +15,7 @@ public class BulletHole extends TemporaryObject{
     
     public BulletHole(Point point) {
         super(point, timeToBeSeen);
+        System.out.println(point);
     }
  
     /**

@@ -180,7 +180,7 @@ public class BunnyController {
     private Point2D.Double checkIntersects(Point2D.Double point){
        Point2D.Double newLocation = point;  
        for (HittableComponent h : hitController.getHittableComponents()){
-            if(h.getClass().getSimpleName().equals("Circle")){
+            if(h instanceof Circle){
                 newLocation = checkIntersectsCircle(newLocation, h);
             } else{               
                 newLocation = checkIntersectsSquare(newLocation, h);

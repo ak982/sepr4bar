@@ -115,6 +115,7 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
             Ellipse2D.Double circle = new Ellipse2D.Double(b.getLocation().getX(), b.getLocation().getY(), 4.0, 4.0);
             g2D.setColor(Color.BLACK);
             g2D.fill(circle);
+           
         }
 
         Ellipse2D.Double circle = new Ellipse2D.Double((double) controller.getX() - 10, (double) controller.getY() - 10, 20.0, 20.0);
