@@ -8,6 +8,7 @@ import dab.engine.simulator.Simulator;
 import dab.gui.intro.DaIntro;
 import dab.gui.mainpanels.DaMMenu;
 import dab.gui.mainpanels.GameInterface;
+import dab.gui.mainpanels.MenuHandler;
 import java.awt.Component;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -44,11 +45,12 @@ public class MainWindow extends JFrame {
     private JPanel currentMenu = null;
     private String oldUserName=null; 
     private String oldUserName2=null;
+    private boolean gameOver;
     
     public MainWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1366, 768);
-        
+        gameOver = false;
         difficulty = DEFAULT_DIFFICULTY;
         // create the menu
         
@@ -95,15 +97,15 @@ public class MainWindow extends JFrame {
         p.requestFocusInWindow();
     }
     
-    public void changeMenu(JPanel p, JLayeredPane invoker){
+    public void changeMenu(MenuHandler p){
         if (currentMenu != null) {
             currentMenu.setVisible(false);
-            invoker.remove(currentMenu);
+            p.getInvoker().remove(currentMenu);
         }
-       
+      
         
        //p.setLayout(new BoxLayout(invoker,BoxLayout.Y_AXIS)); 
-        invoker.add(p, JLayeredPane.POPUP_LAYER);
+        p.getInvoker().add(p, JLayeredPane.POPUP_LAYER);
         currentMenu = p;
         p.setVisible(true);         
         p.requestFocus();
@@ -153,6 +155,14 @@ public class MainWindow extends JFrame {
     
     public String getUserName2(){
         return oldUserName2;
+    }
+    
+    public void setGameOver(boolean gameOver){
+        this.gameOver = gameOver;
+    }
+    
+    public boolean getGameOver(){
+        return gameOver;
     }
     
 }

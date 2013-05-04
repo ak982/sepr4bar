@@ -26,7 +26,7 @@ public class DaMMenu extends JLayeredPane {
         setVisible(true); 
         
         mainMenu = new MainMenu(mw, this);
-        mw.changeMenu(mainMenu, this);       
+        mw.changeMenu(mainMenu);       
     }
 
 }

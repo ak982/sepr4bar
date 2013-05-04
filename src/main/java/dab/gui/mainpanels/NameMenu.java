@@ -28,7 +28,7 @@ import javax.swing.JTextField;
  *
  * @author Aiste
  */
-public class NameMenu extends JPanel{
+public class NameMenu extends MenuHandler{
     private final Simulator simulator;
     private final JTextField enter_name, enter_name2;
     private final JLabel name_label;
@@ -37,10 +37,11 @@ public class NameMenu extends JPanel{
    
     
     public NameMenu(final Simulator simulator,MainWindow mw, final JLayeredPane invoker, final boolean onePlayerMode){
+        super(invoker);
         this.simulator = simulator;
         this.mainWindow = mw;
         this.onePlayerMode = onePlayerMode;
-        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS)); 
+        
         
         if(onePlayerMode){
             name_label = new JLabel("Please enter your name");
@@ -118,7 +119,7 @@ public class NameMenu extends JPanel{
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               mainWindow.changeMenu(new MainMenu(mainWindow, invoker), invoker );
+               mainWindow.changeMenu(new MainMenu(mainWindow, invoker));
             }
         });
         
@@ -149,6 +150,7 @@ public class NameMenu extends JPanel{
                 simulator.setUsername2(enter_name2.getText());                
             }
             mainWindow.startGame(simulator,onePlayerMode);
+            mainWindow.setGameOver(false);
         }
     }
    

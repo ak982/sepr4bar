@@ -17,7 +17,7 @@ import javax.swing.JToggleButton;
  *
  * @author Aiste
  */
-public class Options extends JPanel{
+public class Options extends MenuHandler{
     private MainWindow mainWindow;
     private final int EASY = 1;
     private final int NORMAL = 2;
@@ -27,9 +27,10 @@ public class Options extends JPanel{
     
 
     public Options(MainWindow mw, final JLayeredPane invoker) {
+        super(invoker);
         this.mainWindow = mw;
         this.invoker = invoker;
-        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS)); 
+        
         
         easy = new JToggleButton("easy");
         normal = new JToggleButton("normal");
@@ -80,7 +81,7 @@ public class Options extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent e){
-               mainWindow.changeMenu(new HelpScreen(mainWindow, invoker), invoker);
+               mainWindow.changeMenu(new HelpScreen(mainWindow, invoker));
             }
         });
          
@@ -89,7 +90,7 @@ public class Options extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent e){
-                mainWindow.changeMenu(new MainMenu(mainWindow, invoker), invoker );
+                mainWindow.changeMenu(new MainMenu(mainWindow, invoker));
             }
         });
         

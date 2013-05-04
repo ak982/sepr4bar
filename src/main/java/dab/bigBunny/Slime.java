@@ -5,7 +5,6 @@
 package dab.bigBunny;
 
 import java.awt.Point;
-import java.awt.geom.Point2D;
 
 /**
  *
@@ -13,7 +12,6 @@ import java.awt.geom.Point2D;
  */
 public class Slime extends TemporaryObject {
     
-    private static final int radius = 50;
     private int initialTimeToLive;
     
     public Slime(int x, int y, int ttl) {
@@ -23,17 +21,14 @@ public class Slime extends TemporaryObject {
     public Slime(Point p, int ttl) {
         super(p, ttl);
         initialTimeToLive = ttl;
-    }
-    
-    public int   getRadius()   { return radius; }
-    
+    } 
     
     /**
      * @return a double from 0 (old) to 1 (new) \\
      *         depending on how old the slime is.
      */
-    public double getFreshness() {
-        return (double)remainingTimeToLive / (double)initialTimeToLive;
+    public float getFreshness() {
+        return (float)remainingTimeToLive / (float)initialTimeToLive;
     }
     
     public String toString() {

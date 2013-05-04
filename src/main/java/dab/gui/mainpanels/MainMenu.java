@@ -18,14 +18,14 @@ import javax.swing.JPanel;
  *
  * @author Aiste
  */
-public class MainMenu extends JPanel{
+public class MainMenu extends MenuHandler{
     private MainWindow mainWindow;
     private JLayeredPane invoker;
     
-
     public MainMenu(MainWindow mw, final JLayeredPane invoker) {
         
-        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS)); 
+        super(invoker);
+        
         this.mainWindow = mw;
         this.invoker = invoker;
         
@@ -53,7 +53,7 @@ public class MainMenu extends JPanel{
 
             @Override
             public void actionPerformed(ActionEvent e){                
-                mainWindow.changeMenu(new Options(mainWindow, invoker), invoker);                
+                mainWindow.changeMenu(new Options(mainWindow, invoker));                
             }
         });
      
@@ -79,8 +79,9 @@ public class MainMenu extends JPanel{
    
         
         if(!invoker.toString().contains("Menu")) {
-        
-        add(resume);
+            if(!mainWindow.getGameOver()){        
+                add(resume);
+            }
         }
         add(new_game);
         add(two_player);
@@ -173,7 +174,7 @@ public class MainMenu extends JPanel{
     private void startGame(boolean playerMode){
          mainWindow.stopMusic();
          Simulator sim = new Simulator();         
-         mainWindow.changeMenu(new NameMenu(sim, mainWindow, invoker, playerMode), invoker);
+         mainWindow.changeMenu(new NameMenu(sim, mainWindow, invoker, playerMode));
     }
     
 }

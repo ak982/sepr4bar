@@ -7,9 +7,11 @@ package dab.bigBunny;
 import dab.engine.simulator.Simulator;
 import dab.gui.gamepanel.GamePanel;
 import dab.gui.gamepanel.UIComponent;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -32,14 +34,13 @@ import javax.swing.Timer;
  */
 public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionListener {
 
-    BufferedImage bunny;
+    BufferedImage bunny, slime;
     BunnyController controller;
     Environment environment;
     JProgressBar bar;
     private Rectangle bounds;
     private JLabel box;
     private ImageIcon boxToHit;
-    private Timer animator;
     private HitBoundsController hitboundsController;
 
     public TwoPlayerScreen(Simulator simulator, Environment en, HitBoundsController h,BunnyController bc) {
@@ -52,12 +53,8 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
 
         controller.setBounds(new Rectangle(getWidth(), getHeight()));
         environment.setBounds(getWidth(), getHeight());
-        this.animator = new Timer(1000/30, this);
 
         setFocusable(true);
-        //requestFocusInWindow();
-        
-        //this.setSize(dimX, dimY);
         this.setLayout(null);
         setBackground(Color.WHITE);
         bar = new JProgressBar(0, controller.getHealth());
@@ -65,26 +62,12 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
         bar.setBounds(10, 10, 100, 30);
         bar.setVisible(true);
         bar.setStringPainted(true);
-
-        box = new JLabel("Box");
-        boxToHit = new ImageIcon("resources/HitableBox.png");
-        box.setIcon(boxToHit);
-        box.setBounds(500, 500, 40, 40);
-        this.add(box);
-        box.setVisible(true);
-        hitboundsController.addHitableComponent(new TheRectangle(uiComponents.get(0).getComponent(),500, 500, 40,40));
-        
+       
         for(UIComponent uc : uiComponents){
                 hitboundsController.addHitableComponent(uc.getComponent(),
                         uc.getLocation().x, uc.getLocation().y, uc.getWidth(), uc.getHeight());          
         }
 
-        //to call this on the reactorPannel, not on this thing
-        //bounds = new Rectangle(getWidth(), getHeight());
-        
-        //controller.setBounds(bounds);
-
- 
         addMouseListener(this);
 
         try {
@@ -92,11 +75,14 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
         } catch (Exception e) {
             System.err.println("Image not found");
         }
-
-        this.animator.setInitialDelay(150);
-        this.animator.start();
         
-        //setFocusable(true);
+         try {
+            slime = ImageIO.read(new File("src/main/resources/dab/gui/slime2.png"));
+        } catch (Exception e) {
+            System.err.println("Image not found");
+        }
+        environment.setSlimeRadius(slime.getWidth()/2); 
+        
 
     }
 
@@ -104,6 +90,7 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
+        
         AffineTransform af = new AffineTransform();
 
         af.translate(controller.getX(), controller.getY());
@@ -111,16 +98,15 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
         af.translate(-bunny.getWidth() / 2, -bunny.getHeight() / 2);
 
         for (Slime s : environment.getSlimes()) {
-            Ellipse2D.Double circle = new Ellipse2D.Double(
-                    s.getLocation().getX() - s.getRadius(),
-                    s.getLocation().getY() - s.getRadius(), s.getRadius() * 2, s.getRadius() * 2);
-            double f = s.getFreshness();
-            int rgb = (int) (255 * (1 - f)); // so that things get whiter
-            Color c = new Color(127, rgb, rgb);
-            g2D.setColor(c);
-            g2D.fill(circle);
-
+          float f = s.getFreshness();
+          g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,f));           
+          g2D.drawImage(slime, (int)s.getLocation().getX() - slime.getWidth()/2, 
+                 (int) s.getLocation().getY() - slime.getHeight()/2, slime.getWidth(),
+                  slime.getHeight(), this);
+          
         }
+        
+        g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1));
 
         for (BulletHole b : environment.getBullets()) {
             Ellipse2D.Double circle = new Ellipse2D.Double(b.getLocation().getX(), b.getLocation().getY(), 4.0, 4.0);
@@ -131,8 +117,9 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
         Ellipse2D.Double circle = new Ellipse2D.Double((double) controller.getX() - 10, (double) controller.getY() - 10, 20.0, 20.0);
         g2D.drawImage(bunny, af, this);
         g2D.setColor(Color.black);
-        g2D.draw(circle);
 
+        g2D.draw(circle);
+     
         bar.setValue(controller.getHealth());
     }
 

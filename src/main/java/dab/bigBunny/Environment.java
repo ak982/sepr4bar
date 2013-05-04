@@ -26,6 +26,7 @@ public class Environment {
     private boolean headache;
     private int headacheTime;
     private final int DEFAULT_HEADACHE_TIME = 100;
+    private int slimeRadius;
 
     public Environment() {
         slimes = new TemporaryObjectList<>();
@@ -64,7 +65,7 @@ public class Environment {
     public Slime intersectWithSlime(Point p, int radius) {
         for (Slime s : slimes.getRawList()) {
             int sqdistance = (int) p.distanceSq(s.getLocation());
-            int sqSumRadius = (radius + s.getRadius()) * (radius + s.getRadius());
+            int sqSumRadius = (radius + slimeRadius) * (radius + slimeRadius);
             if (sqdistance < sqSumRadius) { // they intersect
                 return s;
             }
@@ -130,5 +131,9 @@ public class Environment {
 
     public boolean getHeadache() {
         return headache;
+    }
+    
+    public void setSlimeRadius(int slimeRadius){
+        this.slimeRadius = slimeRadius;
     }
 }

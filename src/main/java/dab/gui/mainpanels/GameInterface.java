@@ -26,8 +26,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -52,6 +50,7 @@ public class GameInterface extends JPanel implements KeyListener {
     private BunnyController controller;
     private Environment environment;
     private HitBoundsController hitboundsController;
+    private int counter;
 
     public static GameInterface instance() {
         throw new UnsupportedOperationException();
@@ -62,14 +61,11 @@ public class GameInterface extends JPanel implements KeyListener {
         this.mainWindow = mainWindow;
         this.simulator = simulator;
         this.onePlayerMode = onePlayerMode;
-        
+        counter = 0;
         music = new Sounds("resources/music/backgroundSound.wav", true);
                    
-        
-        
         setupPanels();
-        setupTimer();
-     
+        setupTimer(); 
         
         // rock and roll baby!
         animator.start();
@@ -162,42 +158,14 @@ public class GameInterface extends JPanel implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {   } //Do nothing
     
-    private void showGameOverScreen() {
+    private void showGameOverScreen(boolean playerOneLost) {
         animator.stop();
-        ImageIcon icon = new ImageIcon("resources/endGame.gif");
-        Image img = icon.getImage();
-        // load the game over gif and scale it to fit in the game over dialog
-        Image newimg = img.getScaledInstance(330, 300, java.awt.Image.SCALE_DEFAULT);
-        ImageIcon newIcon = new ImageIcon(newimg);
-        //create an option pane for the game over dialog
-        final JOptionPane optionPane = new JOptionPane(
-                "The Reactor has failed, " + simulator.getUsername() + "! \n" + "You generated "
-                + simulator.energyGenerated() + " of power." + "\n"
-                + "Would you like to start a new game?",
-                JOptionPane.QUESTION_MESSAGE,
-                JOptionPane.YES_NO_OPTION, newIcon);
-        //create a new gameOver dialog, passing the option pane to it
-        gameOver = new GameOver(optionPane);
-        optionPane.addPropertyChangeListener(
-                new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent e) {
-                int value = (Integer) e.getNewValue();
-                //if the user clicks the "Yes" option
-                if ((value == 0)) {
-                    //create a new simulator with the old username
-                    String old_username = simulator.getUsername();
-                    Simulator new_simulator = new Simulator();
-                    new_simulator.setUsername(old_username);
-                    mainWindow.startGame(new_simulator, true);
-                }
-                if ((value == 1)) {
-                    mainWindow.showMenu();
-                }
-            }
-        });
-
+        mainWindow.setGameOver(true);
+        mainWindow.changeMenu(new GameOverMenu(mainWindow, gamePanel,
+                onePlayerMode, playerOneLost, simulator.energyGenerated().toString()));       
     }
+
+    
 
     private void setupTimer() {
 
@@ -205,13 +173,24 @@ public class GameInterface extends JPanel implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 try {
+                    
                     requestFocus();
-                    simulator.step();
-                    infoPanel.update();
-                    obamaPanel.update();
-                    gamePanel.updateComponents();
-                    buttonPanel.update();
+                    if(counter%3==0) {
+                        simulator.step();
+                        infoPanel.update();
+                        obamaPanel.update();
+                        gamePanel.updateComponents();
+                        buttonPanel.update();
+                        counter=0;
+                    }
                     handleMusic();
+                    counter ++;
+                    
+                    if(!onePlayerMode){
+                        controller.step();
+                        environment.step();                    
+                        gamePanel.repaint();
+                    }
                           
                     // soon there will be no need to screenUpdate
                     //screenUpdate();
@@ -221,12 +200,17 @@ public class GameInterface extends JPanel implements KeyListener {
                     // stop the game loop when game over
                     animator.stop();
                     music.interrupt();
-                    showGameOverScreen();
+                    if(!onePlayerMode && controller.getHealth()<=0){
+                        showGameOverScreen(false);
+                    } else {
+                        showGameOverScreen(true);
+                    }
+                    
                 }
             }
         };
         //game loop updates every 100 ms
-        animator = new Timer(100, taskStep);
+        animator = new Timer(1000/30, taskStep);
     }
     
     public void handleMusic(){    
@@ -300,7 +284,7 @@ public class GameInterface extends JPanel implements KeyListener {
         
         animator.stop();
         music.stopIt();
-        mainWindow.changeMenu(new MainMenu(mainWindow, gamePanel), gamePanel);       
+        mainWindow.changeMenu(new MainMenu(mainWindow, gamePanel));       
         
     }
 
