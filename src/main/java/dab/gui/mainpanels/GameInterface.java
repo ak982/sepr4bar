@@ -1,9 +1,5 @@
 package dab.gui.mainpanels;
 
-import dab.bigBunny.BunnyController;
-import dab.bigBunny.Environment;
-import dab.bigBunny.HitBoundsController;
-import dab.bigBunny.TwoPlayerScreen;
 import dab.engine.simulator.CannotControlException;
 import dab.engine.simulator.FailMode;
 import dab.engine.simulator.GameOverException;
@@ -20,36 +16,28 @@ import dab.gui.gamepanel.GameOver;
 import dab.gui.gamepanel.GamePanel;
 import dab.gui.sound.Sounds;
 import java.awt.BorderLayout;
-import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.Timer;
 
-public class GameInterface extends JPanel implements KeyListener {
+public abstract class GameInterface extends JPanel implements KeyListener {
 
     private Simulator simulator;
     private MainWindow mainWindow;
     private Sounds music;
     public final int MAX_SIZE_WIDTH = 1366;
     public final int MAX_SIZE_HEIGHT = 768;
-    private GamePanel gamePanel;
     private ObamaPanel obamaPanel;
     private ButtonPanel buttonPanel;
     private InfoPanel infoPanel;
     private Timer animator;
     public static final Pressure CONDENSER_WARNING_PRESSURE = new Pressure(25530000);
     private GameOver gameOver;
-    private boolean onePlayerMode;
-    private BunnyController controller;
-    private Environment environment;
-    private HitBoundsController hitboundsController;
+    
     private int counter;
 
     public static GameInterface instance() {
@@ -57,22 +45,27 @@ public class GameInterface extends JPanel implements KeyListener {
 
     }
 
-    public GameInterface (MainWindow mainWindow, Simulator simulator, boolean onePlayerMode) {
+    public GameInterface (MainWindow mainWindow, Simulator simulator) {
         this.mainWindow = mainWindow;
         this.simulator = simulator;
-        this.onePlayerMode = onePlayerMode;
+        
         counter = 0;
         music = new Sounds("resources/music/backgroundSound.wav", true);
-                   
-        setupPanels();
-        setupTimer(); 
+  
+        ActionListener taskStep = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+               step();
+            }
+        };
+        animator = new Timer(1000/30, taskStep);
         
         // rock and roll baby!
         animator.start();
         addKeyListener(this);      
     }
     
-    private void setupPanels() {       
+    protected void setupPanels() {       
         setLayout(new BorderLayout());
         JSplitPane topLevelSplitPane, leftPane, rightPane;
         
@@ -88,22 +81,12 @@ public class GameInterface extends JPanel implements KeyListener {
         rightPane.setDividerSize(5);
         rightPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
         rightPane.setResizeWeight(0.5);
-        
-        if(onePlayerMode) {
-            gamePanel = new SinglePlayerPanel(simulator);
-        } else {            
-            environment = new Environment();
-            hitboundsController = new HitBoundsController();
-            controller = new BunnyController(environment, hitboundsController, new Point(100, 100));           
-            gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller); 
-        }
          
         obamaPanel = new ObamaPanel(simulator);
         infoPanel = new InfoPanel(simulator);
         buttonPanel = new ButtonPanel(simulator);
-        
-                
-        leftPane.setLeftComponent(gamePanel);
+                     
+        leftPane.setLeftComponent(getGamePanel());
         leftPane.setRightComponent(obamaPanel);
         rightPane.setLeftComponent(infoPanel);
         rightPane.setRightComponent(buttonPanel);        
@@ -114,103 +97,53 @@ public class GameInterface extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                controller.startForward();
-                break;
-            case KeyEvent.VK_LEFT:
-                controller.startRotateLeft();
-                break;
-            case KeyEvent.VK_RIGHT:
-                controller.startRotateRight();
-                break;
-            case KeyEvent.VK_DOWN:
-                controller.startBrake();
-                break;
-            case KeyEvent.VK_SPACE:
-                environment.startSoftwareFailure();
-                break;
-        }
+    public void keyPressed(KeyEvent e) {    
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP:
-                controller.stopForward();
-                break;
-            case KeyEvent.VK_LEFT:
-                controller.stopRotateLeft();
-                break;
-            case KeyEvent.VK_RIGHT:
-                controller.stopRotateRight();
-                break;
-            case KeyEvent.VK_DOWN:
-                controller.stopBrake();
-                break;
-            case KeyEvent.VK_ESCAPE:
+          if(e.getKeyCode()== KeyEvent.VK_ESCAPE){
                 handelEscape();
-                break;
-        }
+            }   
     }
 
     @Override
     public void keyTyped(KeyEvent e) {   } //Do nothing
     
-    private void showGameOverScreen(boolean playerOneLost) {
+    private void showGameOverScreen() {
         animator.stop();
         mainWindow.setGameOver(true);
-        mainWindow.changeMenu(new GameOverMenu(mainWindow, gamePanel,
-                onePlayerMode, playerOneLost, simulator.energyGenerated().toString()));       
+        showGameOverMenu();           
     }
 
+    protected abstract void showGameOverMenu();
     
-
-    private void setupTimer() {
-
-        ActionListener taskStep = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                try {
-                    
-                    requestFocus();
-                    if(counter%3==0) {
-                        simulator.step();
-                        infoPanel.update();
-                        obamaPanel.update();
-                        gamePanel.updateComponents();
-                        buttonPanel.update();
-                        counter=0;
-                    }
-                    handleMusic();
-                    counter ++;
-                    
-                    if(!onePlayerMode){
-                        controller.step();
-                        environment.step();                    
-                        gamePanel.repaint();
-                    }
-                          
-                    // soon there will be no need to screenUpdate
-                    //screenUpdate();
-                    //repaint();
-                } catch (GameOverException e) {
-
-                    // stop the game loop when game over
-                    animator.stop();
-                    music.interrupt();
-                    if(!onePlayerMode && controller.getHealth()<=0){
-                        showGameOverScreen(false);
-                    } else {
-                        showGameOverScreen(true);
-                    }
-                    
-                }
+    protected void step() {
+        try {
+           
+            if (counter % 3 == 0) {
+                simulator.step();
+                infoPanel.update();
+                obamaPanel.update();
+                getGamePanel().updateComponents();
+                buttonPanel.update();
+                counter = 0;
             }
-        };
-        //game loop updates every 100 ms
-        animator = new Timer(1000/30, taskStep);
+            handleMusic();
+            counter++;
+             requestFocus();
+            // soon there will be no need to screenUpdate
+            //screenUpdate();
+            //repaint();
+        } catch (GameOverException e) {
+
+            // stop the game loop when game over
+            animator.stop();
+            music.interrupt();
+            showGameOverScreen();
+        }
+        
+         addKeyListener(this);
     }
     
     public void handleMusic(){    
@@ -284,7 +217,7 @@ public class GameInterface extends JPanel implements KeyListener {
         
         animator.stop();
         music.stopIt();
-        mainWindow.changeMenu(new MainMenu(mainWindow, gamePanel));       
+        mainWindow.changeMenu(new MainMenu(mainWindow, getGamePanel()));       
         
     }
 
@@ -299,6 +232,6 @@ public class GameInterface extends JPanel implements KeyListener {
   //      handleMusic();
     }
     
-    
+    protected abstract GamePanel getGamePanel();
 
 }

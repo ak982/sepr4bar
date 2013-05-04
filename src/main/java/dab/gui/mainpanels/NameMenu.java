@@ -72,21 +72,22 @@ public class NameMenu extends MenuHandler{
         enter_name.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                super.keyReleased(e);
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    if(onePlayerMode){
-                        tryStart();
-                    } else {
-                        enter_name2.requestFocus();
-                    }
-                }
+              //  super.keyReleased(e);
+               
             }
 
             @Override
             public void keyTyped(KeyEvent e) {            }
 
             @Override
-            public void keyPressed(KeyEvent e) {            }
+            public void keyPressed(KeyEvent e) {    
+             if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    if(onePlayerMode){
+                        tryStart();
+                    } else {
+                        enter_name2.requestFocus();
+                    }
+                }}
         });
         enter_name.setText(mainWindow.getUserName());
         
@@ -97,17 +98,18 @@ public class NameMenu extends MenuHandler{
         enter_name2.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                super.keyReleased(e);
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    tryStart();
-                }
+               
             }
 
             @Override
             public void keyTyped(KeyEvent e) {            }
 
             @Override
-            public void keyPressed(KeyEvent e) {            }
+            public void keyPressed(KeyEvent e) {  
+             super.keyReleased(e);
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    tryStart();
+                }}
         });
         enter_name2.setText(mainWindow.getUserName2());
         

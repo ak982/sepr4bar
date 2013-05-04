@@ -4,11 +4,14 @@
  */
 package dab.gui.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import dab.engine.simulator.Simulator;
 import dab.gui.intro.DaIntro;
 import dab.gui.mainpanels.DaMMenu;
 import dab.gui.mainpanels.GameInterface;
 import dab.gui.mainpanels.MenuHandler;
+import dab.gui.mainpanels.SinglePlayerInterface;
+import dab.gui.mainpanels.TwoPlayerInterface;
 import java.awt.Component;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -29,9 +32,7 @@ public class MainWindow extends JFrame {
                 MainWindow mw = new MainWindow();
                 mw.setExtendedState(MainWindow.MAXIMIZED_BOTH);
                 mw.setVisible(true);
-
                 mw.showIntro();
-
             }
         });
     }
@@ -72,8 +73,12 @@ public class MainWindow extends JFrame {
         oldUserName = simulator.getUsername();
         if(!onePlayerMode&&simulator.getUsername2()!=null){
             oldUserName2 = simulator.getUsername2(); 
+        } 
+        if(onePlayerMode){
+            gameInterface = new SinglePlayerInterface(this, sim);
+        } else {
+            gameInterface = new TwoPlayerInterface(this, sim);
         }
-        gameInterface = new GameInterface(this, sim, onePlayerMode);
         simulator.setDifficulty(difficulty);
         simulator.setPlayerMode(onePlayerMode);
         changeToPanel(gameInterface);
@@ -165,4 +170,7 @@ public class MainWindow extends JFrame {
         return gameOver;
     }
     
+    public void saveGame() throws JsonProcessingException{
+        simulator.saveGame();
+    }
 }

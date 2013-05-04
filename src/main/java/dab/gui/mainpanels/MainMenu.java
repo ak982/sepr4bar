@@ -4,6 +4,7 @@
  */
 package dab.gui.mainpanels;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import dab.engine.simulator.Simulator;
 import dab.gui.application.MainWindow;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -48,6 +50,26 @@ public class MainMenu extends MenuHandler{
             }
         });
         
+        
+            JButton save_menu = new JButton();
+            save_menu.setOpaque(true);
+            save_menu.setIconTextGap(0);
+            save_menu.setContentAreaFilled(false);
+            save_menu.setIcon(new ImageIcon("resources/menu/saveButton.png"));
+            save_menu.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                       mainWindow.saveGame();
+                       JOptionPane.showMessageDialog(null, "Game Saved");
+                    } catch (JsonProcessingException e1) {
+                        e1.printStackTrace();
+                    }
+
+                }
+            });
+            
+        
         JButton options = new JButton("options");
         options.addActionListener(new ActionListener() {
 
@@ -77,14 +99,28 @@ public class MainMenu extends MenuHandler{
             }
         });
    
-        
-        if(!invoker.toString().contains("Menu")) {
+       boolean addResume = false;
+       boolean addSave = false;
+      
+       if(!invoker.toString().contains("Menu")) {
             if(!mainWindow.getGameOver()){        
-                add(resume);
+                addResume = true;
+                if(invoker.toString().contains("One")){
+                    
+                    addSave = true;
+                }
             }
         }
+        
+        if(addResume) {
+            add(resume);
+        }
+                
         add(new_game);
         add(two_player);
+        if (addSave) {
+            add(save_menu);
+        }
         add(options);
         add(exit_game);
         
@@ -93,25 +129,10 @@ public class MainMenu extends MenuHandler{
                 (int)new_game.getMinimumSize().getHeight()*getComponentCount());
         
         
-        /*
+       
 
-            JMenuItem save_menu = new JMenuItem();
-            save_menu.setOpaque(true);
-            save_menu.setIconTextGap(0);
-            save_menu.setContentAreaFilled(false);
-            save_menu.setIcon(new ImageIcon("resources/menu/saveButton.png"));
-            save_menu.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        simulator.saveGame();
-                        JOptionPane.showMessageDialog(null, "Game Saved");
-                    } catch (JsonProcessingException e1) {
-                        e1.printStackTrace();
-                    }
-
-                }
-            });
+            
+             /*
             JMenuItem load_menu = new JMenuItem();
             load_menu.setOpaque(true);
             load_menu.setIconTextGap(0);

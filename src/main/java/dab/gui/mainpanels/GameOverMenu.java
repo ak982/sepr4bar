@@ -22,24 +22,24 @@ import javax.swing.JLayeredPane;
  */
 public class GameOverMenu extends MenuHandler implements KeyListener{
     
-    private boolean playerOneLost;
+    private boolean playerTwoLost;
     private ImageIcon icon;
     private MainWindow mainWindow;
     private JLayeredPane invoker;
     private String text;
     
-    public GameOverMenu(MainWindow mw, final JLayeredPane invoker,boolean playerOneMode, boolean playerOneLost, String power){
+    public GameOverMenu(MainWindow mw, final JLayeredPane invoker,boolean playerOneMode, boolean playerTwoLost, String power){
       super(invoker);
         this.mainWindow = mw; 
       this.invoker = invoker;
         
        setLayout(new BoxLayout(this,BoxLayout.X_AXIS)); 
         
-        this.playerOneLost  = playerOneLost; 
-        if(playerOneLost) {
-            icon = new ImageIcon("resources/endGame.gif");
-        } else {
+        this.playerTwoLost  = playerTwoLost; 
+        if(playerTwoLost) {
             ///Use the one for dying bunny!!!!!!!!
+            icon = new ImageIcon("resources/endGame.gif");
+        } else {          
             icon = new ImageIcon("resources/endGame.gif");   
         }
        
@@ -60,9 +60,11 @@ public class GameOverMenu extends MenuHandler implements KeyListener{
         if(playerOneMode){
             text = "The Reactor has failed, " + mainWindow.getUserName() + "! You generated "
                 + power + " of power.";
-        } else if (playerOneLost){
+        } else if (!playerTwoLost){
             text = "The Reactor has not survived the bunny attacks! " + mainWindow.getUserName() + ", you generated "
                 + power + " of power.";    
+        } else {
+            text = "The bunny has died! " + mainWindow.getUserName2() + ", you lost ";  
         }
         
         JLabel forTheText = new JLabel("<html><p>" +text + "</p></html>");        
@@ -102,7 +104,10 @@ public class GameOverMenu extends MenuHandler implements KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        mainWindow.changeMenu(new MainMenu(mainWindow, invoker));
+        if(e.getKeyCode()== KeyEvent.VK_ESCAPE || e.getKeyCode()== KeyEvent.VK_ENTER){
+                mainWindow.changeMenu(new MainMenu(mainWindow, invoker));
+            }   
+       
     }
 
     @Override
