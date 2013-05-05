@@ -1,6 +1,6 @@
 package dab.bigBunny;
 
-import dab.engine.simulator.views.FailableComponentView;
+import dab.engine.newsim.interfaces.FailableComponentView;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -180,10 +180,10 @@ public class BunnyController {
     private Point2D.Double checkIntersects(Point2D.Double point){
        Point2D.Double newLocation = point;  
        for (HittableComponent h : hitController.getHittableComponents()){
-            if(h.getClass().getSimpleName().equals("Circle")){
+            if(h instanceof Circle){
                 newLocation = checkIntersectsCircle(newLocation, h);
-            } else{               
-                newLocation = checkIntersectsSquare(newLocation, h);
+            } else if (h instanceof RecCircle){     
+                newLocation = checkIntersectsSquare(newLocation, (RecCircle)h);     
             }
        }
           
@@ -296,10 +296,12 @@ public class BunnyController {
         return angle;       
     }
     
-    public Point2D.Double checkIntersectsSquare (Point2D.Double newLocation, HittableComponent h){
+    public Point2D.Double checkIntersectsSquare (Point2D.Double newLocation, RecCircle h){
         double centreX, centreY, halfHeight, halfWidth, newX, newY;
         int thisDirection;
-        Rectangle hitBounds= h.getHittableBounds(radius);
+        Rectangle hitBounds  = h.getRectangle().getHittableBounds(radius);
+        Circle circle1 = h.getCircle1();
+        Circle circle2 = h.getCircle2();
         
         newX = newLocation.getX();
         newY = newLocation.getY();
@@ -313,14 +315,36 @@ public class BunnyController {
             thisDirection = adjustThisDirection();
 
             if (hitFromBelowOrAbove(x, centreX, y, centreY, halfHeight, halfWidth, thisDirection)) {      
+                           
                 if (thisDirection > 180) {
-                    perpendicularAngle = 270;
+                    if(circle2 !=null) {
+                        newLocation = checkIntersectsCircle(newLocation, circle2);
+                        newX = newLocation.getX();
+                        newY = newLocation.getY();
+                        
+                    } else {
+                        perpendicularAngle = 270;
+                        newY = handleHitWall(centreY, halfHeight, perpendicularAngle);              
+                        newX = adjustX(newY, thisDirection);
+                        newX = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getX();
+                    }
+                        
                 } else {
-                    perpendicularAngle = 90;
+                    if(circle1 != null){
+                        newLocation = checkIntersectsCircle(newLocation, circle1);
+                        newX = newLocation.getX();
+                        newY = newLocation.getY();
+                        
+                    }else {
+                        perpendicularAngle = 90;
+                        newY = handleHitWall(centreY, halfHeight, perpendicularAngle);              
+                        newX = adjustX(newY, thisDirection);
+                        newX = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getX();
+                    }
                 }
-                newY = handleHitWall(centreY, halfHeight, perpendicularAngle);              
-                newX = adjustX(newY, thisDirection);
-                newX = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getX();
+                
+                
+              
             } else {
                 if ((thisDirection < 270) && (thisDirection > 90)) {
                     perpendicularAngle = 180;
@@ -333,6 +357,17 @@ public class BunnyController {
             }
 
             orientation = fixOrientation(tempOrientation);
+        } else {
+            if(circle1 != null){
+                newLocation = checkIntersectsCircle(newLocation, circle1);
+                newX = newLocation.getX();
+                newY = newLocation.getY();
+            } 
+            if (circle2 != null){
+                newLocation = checkIntersectsCircle(newLocation, circle2);
+                newX = newLocation.getX();
+                newY = newLocation.getY();
+            }       
         }
   
         newLocation.setLocation(newX, newY);

@@ -14,7 +14,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class BunnyInterface extends JFrame implements KeyListener {
+public class BunnyInterface {
+}
+
+/*public class BunnyInterface extends JFrame implements KeyListener {
 
     private ShowCanvas canvas;
     private BunnyController bunnyController;
@@ -273,4 +276,4 @@ class ShowCanvas extends JPanel implements MouseListener {
 
     public void mouseExited(MouseEvent e) {
     } //Do nothing
-}
+}*/

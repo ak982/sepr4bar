@@ -1,5 +1,6 @@
 package dab.gui.auxpanels;
 
+import dab.engine.newsim.AbstractSimulator;
 import dab.engine.newsim.SinglePlayerSimulator;
 import dab.gui.mainpanels.GameInterface;
 import java.awt.Color;
@@ -26,8 +27,8 @@ public class ObamaPanel extends JPanel {
     JLabel lblWords;
 
     // FIXME: this should be abstract since we're using it in the other interface also.
-    public ObamaPanel(SinglePlayerSimulator simulator) {
-        this.simulator = simulator;
+    public ObamaPanel(AbstractSimulator simulator) {
+        this.simulator = (SinglePlayerSimulator)simulator;
         
         setBackground(Color.WHITE);
         setLayout(null);

@@ -161,6 +161,7 @@ public class Reactor extends Container implements ReactorView {
         return "R: " + super.toString();
     }
 
+    //<editor-fold desc="implemented interfaces">
     @Override
     public Temperature temperature() {
         return new Temperature(water.getTemperature());
@@ -180,4 +181,26 @@ public class Reactor extends Container implements ReactorView {
     public Percentage controlRodPosition() {
         return new Percentage(core.getRodPosition());
     }
+
+    @Override
+    public boolean hasFailed() {
+        return false;
+    }
+
+    @Override
+    public void fixDamage() {
+        ;
+    }
+
+    @Override
+    public int getDamage() {
+        return 0;
+    }
+
+    @Override
+    public void fail(int dmg) {
+        ;
+    }
+    
+    //</editor-fold>
 }

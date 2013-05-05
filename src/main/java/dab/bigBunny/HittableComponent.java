@@ -4,8 +4,7 @@
  */
 package dab.bigBunny;
 
-import dab.engine.simulator.FailableComponent;
-import dab.engine.simulator.views.FailableComponentView;
+import dab.engine.newsim.interfaces.FailableComponentView;
 import java.awt.Rectangle;
 
 /**

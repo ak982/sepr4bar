@@ -12,7 +12,7 @@ import dab.engine.utilities.Temperature;
  *
  * @author eduard
  */
-public interface ReactorView extends ContainerView {
+public interface ReactorView extends ContainerView, FailableComponentView {
     public void moveControlRods(Percentage extracted);
     public Percentage controlRodPosition();
     

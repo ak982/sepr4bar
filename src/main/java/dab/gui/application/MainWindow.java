@@ -4,10 +4,16 @@
  */
 package dab.gui.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import dab.engine.newsim.AbstractSimulator;
 import dab.engine.newsim.SinglePlayerSimulator;
+import dab.engine.newsim.TwoPlayerSimulator;
 import dab.gui.intro.DaIntro;
 import dab.gui.mainpanels.DaMMenu;
 import dab.gui.mainpanels.GameInterface;
+import dab.gui.mainpanels.MenuHandler;
+import dab.gui.mainpanels.SinglePlayerInterface;
+import dab.gui.mainpanels.TwoPlayerInterface;
 import java.awt.Component;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -19,6 +25,7 @@ import javax.swing.JPanel;
  * @author eduard
  */
 public class MainWindow extends JFrame {
+    private final static int DEFAULT_DIFFICULTY = 1;    //to check with the one in options
     
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -28,29 +35,28 @@ public class MainWindow extends JFrame {
                 MainWindow mw = new MainWindow();
                 mw.setExtendedState(MainWindow.MAXIMIZED_BOTH);
                 mw.setVisible(true);
-
-                //mw.showIntro();
-                mw.startGame(new SinglePlayerSimulator(), true);
-
+                mw.showIntro();
+                //mw.startSinglePlayerGame(new SinglePlayerSimulator());
             }
         });
     }
    // private DaMMenu menu;
     private Component currentComponent = null;
     private int difficulty;
-    private final int DEFAULT_DIFFICULTY =1;    //to check with the one in options
     private boolean music;
-    private SinglePlayerSimulator simulator = null;
     private GameInterface gameInterface = null;
     private JPanel currentMenu = null;
     private String oldUserName=null; 
     private String oldUserName2=null;
+    private boolean gameOver;
+    private AbstractSimulator currentSimulator;
     
     public MainWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1366, 768);
-        
+        gameOver = false;
         difficulty = DEFAULT_DIFFICULTY;
+        currentSimulator = null;
         // create the menu
         
         music = true;      
@@ -66,15 +72,36 @@ public class MainWindow extends JFrame {
         changeToPanel(menu);      
     }
     
-    public void startGame(SinglePlayerSimulator sim, boolean onePlayerMode) {
-        simulator = sim;
-        oldUserName = simulator.getUsername();
-        /*if(!onePlayerMode&&simulator.getUsername2()!=null){
-            oldUserName2 = simulator.getUsername2(); 
-        }*/
-        gameInterface = new GameInterface(this, sim, onePlayerMode);
+    /*public void startGame(AbstractSimulator sim, boolean onePlayerMode) {
+        currentSimulator = sim;
+        oldUserName = currentSimulator.getUsername();
+
+        if(onePlayerMode){
+            gameInterface = new SinglePlayerInterface(this, sim);
+        } else {
+            gameInterface = new TwoPlayerInterface(this, sim);
+        }
         simulator.setDifficulty(difficulty);
         //simulator.setPlayerMode(onePlayerMode);
+        changeToPanel(gameInterface);
+    }*/
+
+    public void startSinglePlayerGame(SinglePlayerSimulator sim) {
+        currentSimulator = sim;
+        sim.setDifficulty(difficulty);
+        oldUserName = sim.getUsername();
+        
+        gameInterface = new SinglePlayerInterface(this, sim);
+        changeToPanel(gameInterface);
+    }
+    
+    public void startTwoPlayerGame(TwoPlayerSimulator sim) {
+        currentSimulator = sim;
+        sim.setDifficulty(difficulty);
+        oldUserName = sim.getUsername1();
+        oldUserName2 = sim.getUsername2();
+        
+        gameInterface = new TwoPlayerInterface(this, sim);
         changeToPanel(gameInterface);
     }
     
@@ -96,15 +123,15 @@ public class MainWindow extends JFrame {
         p.requestFocusInWindow();
     }
     
-    public void changeMenu(JPanel p, JLayeredPane invoker){
+    public void changeMenu(MenuHandler p){
         if (currentMenu != null) {
             currentMenu.setVisible(false);
-            invoker.remove(currentMenu);
+            p.getInvoker().remove(currentMenu);
         }
-       
+      
         
        //p.setLayout(new BoxLayout(invoker,BoxLayout.Y_AXIS)); 
-        invoker.add(p, JLayeredPane.POPUP_LAYER);
+        p.getInvoker().add(p, JLayeredPane.POPUP_LAYER);
         currentMenu = p;
         p.setVisible(true);         
         p.requestFocus();
@@ -117,8 +144,8 @@ public class MainWindow extends JFrame {
     }
     
     public void setDifficulty (int i) {      
-        if(simulator != null){               
-            simulator.setDifficulty(i);
+        if(currentSimulator != null){               
+            currentSimulator.setDifficulty(i);
         }
         difficulty = i;       
     }
@@ -156,4 +183,17 @@ public class MainWindow extends JFrame {
         return oldUserName2;
     }
     
+    public void setGameOver(boolean gameOver){
+        this.gameOver = gameOver;
+    }
+    
+    public boolean getGameOver(){
+        return gameOver;
+    }
+    
+    public void saveGame() throws JsonProcessingException {
+        if (currentSimulator instanceof SinglePlayerSimulator) {
+            ((SinglePlayerSimulator)currentSimulator).saveGame();
+        }
+    }
 }

@@ -4,8 +4,7 @@
  */
 package dab.bigBunny;
 
-import dab.engine.simulator.FailableComponent;
-import dab.engine.simulator.views.FailableComponentView;
+import dab.engine.newsim.interfaces.FailableComponentView;
 import java.awt.Rectangle;
 
 /**
@@ -14,7 +13,6 @@ import java.awt.Rectangle;
  */
 public class Circle extends HittableComponent{
     
-    private FailableComponent component;
     
     public Circle(FailableComponentView component, int x, int y, int width, int height){
       super(component, x, y, width, height);

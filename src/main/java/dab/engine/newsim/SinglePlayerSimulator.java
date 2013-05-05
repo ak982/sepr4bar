@@ -20,8 +20,13 @@ public class SinglePlayerSimulator extends AbstractSimulator {
     
     public SinglePlayerSimulator() {
         super();
+        this.userName = "";
         this.failureModel = new SinglePlayerFailureModel(powerPlant);
     } 
+    
+    public SinglePlayerSimulator(String playerName) {
+        this.userName = playerName;
+    }
     
     public void setUsername(String userName) {
         this.userName = userName;

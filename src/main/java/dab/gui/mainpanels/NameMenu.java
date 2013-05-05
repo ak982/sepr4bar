@@ -5,7 +5,9 @@
 package dab.gui.mainpanels;
 
 import dab.engine.newsim.AbstractSimulator;
+import dab.engine.newsim.DualPlayerFailureModel;
 import dab.engine.newsim.SinglePlayerSimulator;
+import dab.engine.newsim.TwoPlayerSimulator;
 import dab.gui.application.MainWindow;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,19 +31,27 @@ import javax.swing.JTextField;
  *
  * @author Aiste
  */
-public class NameMenu extends JPanel{
-    private final AbstractSimulator simulator;
+public class NameMenu extends MenuHandler{
+
     private final JTextField enter_name, enter_name2;
     private final JLabel name_label;
     private MainWindow mainWindow;
     private boolean onePlayerMode;
+    private String previousName1, previousName2;
    
+    public NameMenu(MainWindow mw, final JLayeredPane invoker, String singlePlayerName) {
+        this(mw, invoker, true, singlePlayerName, "");
+    }
     
-    public NameMenu(final AbstractSimulator simulator,MainWindow mw, final JLayeredPane invoker, final boolean onePlayerMode){
-        this.simulator = simulator;
+    public NameMenu(MainWindow mw, final JLayeredPane invoker, String singlePlayerName, String dualPlayerName) {
+        this(mw, invoker, false, singlePlayerName, dualPlayerName);
+    }
+    
+    private NameMenu(MainWindow mw, final JLayeredPane invoker, final boolean onePlayerMode, String previousName1, String previousName2){
+        super(invoker);
         this.mainWindow = mw;
         this.onePlayerMode = onePlayerMode;
-        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS)); 
+        
         
         if(onePlayerMode){
             name_label = new JLabel("Please enter your name");
@@ -72,21 +82,22 @@ public class NameMenu extends JPanel{
         enter_name.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                super.keyReleased(e);
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    if(onePlayerMode){
-                        tryStart();
-                    } else {
-                        enter_name2.requestFocus();
-                    }
-                }
+              //  super.keyReleased(e);
+               
             }
 
             @Override
             public void keyTyped(KeyEvent e) {            }
 
             @Override
-            public void keyPressed(KeyEvent e) {            }
+            public void keyPressed(KeyEvent e) {    
+             if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    if(onePlayerMode){
+                        tryStart();
+                    } else {
+                        enter_name2.requestFocus();
+                    }
+                }}
         });
         enter_name.setText(mainWindow.getUserName());
         
@@ -97,17 +108,18 @@ public class NameMenu extends JPanel{
         enter_name2.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                super.keyReleased(e);
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    tryStart();
-                }
+               
             }
 
             @Override
             public void keyTyped(KeyEvent e) {            }
 
             @Override
-            public void keyPressed(KeyEvent e) {            }
+            public void keyPressed(KeyEvent e) {  
+             super.keyReleased(e);
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    tryStart();
+                }}
         });
         enter_name2.setText(mainWindow.getUserName2());
         
@@ -119,7 +131,7 @@ public class NameMenu extends JPanel{
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               mainWindow.changeMenu(new MainMenu(mainWindow, invoker), invoker );
+               mainWindow.changeMenu(new MainMenu(mainWindow, invoker));
             }
         });
         
@@ -144,12 +156,14 @@ public class NameMenu extends JPanel{
         if (enter_name.getText().length() == 0 ||(!onePlayerMode&&enter_name2.getText().length() == 0)) {
             JOptionPane.showMessageDialog(null, "Name can't be empty!");
         } else{
-            //set the user name and initialize a new Interface                           
-            /*simulator.setUsername(enter_name.getText());    
-            if(!onePlayerMode){
-                simulator.setUsername2(enter_name2.getText());                
-            }*/
-            mainWindow.startGame((SinglePlayerSimulator)simulator,onePlayerMode);
+            mainWindow.setGameOver(false);
+            if (onePlayerMode) {
+                SinglePlayerSimulator sim = new SinglePlayerSimulator(enter_name.getText());
+                mainWindow.startSinglePlayerGame(sim);
+            } else {
+                TwoPlayerSimulator sim = new TwoPlayerSimulator(enter_name.getText(), enter_name2.getText());
+                mainWindow.startTwoPlayerGame(sim);
+            }
         }
     }
    

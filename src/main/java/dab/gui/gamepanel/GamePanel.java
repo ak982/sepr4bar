@@ -50,13 +50,12 @@ public abstract class GamePanel extends JLayeredPane {
         setLayout(null);
         
         
-        uiComponents.add(new UIComponent(this, simulator.getPumps().get(1), new Point(200, 100), "pump1.png", "pump2.gif"));
-        uiComponents.add(new UIComponent(this, simulator.getPumps().get(0), new Point(200, 200), "pump1.png", "pump2.gif"));
-        uiComponents.add(new UIComponent(this, simulator.getTurbine(),      new Point(200, 300), "pump1.png", "pump2.gif"));
-        uiComponents.add(new UIComponent(this, simulator.getCondenser(),    new Point(200, 400), "pump1.png", "pump2.gif"));
-        //uiComponents.add(new UIComponent(this, simulator.getReactor(),      new Point(200, 500), "pump1.png", "pump2.gif"));
-        
-        
+        uiComponents.add(new UIPump(this, simulator.getPumps().get(1),   new Point(664, 437),"pump.png" , "pump_broken.png", "pump_working.png"));
+        uiComponents.add(new UIPump(this, simulator.getPumps().get(0),   new Point(298, 433), "pump.png" , "pump_broken.png", "pump_working.png"));
+        uiComponents.add(new UIComponent(this, simulator.getReactor(),   new Point(67, 220), "reactor.png", "reactor.png"));
+        uiComponents.add(new UIComponent(this, simulator.getCondenser(), new Point(480, 348), "condenser.png", "condenser_broken.png"));
+        uiComponents.add(new UIComponent(this, simulator.getTurbine(),   new Point(367, 64), "turbine.png", "turbine_broken.png"));
+        uiComponents.add(new UIComponent(this, simulator.getCondenser(), new Point(798, 389), "coolant.png", "coolant_broken.png"));
         
         for (UIComponent c : uiComponents) {
             add(c, PALETTE_LAYER);
