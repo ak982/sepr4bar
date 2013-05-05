@@ -19,17 +19,13 @@ import javax.swing.SwingConstants;
  * @author Team Haddock
  *
  */
-public class ObamaPanel extends JPanel {
+public abstract class ObamaPanel extends JPanel {
 
-    SinglePlayerSimulator simulator;
-    JLabel lblObama;
-    JLabel lblSpeech;
-    JLabel lblWords;
+    protected JLabel lblObama;
+    protected JLabel lblSpeech;
+    protected JLabel lblWords;
 
-    // FIXME: this should be abstract since we're using it in the other interface also.
-    public ObamaPanel(AbstractSimulator simulator) {
-        this.simulator = (SinglePlayerSimulator)simulator;
-        
+    public ObamaPanel() {
         setBackground(Color.WHITE);
         setLayout(null);
         lblObama = new JLabel();
@@ -50,7 +46,6 @@ public class ObamaPanel extends JPanel {
         lblWords.setHorizontalAlignment(SwingConstants.LEFT);
         lblWords.setHorizontalTextPosition(SwingConstants.RIGHT);
         lblWords.setBounds(210, 30, 400, 400);
-        lblWords.setText("!!!!!!!!!!!!!!!!");
         add(lblWords);
 
         lblSpeech = new JLabel();
@@ -62,34 +57,5 @@ public class ObamaPanel extends JPanel {
     }
 
     // update the panel with warnings and stuff
-    public void update() {
-        String temp = "<html>";
-        
-        if (simulator.reactorTemperature().inCelsius() > 150) {
-            temp += "WARNING, " + simulator.getUsername() + ": REACTOR TEMPERATURE TOO HIGH" + "<br>";
-        }
-
-        if (simulator.condenserPressure().greaterThan(GameInterface.CONDENSER_WARNING_PRESSURE)) {
-            temp += "WARNING, " + simulator.getUsername() + ": CONDENSER PRESSURE TOO HIGH" + "<br>";
-        }
-
-        for (String failedComponent : simulator.listFailedComponents()) {
-            if (failedComponent.equals("Pump 1")) {
-                temp += "WARNING, " + simulator.getUsername() + ": The Water pump HAS FAILED<br>";
-
-            } else if (failedComponent.equals("Pump 2")) {
-                temp += "WARNING, " + simulator.getUsername() + ": The coolant pump HAS FAILED<br>";
-
-            } else {
-                temp += "WARNING, " + simulator.getUsername() + ": " + failedComponent + " HAS FAILED<br>";
-            }
-        }
-
-        if (!simulator.getSoftFailReport().getFailBool()) {
-            temp += "WARNING, " + simulator.getUsername() + ": A software failure has occured!";
-        }
-        temp += "</html>";
-        
-        lblWords.setText(temp);
-    }
+    public abstract void update();
 }

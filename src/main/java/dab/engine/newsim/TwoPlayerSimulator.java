@@ -20,6 +20,7 @@ public class TwoPlayerSimulator extends AbstractSimulator {
     }
     
     public TwoPlayerSimulator(String name1, String name2) {
+        this();
         this.firstPlayerName = name1;
         this.secondPlayerName = name2;
     }

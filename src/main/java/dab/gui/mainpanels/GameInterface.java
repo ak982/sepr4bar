@@ -22,30 +22,19 @@ import javax.swing.JSplitPane;
 import javax.swing.Timer;
 
 public abstract class GameInterface extends JPanel implements KeyListener {
-
-    private AbstractSimulator simulator;
-    private MainWindow mainWindow;
-    private Sounds music;
-    public final int MAX_SIZE_WIDTH = 1366;
-    public final int MAX_SIZE_HEIGHT = 768;
-    private ObamaPanel obamaPanel;
-    private ButtonPanel buttonPanel;
-    private InfoPanel infoPanel;
-    private Timer animator;
-    public static final Pressure CONDENSER_WARNING_PRESSURE = new Pressure(25530000);
-    private GameOver gameOver;
     
+    
+    private Sounds music;
+    private Timer animator;
     private int counter;
+    
+    protected MainWindow mainWindow;
+    protected JSplitPane leftPane, rightPane;
 
-    public static GameInterface instance() {
-        throw new UnsupportedOperationException();
 
-    }
-
-    public GameInterface (MainWindow mainWindow, AbstractSimulator simulator) {
+    public GameInterface (MainWindow mainWindow) {
         this.mainWindow = mainWindow;
-        this.simulator = simulator;
-        
+  
         counter = 0;
         music = new Sounds("resources/music/backgroundSound.wav", true);
   
@@ -57,18 +46,32 @@ public abstract class GameInterface extends JPanel implements KeyListener {
         };
         animator = new Timer(1000/30, taskStep);
         
-        // rock and roll baby!
-        animator.start();
-        addKeyListener(this);      
+        setupPanels();
     }
     
-    protected void setupPanels() {       
+    protected void start() {
+        // rock and roll baby!
+        addKeyListener(this);
+        animator.start();
+        
+    }
+    
+    protected void setupPanes() {
+        leftPane.setLeftComponent(getGamePanel());
+        leftPane.setRightComponent(getObamaPanel());
+        rightPane.setLeftComponent(getInfoPanel());
+        rightPane.setRightComponent(getButtonPanel());
+    }
+    
+    private void setupPanels() {       
+        
         setLayout(new BorderLayout());
-        JSplitPane topLevelSplitPane, leftPane, rightPane;
+        
+        JSplitPane topLevelSplitPane;
         
         topLevelSplitPane = new JSplitPane();
         topLevelSplitPane.setDividerSize(5);
-        //topLevelSplitPane.setResizeWeight(0.2);
+        topLevelSplitPane.setResizeWeight(0.2);
         
         leftPane = new JSplitPane();
         leftPane.setDividerSize(5);
@@ -78,7 +81,7 @@ public abstract class GameInterface extends JPanel implements KeyListener {
         rightPane.setDividerSize(5);
         rightPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
         rightPane.setResizeWeight(0.2);
-         
+        /* 
         obamaPanel = new ObamaPanel(simulator);
         infoPanel = new InfoPanel(simulator);
         buttonPanel = new ButtonPanel(simulator);
@@ -87,6 +90,7 @@ public abstract class GameInterface extends JPanel implements KeyListener {
         leftPane.setRightComponent(obamaPanel);
         rightPane.setLeftComponent(infoPanel);
         rightPane.setRightComponent(buttonPanel);        
+        */
         
         topLevelSplitPane.setLeftComponent(leftPane);
         topLevelSplitPane.setRightComponent(rightPane);
@@ -106,41 +110,39 @@ public abstract class GameInterface extends JPanel implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {   } //Do nothing
-    
-    private void showGameOverScreen() {
-        animator.stop();
-        mainWindow.setGameOver(true);
-        showGameOverMenu();           
-    }
 
     protected abstract void showGameOverMenu();
+    protected abstract AbstractSimulator getSimulator();
+    protected abstract GamePanel getGamePanel();
+    protected abstract ObamaPanel getObamaPanel();
+    protected abstract InfoPanel  getInfoPanel();
+    protected abstract ButtonPanel getButtonPanel();
     
     protected void step() {
         try {
            
             if (counter % 3 == 0) {
-                simulator.step();
-                infoPanel.update();
-                obamaPanel.update();
+                getSimulator().step();
+                
+                getInfoPanel().update();
+                getObamaPanel().update();
                 getGamePanel().updateComponents();
-                buttonPanel.update();
+                getButtonPanel().update();
                 counter = 0;
             }
             handleMusic();
             counter++;
-             requestFocus();
-            // soon there will be no need to screenUpdate
-            //screenUpdate();
-            //repaint();
+            requestFocus();
         } catch (GameOverException e) {
 
             // stop the game loop when game over
             animator.stop();
             music.interrupt();
-            showGameOverScreen();
+        mainWindow.setGameOver(true);
+        showGameOverMenu();   
         }
         
-         addKeyListener(this);
+         //addKeyListener(this);
     }
     
     public void handleMusic(){    
@@ -225,6 +227,6 @@ public abstract class GameInterface extends JPanel implements KeyListener {
   //      handleMusic();
     }
     
-    protected abstract GamePanel getGamePanel();
+    
 
 }

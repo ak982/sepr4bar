@@ -25,6 +25,7 @@ public class SinglePlayerSimulator extends AbstractSimulator {
     } 
     
     public SinglePlayerSimulator(String playerName) {
+        this();
         this.userName = playerName;
     }
     

@@ -33,4 +33,5 @@ public class Constants {
     // steam properties
     public static final int    NORMAL_PARTICLES_PER_VOLUME_STEAM = (int)(ATMOSPHERIC_PRESSURE / (BOLTZMAN_CONSTANT * ROOM_TEMP));
     public static final double SPECIFIC_HEAT_STEAM = 2;
+    
 }

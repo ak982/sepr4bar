@@ -37,7 +37,6 @@ public class NameMenu extends MenuHandler{
     private final JLabel name_label;
     private MainWindow mainWindow;
     private boolean onePlayerMode;
-    private String previousName1, previousName2;
    
     public NameMenu(MainWindow mw, final JLayeredPane invoker, String singlePlayerName) {
         this(mw, invoker, true, singlePlayerName, "");
@@ -99,7 +98,7 @@ public class NameMenu extends MenuHandler{
                     }
                 }}
         });
-        enter_name.setText(mainWindow.getUserName());
+        enter_name.setText(previousName1);
         
         enter_name2 = new JTextField(20);
         enter_name2.setFont(new Font("Bookman Old Style", Font.BOLD, 18));
@@ -121,7 +120,7 @@ public class NameMenu extends MenuHandler{
                     tryStart();
                 }}
         });
-        enter_name2.setText(mainWindow.getUserName2());
+        enter_name2.setText(previousName2);
         
         //ok button has the same functionality as when the user presses enter
         JButton back = new JButton("back");       
