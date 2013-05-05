@@ -6,14 +6,17 @@ import dab.engine.utilities.Energy;
 import dab.engine.utilities.Percentage;
 import dab.engine.utilities.Pressure;
 import dab.engine.utilities.Temperature;
-import dab.engine.seprphase2.GameOverException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import dab.engine.simulator.views.CondenserView;
+import dab.engine.simulator.views.PumpView;
+import dab.engine.simulator.views.ReactorView;
+import dab.engine.simulator.views.TurbineView;
+import dab.engine.simulator.views.ValveView;
 
 
 /**
@@ -29,14 +32,43 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
 
     private PhysicalModel physicalModel;
     private FailureModel failureModel;
-    private String userName;
+    private String userName, userName2;
+    private int difficulty;
 
     public Simulator() {
         physicalModel = new PhysicalModel();
         failureModel = new FailureModel(physicalModel, physicalModel);
         userName = "";
+        userName2 = "";
     }
-
+    
+    public TurbineView getTurbine(){
+        return physicalModel.getTurbine();
+    }
+    
+    public PumpView getPump(int i) {
+        return physicalModel.getPump(i);
+    }
+    
+    public ReactorView getReactor() {
+        return physicalModel.getReactor();
+    }
+    
+    public CondenserView getCondenser() {
+        return physicalModel.getCondenser();
+    }
+    
+    public ArrayList<PumpView> getPumps() {
+        ArrayList<PumpView> pumps = new ArrayList<>();
+        for (Pump p : physicalModel.getPumps()) 
+            pumps.add(p);
+        return pumps;
+    }
+    
+    public ValveView getValve(int i) {
+        return physicalModel.getValve(i);
+    }
+    
     /**
      *
      * @param String user Name
@@ -44,6 +76,10 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
     @Override
     public void setUsername(String userName) {
         this.userName = userName;
+    }
+    
+    public void setUsername2(String userName2){
+        this.userName2 = userName2;
     }
 
     /**
@@ -53,12 +89,12 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
      */
     @Override
     public void saveGame() throws JsonProcessingException {
-        SaveGame saveGame = new SaveGame(physicalModel, failureModel, userName);
+        /*SaveGame saveGame = new SaveGame(physicalModel, failureModel, userName);
         try {
             saveGame.save();
-        } catch (FileNotFoundException ex) {
-        } catch (IOException ex) {
-        }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } */
     }
     /**
      *
@@ -67,14 +103,14 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
      */
     @Override
     public void loadGame(int gameNumber) {
-        try {
+        /*try {
             SaveGame saveGame = SaveGame.load(listGames()[gameNumber]);
             this.physicalModel = saveGame.getPhysicalModel();
             this.failureModel = new FailureModel(physicalModel, physicalModel);
             this.userName = saveGame.getUserName();
         } catch (JsonParseException ex) {
         } catch (IOException ex) {
-        }
+        }*/
     }
 
     /**
@@ -105,32 +141,13 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
     }
 
     /**
-     *
-     * @return String[] repairing components
-     */
-    @Override
-    public String[] listRepairingComponents(){
-        return failureModel.listRepairingComponents();
-    }
-
-    /**
      * Execute the calculations for every component
      * @throws GameOverException
      * 
      */
     public void step() throws GameOverException {
-        try {
             failureModel.step();
-        } catch (GameOverException e) {
-            // FIXME: shouldn't it be sufficient to just throw the gameover exception
-            throw new GameOverException("Dear " + userName + ",\n\n" +
-                    "YOU HAVE FAILED\n\n" +
-                    "The reactor vessel has failed catastrophically,\n"+
-                    "and everyone within a 100km radius is now either\n " +
-                    "dead or dying of radiation\n" +"poisioning.\n\n" +
-                    "However, you did successfully generate \n" + failureModel.energyGenerated() +
-            "\nof energy before this occurred.");
-        }
+        
     }
 
     public void failStateCheck() {
@@ -245,7 +262,7 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
      * @return water level percentage
      */
     @Override
-    public Percentage reactorWaterLevel() {
+    public double reactorWaterLevel() {
         return failureModel.reactorWaterLevel();
     }
 
@@ -296,15 +313,6 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
 
     /**
      *
-     * @return minimum water level percentage
-     */
-    @Override
-    public Percentage reactorMinimumWaterLevel() {
-        return failureModel.reactorMinimumWaterLevel();
-    }
-
-    /**
-     *
      * @throws UnsupportedOperationException
      */
     @Override
@@ -345,7 +353,8 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
      */
     @Override
     public ArrayList<FailableComponent> components() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return failureModel.components();
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
@@ -363,5 +372,18 @@ public class Simulator implements PlantController, PlantStatus, GameManager {
     @Override
     public String getUsername() {
         return userName;
+    }
+    
+     
+    public String getUsername2(){
+        return userName2;
+    }
+    
+    public void setDifficulty(int i){
+        failureModel.setDifficulty(i);
+    }
+    
+    public void setPlayerMode(boolean onePlayerMode){
+        failureModel.setPlayerMode(onePlayerMode);
     }
 }

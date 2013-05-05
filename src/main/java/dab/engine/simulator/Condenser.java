@@ -12,6 +12,7 @@ import dab.engine.utilities.Temperature;
 import dab.engine.utilities.Volume;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dab.engine.simulator.views.CondenserView;
 
 /**
  * 
@@ -19,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  * @author Marius
  */
-public class Condenser extends FailableComponent {
+public class Condenser extends FailableComponent implements CondenserView {
 
     @JsonProperty
     private Mass steamMass;
@@ -209,7 +210,7 @@ public class Condenser extends FailableComponent {
      * Returns the water level of the condenser
      * @return Percentage
      */
-    public Percentage getWaterLevel() {
+    public Percentage waterLevel() {
         return waterLevel;
     }
 
@@ -222,6 +223,7 @@ public class Condenser extends FailableComponent {
     public void repair() throws CannotRepairException {
         super.repair();
         initializeVariables();
+        System.out.println("repairing condenser");
     }
 
     /**
@@ -229,8 +231,8 @@ public class Condenser extends FailableComponent {
      */
     private void initializeVariables() {
         pressure = pascals(101325);
-        waterMass = kilograms(0);
-        steamMass = kilograms(0);
+        //waterMass = kilograms(0);
+        //steamMass = kilograms(0);
         /*
          steamInputPort.mass = kilograms(0);
          reactorInputPort.mass = kilograms(0);

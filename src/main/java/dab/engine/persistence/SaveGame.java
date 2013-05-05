@@ -10,6 +10,8 @@ import java.util.Calendar;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import dab.engine.newsim.PowerPlant;
+import dab.engine.newsim.SinglePlayerFailureModel;
 
 /**
  * Saveable/Loadable game state
@@ -29,12 +31,11 @@ public class SaveGame {
     }
 
     @JsonProperty
-    private PhysicalModel physicalModel;
+    private PowerPlant powerPlant;
+    @JsonProperty
+    private SinglePlayerFailureModel failureModel;
     @JsonProperty
     private String userName;
-
-    private SaveGame() {
-    }
 
     /**
      *  Save the state of the game
@@ -42,8 +43,9 @@ public class SaveGame {
      *  @param FailureModel
      *  @param String
      */
-    public SaveGame(PhysicalModel physicalModel, FailureModel failureModel, String userName) {
-        this.physicalModel = physicalModel;
+    public SaveGame(PowerPlant physicalModel, SinglePlayerFailureModel failureModel, String userName) {
+        this.powerPlant = physicalModel;
+        this.failureModel = failureModel;
         this.userName = userName;
     }
 
@@ -57,20 +59,17 @@ public class SaveGame {
         FileSystem.createSavePath();
         FileSystem.writeString(fileName(), data);
     }
-    /**
-     * Get the name of the user
-     *  @return String
-     */
+
     public String getUserName() {
-        return this.userName;
+        return userName;
     }
 
-    /**
-     *  Get the physical mode
-     *  @return PhysicalModel
-     */
-    public PhysicalModel getPhysicalModel() {
-        return this.physicalModel;
+    public PowerPlant getPowerPlant() {
+        return powerPlant;
+    }
+    
+    public SinglePlayerFailureModel getFailureModel() {
+        return failureModel;
     }
 
     /**
@@ -80,6 +79,6 @@ public class SaveGame {
      */
     private String fileName() {
         Calendar cal = Calendar.getInstance();
-        return "sepr.teameel." + userName + "." + cal.getTimeInMillis() + ".nuke";
+        return "DaBAR" + userName + "." + cal.getTimeInMillis() + ".sav";
     }
 }

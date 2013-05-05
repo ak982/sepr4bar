@@ -3,18 +3,17 @@ package dab.engine.simulator;
 import static dab.engine.simulator.PhysicalConstants.*;
 import static dab.engine.utilities.Units.*;
 import dab.engine.utilities.*;
-import dab.engine.seprphase2.GameOverException;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dab.engine.simulator.views.ReactorView;
 
 /**
  * Class containing the physical model logic for the Reactor component
  * @author Marius
  */
-public class Reactor extends FailableComponent {
+public class Reactor extends FailableComponent implements ReactorView {
 
-    private final Mass maximumWaterMass = kilograms(1000);
-    private final Mass minimumWaterMass = kilograms(800);
+    private Mass maximumWaterMass = kilograms(1000);
     private final Volume reactorVolume = cubicMetres(2);
     @JsonProperty
     private FuelPile fuelPile = new FuelPile();
@@ -39,6 +38,9 @@ public class Reactor extends FailableComponent {
     private double boilingPtAtPressure;
     @JsonProperty
     private double neededEnergy;
+    
+    @JsonProperty
+    private boolean quenched;
 
     /**
      *
@@ -50,6 +52,7 @@ public class Reactor extends FailableComponent {
         steamMass = kilograms(0);
         temperature = kelvin(350);
         pressure = pascals(101325);
+        quenched = false;
     }
 
     /**
@@ -90,8 +93,8 @@ public class Reactor extends FailableComponent {
      *
      * @return water level percentage
      */
-    public Percentage waterLevel() {
-        return new Percentage((waterMass.inKilograms() / maximumWaterMass.inKilograms()) * 100);
+    public double waterLevel() {
+        return waterMass.inKilograms() ;
     }
 
     /**
@@ -115,8 +118,11 @@ public class Reactor extends FailableComponent {
      * @throws GameOverException
      */
     public void step() throws GameOverException {
-
-        System.out.println(inputPort.mass.inKilograms());
+        if(temperature.inKelvin() >=365) {
+            quench();
+        }
+        
+        //System.out.println(inputPort.mass.inKilograms());
         if (steamMass.inKilograms() > inputPort.mass.inKilograms()) {
             steamMass = steamMass.minus(inputPort.mass);
             waterMass = waterMass.plus(inputPort.mass);
@@ -144,8 +150,10 @@ public class Reactor extends FailableComponent {
         // it into steam. Because it doesn't convert it into steam,
         // the pressure accumulates
         boilingPtAtPressure = boilingPointOfWater + 10 * Math.log(pressure.inPascals() / atmosphericPressure);
-        if (boilingPtAtPressure - old < 0.3)
-            System.out.println("BROKE");
+        
+        /* // for debugging purposes only
+         * if (boilingPtAtPressure - old < 0.3)
+            System.out.println("BROKE");*/
         
         neededEnergy = (boilingPtAtPressure - temperature.inKelvin()) * waterMass.inKilograms() * specificHeatOfWater;
 
@@ -240,13 +248,7 @@ public class Reactor extends FailableComponent {
     public Mass maximumWaterMass() {
         return maximumWaterMass;
     }
-    /**
-     *
-     * @return minimum water Mass
-     */
-    public Mass minimumWaterMass() {
-        return minimumWaterMass;
-    }
+
     /**
      *
      * @param input Port
@@ -265,13 +267,6 @@ public class Reactor extends FailableComponent {
         return new Percentage(0);
     }
 
-    /**
-     *
-     * @return minimum water level percentage
-     */
-    public Percentage minimumWaterLevel() {
-        return new Percentage((this.minimumWaterMass.inKilograms() / this.maximumWaterMass.inKilograms()) * 100);
-    }
 
     /**
      *
@@ -281,10 +276,24 @@ public class Reactor extends FailableComponent {
     private void correctWaterMass() {
         if (waterMass.inKilograms() > maximumWaterMass.inKilograms()) {
             waterMass = maximumWaterMass;
+            System.out.println("correcting water level" + waterMass);
         }
         if (waterMass.inKilograms() < 0) {
             waterMass = kilograms(0);
         }
+    }
+    
+    public void quench(){
+        if(!quenched){
+            maximumWaterMass = kilograms(1500); 
+            waterMass = waterMass.plus(kilograms(500));
+            temperature = new Temperature(300);
+            System.out.println("QUENCHED " + maximumWaterMass + " and water mass " + waterMass );
+        }
+        
+        quenched = true;
+        
+        
     }
 }
 

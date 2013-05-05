@@ -19,7 +19,7 @@ public interface PlantStatus {
     
     public Temperature reactorTemperature();
     
-    public Percentage reactorWaterLevel();
+    public double reactorWaterLevel();
 
     public Energy energyGenerated();
 
@@ -32,11 +32,7 @@ public interface PlantStatus {
 
     public Percentage condenserWaterLevel();
 
-    public Percentage reactorMinimumWaterLevel();
-
     public String[] listFailedComponents();
-    
-    public String[] listRepairingComponents();
 
     public boolean turbineHasFailed();
 

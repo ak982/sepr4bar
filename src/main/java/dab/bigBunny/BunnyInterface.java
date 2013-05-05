@@ -1,36 +1,72 @@
 package dab.bigBunny;
 
+import dab.gui.gamepanel.GamePanel;
+import dab.engine.simulator.Condenser;
+import dab.engine.simulator.Pump;
+import dab.engine.simulator.UnusedComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class BunnyInterface extends JFrame implements KeyListener {
+public class BunnyInterface {
+}
+
+/*public class BunnyInterface extends JFrame implements KeyListener {
 
     private ShowCanvas canvas;
-    private BunnyController controller;
+    private BunnyController bunnyController;
     private Environment environment;
-    private Dimension resolution;
+    private Dimension panelSize;
     private JFrame frame;
+    private HitBoundsController hitBoundsController;
+     protected BufferedImage background;
+    
 
     public BunnyInterface() {
         frame = new JFrame("MockGui");
-        //for now temproray resolution. The one in haddocks game needs fixing as well
-        resolution = new Dimension(800, 600);
-        environment = new Environment(resolution.width, resolution.height);
+        //for now temproray panelSize. The one in haddocks game needs fixing as well
+        
+          try {
+            background = ImageIO.read(GamePanel.class.getResourceAsStream("gamepanel_bkg2.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        
+        Dimension panelSize = new Dimension(background.getWidth(), background.getHeight());
+       
+        
+        
+        
+        
+        
+        //resolution = new Dimension(800, 600);
+        environment = new Environment();
+        environment.setBounds(panelSize.width, panelSize.height);
+        
+        //this Has to be before the bunnyController initialisation
+        hitBoundsController = new HitBoundsController();
+        // new Pump just temprorary, and the numbers. Use the real ones later
+        hitBoundsController.addHitableComponent(new Circle(new Pump(null, null) ,300, 300, 40,40));
+        hitBoundsController.addHitableComponent(new Circle(new Pump(null, null) ,200, 200, 73, 73));
+        hitBoundsController.addHitableComponent(new TheRectangle(new Condenser(), 500, 500, 40, 40));
+        hitBoundsController.addHitableComponent(new TheRectangle(new UnusedComponent("CoolingUnit"), 765, 337, 160 , 237));
+        
+        
         //Change radius according to image
-        controller = new BunnyController(environment, 10);
+        bunnyController = new BunnyController(environment, hitBoundsController, 10);        
         Container container = frame.getContentPane();
-        canvas = new ShowCanvas(controller, environment, resolution.width, resolution.height);
+        canvas = new ShowCanvas(bunnyController, environment, panelSize.width, panelSize.height, hitBoundsController);
         container.setLayout(null);
         container.add(canvas);
-        container.setMinimumSize(resolution);
-        container.setPreferredSize(resolution);
-        container.setMaximumSize(resolution);
+        container.setMinimumSize(panelSize);
+        container.setPreferredSize(panelSize);
+        container.setMaximumSize(panelSize);
         container.setFocusable(true);
         frame.setResizable(false);
         frame.setVisible(true);
@@ -42,10 +78,10 @@ public class BunnyInterface extends JFrame implements KeyListener {
         ActionListener taskPerformer = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 // ...Perform a task...
-                controller.step();
+                bunnyController.step();
                 environment.step();
                 canvas.repaint();
-                System.out.println("" + controller.getOrientation());
+                System.out.println("" + bunnyController.getOrientation());
             }
         };
         new Timer(delay, taskPerformer).start();
@@ -60,16 +96,16 @@ public class BunnyInterface extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-                controller.startForward();
+                bunnyController.startForward();
                 break;
             case KeyEvent.VK_LEFT:
-                controller.startRotateLeft();
+                bunnyController.startRotateLeft();
                 break;
             case KeyEvent.VK_RIGHT:
-                controller.startRotateRight();
+                bunnyController.startRotateRight();
                 break;
             case KeyEvent.VK_DOWN:
-                controller.startBrake();
+                bunnyController.startBrake();
                 break;
             case KeyEvent.VK_SPACE:
                 environment.startSoftwareFailure();
@@ -81,16 +117,16 @@ public class BunnyInterface extends JFrame implements KeyListener {
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-                controller.stopForward();
+                bunnyController.stopForward();
                 break;
             case KeyEvent.VK_LEFT:
-                controller.stopRotateLeft();
+                bunnyController.stopRotateLeft();
                 break;
             case KeyEvent.VK_RIGHT:
-                controller.stopRotateRight();
+                bunnyController.stopRotateRight();
                 break;
             case KeyEvent.VK_DOWN:
-                controller.stopBrake();
+                bunnyController.stopBrake();
                 break;
         }
     }
@@ -103,18 +139,32 @@ public class BunnyInterface extends JFrame implements KeyListener {
 class ShowCanvas extends JPanel implements MouseListener {
 
     BufferedImage bunny;
-    BunnyController controller;
+    BunnyController bunnyController;
     Environment environment;
+    HitBoundsController hitBoundsController;
     JProgressBar bar;
     private Rectangle bounds;
-    private JLabel box;
+    private JLabel box, pump;
     private ImageIcon boxToHit;
+    private Ellipse2D.Double hitableCircle, pumpCircle;
+    protected BufferedImage background;
 
-    ShowCanvas(BunnyController controller, Environment environment, int dimX, int dimY) {
-        this.controller = controller;
+    
+    
+
+    ShowCanvas(BunnyController controller, Environment environment, int dimX, int dimY, HitBoundsController hitBoundsController) {
+        this.hitBoundsController = hitBoundsController;
+        this.bunnyController = controller;
         this.environment = environment;
         this.setSize(dimX, dimY);
         this.setLayout(null);
+        
+           try {
+            background = ImageIO.read(GamePanel.class.getResourceAsStream("gamepanel_bkg2.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+               
         setBackground(Color.WHITE);
         bar = new JProgressBar(0, controller.getHealth());
         this.add(bar);
@@ -125,10 +175,21 @@ class ShowCanvas extends JPanel implements MouseListener {
         box = new JLabel("Box");
         boxToHit = new ImageIcon("resources/HitableBox.png");
         box.setIcon(boxToHit);
-        box.setBounds(500, 500, 40, 40);
-        this.add(box);
+        
+        box.setBounds(hitBoundsController.getHittableComponents().get(2).getDimensions());
+       // this.add(box);
         box.setVisible(true);
-        controller.setHitBounds(box.getBounds());
+        //controller.setHitBounds(box.getBounds());
+           
+        pump = new JLabel();
+        pump.setIcon(new ImageIcon("resources/mainInterface/MOVINGPUMP_MAIN_SCALED.gif"));  
+        pump.setBounds(hitBoundsController.getHittableComponents().get(1).getDimensions());
+      //  this.add(pump);
+        Rectangle r = new Rectangle(hitBoundsController.getHittableComponents().get(1).getDimensions());
+        pumpCircle = new Ellipse2D.Double(r.x, r.y, r.width, r.height);
+       
+        r = new Rectangle(hitBoundsController.getHittableComponents().get(0).getDimensions());
+        hitableCircle = new Ellipse2D.Double(r.x, r.y, r.width, r.height);          
 
         //to call this on the reactorPannel, not on this thing
         bounds = this.getBounds();
@@ -138,12 +199,10 @@ class ShowCanvas extends JPanel implements MouseListener {
         addMouseListener(this);
 
         try {
-            bunny = ImageIO.read(new File("resources/bunny.jpg"));
+            bunny = ImageIO.read(new File("resources/bunny2.jpg"));
         } catch (Exception e) {
             System.err.println("Image not found");
         }
-
-
     }
 
     @Override
@@ -152,8 +211,8 @@ class ShowCanvas extends JPanel implements MouseListener {
         Graphics2D g2D = (Graphics2D) g;
         AffineTransform af = new AffineTransform();
 
-        af.translate(controller.getX(), controller.getY());
-        af.rotate((90 + controller.getOrientation()) * Math.PI / 180);
+        af.translate(bunnyController.getX(), bunnyController.getY());
+        af.rotate((90 + bunnyController.getOrientation()) * Math.PI / 180);
         af.translate(-bunny.getWidth() / 2, -bunny.getHeight() / 2);
 
         for (Slime s : environment.getSlimes()) {
@@ -174,12 +233,20 @@ class ShowCanvas extends JPanel implements MouseListener {
             g2D.fill(circle);
         }
 
-        Ellipse2D.Double circle = new Ellipse2D.Double((double) controller.getX() - 10, (double) controller.getY() - 10, 20.0, 20.0);
+        Ellipse2D.Double circle = new Ellipse2D.Double((double) bunnyController.getX() - 10, (double) bunnyController.getY() - 10, 20.0, 20.0);
         g2D.drawImage(bunny, af, this);
         g2D.setColor(Color.black);
         g2D.draw(circle);
+        
+         g.drawImage(background, 0, 0, null);
+        
+        g2D.setColor(Color.GREEN);
+      // g2D.fill(hitableCircle);
+        
+       // g2D.draw(pumpCircle);
+        
 
-        bar.setValue(controller.getHealth());
+        bar.setValue(bunnyController.getHealth());
     }
 
     public void mousePressed(MouseEvent e) {
@@ -188,10 +255,10 @@ class ShowCanvas extends JPanel implements MouseListener {
 
         //Also get the power generated, check if it is > then some amount,
         //if it is - subtrackt that amount and call this:
-        double distance = clicked.distance(controller.getCoordinates());
-        if (distance <= controller.getRadius()) {
+        double distance = clicked.distance(bunnyController.getCoordinates());
+        if (distance <= bunnyController.getRadius()) {
             System.out.println("Bunny has been shot");
-            controller.hasBeenShot();
+            bunnyController.hasBeenShot();
             //Animation of shot bunny 
         } else {
             environment.addBullet(clicked); //bullet hole if missed
@@ -209,4 +276,4 @@ class ShowCanvas extends JPanel implements MouseListener {
 
     public void mouseExited(MouseEvent e) {
     } //Do nothing
-}
+}*/
