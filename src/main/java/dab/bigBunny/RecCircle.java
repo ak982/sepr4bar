@@ -38,7 +38,11 @@ public class RecCircle extends HittableComponent{
     //To change This!!
     @Override
     protected Rectangle getHittableBounds(int radius) {
-        return (new Rectangle(x, y, width, height));
+        int newX = x - radius;
+        int newY = y - radius;
+        int newWidth = width + radius + radius;
+        int newHeight = height + radius + radius;
+        return new Rectangle(newX, newY, newWidth, newHeight);
     }
     
 }

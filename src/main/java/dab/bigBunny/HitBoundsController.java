@@ -21,36 +21,35 @@ public class HitBoundsController {
     
     public HitBoundsController() {
         hittableComponents = new ArrayList<HittableComponent>();
-    }
+    }   
     
-    public void addHitableComponent(TheRectangle rectangle){
-        hittableComponents.add(rectangle);
-    }
-    
-    public void addHitableComponent(Circle circle){
-        hittableComponents.add(circle);
-    }
-    
-    public void addHitableComponent(FailableComponentView component, int x, int y, int width, int height) {
-        // System.out.println(component.toString());
+    public void addHitableComponent(FailableComponentView component, int x, int y, int width, int height) { 
+        
         if (component instanceof Pump) {
-            addHitableComponent(new Circle(component, x, y, width, height));
-        } else if (component instanceof Turbine) {
-            addHitableComponent(new Circle(component, 375, 68, 48, 48));
-            addHitableComponent(new Circle(component, 375, 131, 48, 48));
-            addHitableComponent(new TheRectangle(component, x, y+15, width, height-30));       
-        } else if(component instanceof Reactor) {
-              addHitableComponent(new Circle(component, x, y, 40, 40));        //magic numbers here
-              addHitableComponent(new TheRectangle(component, x, y+44, width, height-44));  //magic numbers here        
-        } else if (component instanceof Condenser){
-            if(height < 120){
-                addHitableComponent(new Circle(component, x, 415, width, width));
-                addHitableComponent(new TheRectangle(component, x, y, width, height-33));               
-            } else {
-                addHitableComponent(new Circle(component, 482, 354, 86, 86));
-                addHitableComponent(new Circle(component, 482, 412, 86, 86));
-                addHitableComponent(new TheRectangle(component, x, 376, width, 86));
+            hittableComponents.add(new Circle(component, x, y, width, height));
+        } else {
+            Circle circle1 = new Circle(component, x, y, width, width);
+            Circle circle2 = new Circle(component, x,y+height-width , width, width);
+            
+            RecCircle recCircle;
+            TheRectangle rectangle;
+                      
+            if (component instanceof Turbine) { 
+               rectangle = new TheRectangle(component, x, y+width/2, width, height-width);
+                recCircle = new RecCircle(component, x, y, width, height, circle1, circle2, rectangle);           
+            } else if(component instanceof Reactor) {
+                rectangle = new TheRectangle(component, x, y+width/2, width, height-width/2);
+                recCircle = new RecCircle(component, x, y, width, height, circle1, null, rectangle);
+            } else {        //component is one of the condenser parts. check which, and ajust acordingly
+                if(height < 120){
+                    rectangle = new TheRectangle(component, x, y, width, height-width/2);
+                    recCircle = new RecCircle(component, x, y, width, height, null, circle2, rectangle);        
+                } else {
+                    rectangle = new TheRectangle(component, x, y+width/2, width, height-width);
+                    recCircle = new RecCircle(component, x, y, width, height, circle1, circle2, rectangle);              
+                }
             }
+            hittableComponents.add(recCircle);
         }
     }
     
