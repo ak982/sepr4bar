@@ -19,8 +19,8 @@ import dab.engine.utilities.Percentage;
  */
 public class ReactorCore {
 
-    private static final double MIN_POWER = 1000;
-    private static final double MAX_POWER = 10000;
+    private static final double MIN_POWER = 10000;
+    private static final double MAX_POWER = 500000;
     // transfer ease is just how much of the rod's temperature is going to DROP
     // every second, if the rods are fully submersed, their temperature will be an averaged with that of water's
     private static final double MAXIMUM_TRANSFER_EASE_PER_TICK = 0.5 / Constants.TICKS_PER_SECOND;

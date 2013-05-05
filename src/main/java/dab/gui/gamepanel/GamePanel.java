@@ -4,7 +4,7 @@
  */
 package dab.gui.gamepanel;
 
-import dab.engine.simulator.Simulator;
+import dab.engine.newsim.AbstractSimulator;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -22,11 +22,11 @@ import javax.swing.JPanel;
  * @author eduard
  */
 public abstract class GamePanel extends JLayeredPane {
-    protected Simulator simulator;
+    protected AbstractSimulator simulator;
     protected BufferedImage background;
     protected ArrayList<UIComponent> uiComponents;
     
-    public GamePanel(Simulator simulator) {
+    public GamePanel(AbstractSimulator simulator) {
         // setLayout(new BoxLayout(this,BoxLayout.Y_AXIS)); 
         this.simulator = simulator;
         uiComponents = new ArrayList<>();
@@ -54,7 +54,7 @@ public abstract class GamePanel extends JLayeredPane {
         uiComponents.add(new UIComponent(this, simulator.getPumps().get(0), new Point(200, 200), "pump1.png", "pump2.gif"));
         uiComponents.add(new UIComponent(this, simulator.getTurbine(),      new Point(200, 300), "pump1.png", "pump2.gif"));
         uiComponents.add(new UIComponent(this, simulator.getCondenser(),    new Point(200, 400), "pump1.png", "pump2.gif"));
-        uiComponents.add(new UIComponent(this, simulator.getReactor(),      new Point(200, 500), "pump1.png", "pump2.gif"));
+        //uiComponents.add(new UIComponent(this, simulator.getReactor(),      new Point(200, 500), "pump1.png", "pump2.gif"));
         
         
         

@@ -4,7 +4,8 @@
  */
 package dab.gui.mainpanels;
 
-import dab.engine.newsim.Simulator;
+import dab.engine.newsim.AbstractSimulator;
+import dab.engine.newsim.SinglePlayerSimulator;
 import dab.gui.application.MainWindow;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,14 +30,14 @@ import javax.swing.JTextField;
  * @author Aiste
  */
 public class NameMenu extends JPanel{
-    private final Simulator simulator;
+    private final AbstractSimulator simulator;
     private final JTextField enter_name, enter_name2;
     private final JLabel name_label;
     private MainWindow mainWindow;
     private boolean onePlayerMode;
    
     
-    public NameMenu(final Simulator simulator,MainWindow mw, final JLayeredPane invoker, final boolean onePlayerMode){
+    public NameMenu(final AbstractSimulator simulator,MainWindow mw, final JLayeredPane invoker, final boolean onePlayerMode){
         this.simulator = simulator;
         this.mainWindow = mw;
         this.onePlayerMode = onePlayerMode;
@@ -144,11 +145,11 @@ public class NameMenu extends JPanel{
             JOptionPane.showMessageDialog(null, "Name can't be empty!");
         } else{
             //set the user name and initialize a new Interface                           
-            simulator.setUsername(enter_name.getText());    
+            /*simulator.setUsername(enter_name.getText());    
             if(!onePlayerMode){
                 simulator.setUsername2(enter_name2.getText());                
-            }
-            mainWindow.startGame(simulator,onePlayerMode);
+            }*/
+            mainWindow.startGame((SinglePlayerSimulator)simulator,onePlayerMode);
         }
     }
    

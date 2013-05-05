@@ -18,4 +18,7 @@ public interface ContainerView {
     public Temperature temperature();
     public Pressure    pressure();
     
+    public double getBottomPressure();
+    public double getWaterMass();
+    
 }

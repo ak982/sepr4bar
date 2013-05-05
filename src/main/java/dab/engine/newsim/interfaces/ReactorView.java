@@ -16,7 +16,6 @@ public interface ReactorView extends ContainerView {
     public void moveControlRods(Percentage extracted);
     public Percentage controlRodPosition();
     
-    
     public Temperature coreTemperature();
    
 }

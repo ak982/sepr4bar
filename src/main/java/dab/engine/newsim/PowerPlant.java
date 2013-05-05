@@ -51,16 +51,16 @@ public class PowerPlant {
         valves     = new ArrayList<>(2);
         
         // setup the components
-        Reactor reactor = new Reactor("Reactor", 1, 1);
-        Condenser condenser = new Condenser("Condenser", 2, 1.5);
+        Reactor reactor = new Reactor("Reactor", 10, 1);
+        Condenser condenser = new Condenser("Condenser", 10, 0.7);
         Turbine turbine = new Turbine("Turbine");
-        Pump pump = new Pump("Condenser to Reactor Pump", 2500);
+        Pump pump = new Pump("Condenser to Reactor Pump", 0.3);
         Valve reactorToTurbine = new Valve("Valve 1");
         Valve condenserToPump  = new Valve("Valve 2");
         
         // make the connections
         reactor.setOutputComponent(reactorToTurbine);
-        reactor.setOutputComponent(turbine);
+        reactorToTurbine.setOutputComponent(turbine);
         turbine.setOutputComponent(condenser);
         condenser.setOutputComponent(condenserToPump);
         condenserToPump.setOutputComponent(pump);
@@ -108,9 +108,13 @@ public class PowerPlant {
     
     protected ArrayList<FailableObject> getFailableComponents() {
         ArrayList<FailableObject> failables = new ArrayList<>();
-        failables.addAll(condensers);
+        for (Condenser c : condensers) {
+            failables.add(c);
+            failables.add(c.getHeatSink());
+        }
         failables.addAll(turbines);
         failables.addAll(pumps);
+        
         return failables;
     }
     //</editor-fold>

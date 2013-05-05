@@ -60,5 +60,9 @@ public class SinglePlayerSimulator extends AbstractSimulator {
     protected FailureModel getFailureModel() {
         return failureModel;
     }
+    
+    public String getUsername() {
+        return userName;
+    }
 
 }

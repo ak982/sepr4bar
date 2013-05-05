@@ -4,7 +4,7 @@
  */
 package dab.bigBunny;
 
-import dab.engine.newsim.Simulator;
+import dab.engine.newsim.AbstractSimulator;
 import dab.gui.gamepanel.GamePanel;
 import dab.gui.gamepanel.UIComponent;
 import java.awt.Color;
@@ -42,10 +42,9 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
     private Timer animator;
     private HitBoundsController hitboundsController;
 
-    public TwoPlayerScreen(Simulator simulator, Environment en, HitBoundsController h,BunnyController bc) {
+    public TwoPlayerScreen(AbstractSimulator simulator, Environment en, HitBoundsController h,BunnyController bc) {
         super(simulator);
         
-        this.simulator = simulator;
         this.environment = en;
         this.hitboundsController = h;
         this.controller = bc;
@@ -72,12 +71,12 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
         box.setBounds(500, 500, 40, 40);
         this.add(box);
         box.setVisible(true);
-        hitboundsController.addHitableComponent(new TheRectangle(uiComponents.get(0).getComponent(),500, 500, 40,40));
+        /*hitboundsController.addHitableComponent(new TheRectangle(uiComponents.get(0).getComponent(),500, 500, 40,40));
         
         for(UIComponent uc : uiComponents){
                 hitboundsController.addHitableComponent(uc.getComponent(),
                         uc.getLocation().x, uc.getLocation().y, uc.getWidth(), uc.getHeight());          
-        }
+        }*/
 
         //to call this on the reactorPannel, not on this thing
         //bounds = new Rectangle(getWidth(), getHeight());

@@ -4,7 +4,7 @@
  */
 package dab.gui.application;
 
-import dab.engine.newsim.Simulator;
+import dab.engine.newsim.SinglePlayerSimulator;
 import dab.gui.intro.DaIntro;
 import dab.gui.mainpanels.DaMMenu;
 import dab.gui.mainpanels.GameInterface;
@@ -29,7 +29,8 @@ public class MainWindow extends JFrame {
                 mw.setExtendedState(MainWindow.MAXIMIZED_BOTH);
                 mw.setVisible(true);
 
-                mw.showIntro();
+                //mw.showIntro();
+                mw.startGame(new SinglePlayerSimulator(), true);
 
             }
         });
@@ -39,7 +40,7 @@ public class MainWindow extends JFrame {
     private int difficulty;
     private final int DEFAULT_DIFFICULTY =1;    //to check with the one in options
     private boolean music;
-    private Simulator simulator = null;
+    private SinglePlayerSimulator simulator = null;
     private GameInterface gameInterface = null;
     private JPanel currentMenu = null;
     private String oldUserName=null; 
@@ -65,12 +66,12 @@ public class MainWindow extends JFrame {
         changeToPanel(menu);      
     }
     
-    public void startGame(Simulator sim, boolean onePlayerMode) {
+    public void startGame(SinglePlayerSimulator sim, boolean onePlayerMode) {
         simulator = sim;
         oldUserName = simulator.getUsername();
-        if(!onePlayerMode&&simulator.getUsername2()!=null){
+        /*if(!onePlayerMode&&simulator.getUsername2()!=null){
             oldUserName2 = simulator.getUsername2(); 
-        }
+        }*/
         gameInterface = new GameInterface(this, sim, onePlayerMode);
         simulator.setDifficulty(difficulty);
         //simulator.setPlayerMode(onePlayerMode);

@@ -45,7 +45,7 @@ public class ControlRodSlider extends JSlider{
             public void stateChanged(ChangeEvent e) {
                 if (!getValueIsAdjusting()){
                     //notify observer only when the rods are released
-                    reactor.moveControlRods(new Percentage(getValue()/2));
+                    reactor.moveControlRods(new Percentage(getValue()));
                     // int y = control_rods.getHeight();
                     //  control_rods.setBounds(44,(int)( y-getValue()/1.5-87), 300, 300);
                 }

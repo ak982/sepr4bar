@@ -4,7 +4,7 @@
  */
 package dab.gui.gamepanel;
 
-import dab.engine.simulator.views.FailableComponentView;
+import dab.engine.newsim.interfaces.FailableComponentView;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;

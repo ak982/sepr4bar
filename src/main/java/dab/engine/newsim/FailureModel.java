@@ -40,7 +40,7 @@ import java.util.Random;
  * @author Marius Dumitrescu
  */
 public abstract class FailureModel {
-    protected SoftFailReport lastFailReport;
+    protected SoftFailReport lastFailReport = new SoftFailReport();
     protected RandomGenerator dice;
     protected PowerPlant powerPlant;
     
@@ -87,8 +87,8 @@ public abstract class FailureModel {
      */
     public void step() throws GameOverException {
         powerPlant.step();
-        failStateCheck();
-        checkCondenserPressure();
+        // remove, used for debugging
+        //failStateCheck();
         checkTurbineFailure();
         
     }
@@ -105,16 +105,6 @@ public abstract class FailureModel {
 
         return out;
 
-    }
-
-    /**
-     * FIXME: prolly want to delete?
-     * Fail condenser if pressure too high
-     */
-    private void checkCondenserPressure() {
-        if (powerPlant.getCondenser().pressure().greaterThan(new Pressure(500000))) {
-            powerPlant.getCondenser().getFailureController().fail();
-        }
     }
 
     /**

@@ -1,6 +1,6 @@
 package dab.gui.auxpanels;
 
-import dab.engine.newsim.Simulator;
+import dab.engine.newsim.SinglePlayerSimulator;
 import dab.gui.mainpanels.GameInterface;
 import java.awt.Color;
 import java.awt.Font;
@@ -20,12 +20,13 @@ import javax.swing.SwingConstants;
  */
 public class ObamaPanel extends JPanel {
 
-    Simulator simulator;
+    SinglePlayerSimulator simulator;
     JLabel lblObama;
     JLabel lblSpeech;
     JLabel lblWords;
 
-    public ObamaPanel(Simulator simulator) {
+    // FIXME: this should be abstract since we're using it in the other interface also.
+    public ObamaPanel(SinglePlayerSimulator simulator) {
         this.simulator = simulator;
         
         setBackground(Color.WHITE);

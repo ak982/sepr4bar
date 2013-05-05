@@ -4,8 +4,7 @@
  */
 package dab.gui.gamepanel;
 
-import dab.engine.simulator.CannotRepairException;
-import dab.engine.simulator.views.FailableComponentView;
+import dab.engine.newsim.interfaces.FailableComponentView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -18,7 +17,6 @@ import javax.swing.JButton;
 public class FixButton extends JButton {
 
     FailableComponentView linkedComponent;
-    int dmg = 0;
     
     public FixButton(FailableComponentView component) {
         this.linkedComponent = component;
@@ -31,11 +29,7 @@ public class FixButton extends JButton {
         addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                try {
                     linkedComponent.fixDamage();
-                } catch (CannotRepairException e) {
-                    System.err.println(e);
-                }
                 update();
             }
         });

@@ -1,6 +1,6 @@
 package dab.gui.auxpanels;
 
-import dab.engine.newsim.Simulator;
+import dab.engine.newsim.AbstractSimulator;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -21,11 +21,11 @@ import javax.swing.SwingConstants;
  */
 public class InfoPanel extends JPanel {
 
-    private Simulator simulator;
+    private AbstractSimulator simulator;
     private JLabel screenText;
     private Image background;
 
-    public InfoPanel(Simulator simulator) {
+    public InfoPanel(AbstractSimulator simulator) {
         this.simulator = simulator;
         
         setLayout(new BorderLayout());
@@ -49,10 +49,18 @@ public class InfoPanel extends JPanel {
 
     public void update() {
         screenText.setText(
-                "<html>Control Rod Position " + (Integer.parseInt((simulator.controlRodPosition().toString())) * 2) + "<br>" + //this lines throws a NullPointerException at the moment
-                "<br>" + "Reactor Water Level " + simulator.reactorWaterLevel() + "<br>" + "Reactor Temperature " + simulator.reactorTemperature()
-                + "<br>" + "Reactor Pressure " + simulator.reactorPressure() + "<br>" + "<br>" + "Condenser Water Level " + simulator.condenserWaterLevel()
-                + "<br>" + "Condenser Temperature " + simulator.condenserTemperature() + "<br>" + "Condenser Pressure " + simulator.condenserPressure()
-                + "<br>" + "<br>" + "ENERGY GENERATED " + simulator.energyGenerated() + "</html>");
+                "<html>Control Rod Position " + simulator.controlRodPosition().toString() + "<br>" 
+                + "<br>" + 
+                "R Water Level " + simulator.reactorWaterLevel() + "<br>" + 
+                "R Temperature " + simulator.reactorTemperature() + "<br>" + 
+                "R Pressure " + simulator.reactorPressure() + "<br>" + 
+                "R Bottom Pressure" + (int)simulator.getReactor().getBottomPressure() + "<br>"+
+                "R Water mass" + (int)(simulator.getReactor().getWaterMass() * 10)+ "<br>" + "<br>" +
+                "C Water Level " + simulator.condenserWaterLevel() + "<br>" + 
+                "C Temperature " + simulator.condenserTemperature() + "<br>" + 
+                "C Pressure " + simulator.condenserPressure()+ "<br>" +
+                "C Bottom Pressure" + (int)simulator.getCondenser().getBottomPressure() + "<br>"+
+                "C Water Mass" + (int)(simulator.getCondenser().getWaterMass() * 10) + "<br>" +
+                "ENERGY GENERATED " + simulator.energyGenerated() + "</html>");
     }
 }

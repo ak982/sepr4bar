@@ -4,12 +4,9 @@ import dab.bigBunny.BunnyController;
 import dab.bigBunny.Environment;
 import dab.bigBunny.HitBoundsController;
 import dab.bigBunny.TwoPlayerScreen;
-import dab.engine.simulator.CannotControlException;
+import dab.engine.newsim.SinglePlayerSimulator;
 import dab.engine.simulator.FailMode;
 import dab.engine.simulator.GameOverException;
-import dab.engine.simulator.KeyNotFoundException;
-import dab.engine.simulator.Simulator;
-import dab.engine.simulator.UserCommands;
 import dab.engine.utilities.Percentage;
 import dab.engine.utilities.Pressure;
 import dab.gui.application.MainWindow;
@@ -19,6 +16,7 @@ import dab.gui.auxpanels.ObamaPanel;
 import dab.gui.gamepanel.GameOver;
 import dab.gui.gamepanel.GamePanel;
 import dab.gui.sound.Sounds;
+
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Point;
@@ -36,7 +34,7 @@ import javax.swing.Timer;
 
 public class GameInterface extends JPanel implements KeyListener {
 
-    private Simulator simulator;
+    private SinglePlayerSimulator simulator;
     private MainWindow mainWindow;
     private Sounds music;
     public final int MAX_SIZE_WIDTH = 1366;
@@ -58,7 +56,7 @@ public class GameInterface extends JPanel implements KeyListener {
 
     }
 
-    public GameInterface (MainWindow mainWindow, Simulator simulator, boolean onePlayerMode) {
+    public GameInterface (MainWindow mainWindow, SinglePlayerSimulator simulator, boolean onePlayerMode) {
         this.mainWindow = mainWindow;
         this.simulator = simulator;
         this.onePlayerMode = onePlayerMode;
@@ -99,7 +97,7 @@ public class GameInterface extends JPanel implements KeyListener {
             environment = new Environment();
             hitboundsController = new HitBoundsController();
             controller = new BunnyController(environment, hitboundsController, new Point(100, 100));           
-            gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller); 
+            //gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller); 
         }
          
         obamaPanel = new ObamaPanel(simulator);
@@ -187,7 +185,7 @@ public class GameInterface extends JPanel implements KeyListener {
                 if ((value == 0)) {
                     //create a new simulator with the old username
                     String old_username = simulator.getUsername();
-                    Simulator new_simulator = new Simulator() ;
+                    SinglePlayerSimulator new_simulator = new SinglePlayerSimulator();
                     new_simulator.setUsername(old_username);
                     mainWindow.startGame(new_simulator, true);
                 }
@@ -268,7 +266,7 @@ public class GameInterface extends JPanel implements KeyListener {
     }
 
     //@Override
-    public void update(UserCommands command, int parameter) {
+    /*public void update(UserCommands command, int parameter) {
         try {
             switch (command) {
                 case TURNON:
@@ -293,7 +291,7 @@ public class GameInterface extends JPanel implements KeyListener {
         }
 
         screenUpdate();
-    }
+    }*/
 
     private void handelEscape()  {
         // pause the game loop when esc is pressed

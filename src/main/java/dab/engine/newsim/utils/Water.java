@@ -79,6 +79,7 @@ public class Water extends Matter {
     // L = E / m; m = E / L
     // return the ammount of steam created after energy has beeen added
     public Steam addEnergy(double energy, double pressure) {
+        //double energyNeeded = Math.max(0, energyNeededToBoil(pressure));
         double energyNeeded = energyNeededToBoil(pressure);
         if (energyNeeded > energy) {
             super.addEnergy(energy);

@@ -17,9 +17,9 @@ import javax.naming.Name;
  * @author eduard
  */
 public class HeatSink implements FailableObject, PumpView {
-    private static final int STEAM_PARTICLES = 30000; // around 0.6 kg of steam
-    private static final int WATER_PARTICLES = 120000;
-    private static final double COOLING_EASE = 0.2 / Constants.TICKS_PER_SECOND;      // how much to change the temperature each step
+    private static final int STEAM_PARTICLES = Constants.NORMAL_PARTICLES_PER_VOLUME_STEAM * 10; // around 0.6 kg of steam
+    private static final int WATER_PARTICLES = Constants.WATER_PARTICLES_PER_KILOGRAM * 3000;
+    private static final double COOLING_EASE = 0.8 / Constants.TICKS_PER_SECOND;      // how much to change the temperature each step
     
     @JsonProperty
     private double steamTemp, waterTemp;
@@ -55,11 +55,13 @@ public class HeatSink implements FailableObject, PumpView {
     
     public void coolWater(Water toBeCooled) {
         toBeCooled.add(new Water(waterTemp, WATER_PARTICLES));
+        waterTemp = toBeCooled.getTemperature();
         toBeCooled.remove(WATER_PARTICLES);
     }
     
     public void coolSteam(Steam toBeCooled) {
         toBeCooled.add(new Steam(steamTemp, STEAM_PARTICLES));
+        steamTemp = toBeCooled.getTemperature();
         toBeCooled.remove(STEAM_PARTICLES);
     }
     

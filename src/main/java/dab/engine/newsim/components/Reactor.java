@@ -6,6 +6,7 @@ package dab.engine.newsim.components;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dab.engine.newsim.interfaces.ReactorView;
+import dab.engine.newsim.utils.AverageBuffer;
 import dab.engine.newsim.utils.BlockedHydroState;
 import dab.engine.newsim.utils.Constants;
 import dab.engine.newsim.utils.Steam;
@@ -36,6 +37,7 @@ public class Reactor extends Container implements ReactorView {
     
     @JsonProperty
     private ReactorCore core;
+   
 
     public Reactor(String name, double volume, double area) {
         super(
@@ -47,11 +49,32 @@ public class Reactor extends Container implements ReactorView {
         core = new ReactorCore();
     }
 
+    @Override
+    public double getWaterMass() {
+        return water.getMass();
+    }
+    
     // calculate the equilibrium pressure of the steam in this container and the one described by hydroState
     private double getEqualizedSteamPressure(HydraulicState hydroValue) {
         double v1 = getCompressibleVolume(), v2 = hydroValue.getCompressibleVolume();
         double p1 = getPressure(), p2 = hydroValue.getPressure();
         return (v1 * p1 + v2 * p2) / (v1 + v2);
+    }
+    
+        private void condenseSteam() {
+            // if pressure is smaller than atmosferic one, then we don't condense anything,
+            // otherwise we condense such that we reach the boiling point at that pressure
+            if (getPressure()> Constants.ATMOSPHERIC_PRESSURE) {
+                double boilingPoint = Water.getBoilingTemperature(getPressure() * 1.5);
+                if (boilingPoint > steam.getTemperature()) { // remove steam such that it equalizes to the boiling point
+                    double newSteamPressure = Math.max(Water.getBoilingPressure(steam.getTemperature()), Constants.ATMOSPHERIC_PRESSURE);
+
+                    int newQuantity = steam.getParticlesAtState(newSteamPressure, getCompressibleVolume());
+                    int deltaQuantity = steam.getParticleNr() - newQuantity;
+                    steam.remove(deltaQuantity);
+                    getWater().add(new Water(steam.getTemperature(), deltaQuantity));
+                }
+            }        
     }
     
     private Ratio getCoreSubmersedLevel() {
@@ -94,10 +117,10 @@ public class Reactor extends Container implements ReactorView {
             if (equalPressure < getPressure()) { // send stuff
                 int qty = steam.getParticlesAtState(equalPressure, getCompressibleVolume());
                 int deltaAmmount = steam.getParticleNr() - qty;
-                System.out.println(String.format("R: Before P: %f\tOP: %f", getPressure(), equalPressure));
+                //System.out.println(String.format("R: Before P: %f\tOP: %f", getPressure(), equalPressure));
                 outputComponent.receiveMatter(new Steam(steam.getTemperature(), deltaAmmount));
                 steam.remove(deltaAmmount);
-                System.out.println(String.format("R: After P: %f\tOP: %f", getPressure(), getEqualizedSteamPressure(getOutputComponent().getHydroState())));
+                //System.out.println(String.format("R: After P: %f\tOP: %f", getPressure(), getEqualizedSteamPressure(getOutputComponent().getHydroState())));
                 //System.out.println(getPressure());
             } else {
                 break;
@@ -119,6 +142,9 @@ public class Reactor extends Container implements ReactorView {
     }
     
     public void step() throws GameOverException {
+        // condense any super-heated steam
+        condenseSteam();
+        
         // heatup water, convert some of it into steam
         steam.add(getWater().addEnergy(core.getEnergyPerTick(getCoreSubmersedLevel()), steam.getPressure(getCompressibleVolume())));
 
@@ -127,6 +153,7 @@ public class Reactor extends Container implements ReactorView {
         
         discardExcessWater();
         equalizePressure();
+        
     }
 
     @Override
@@ -134,6 +161,11 @@ public class Reactor extends Container implements ReactorView {
         return "R: " + super.toString();
     }
 
+    @Override
+    public Temperature temperature() {
+        return new Temperature(water.getTemperature());
+    }
+    
     @Override
     public Temperature coreTemperature() {
         return new Temperature(core.getTemperature());

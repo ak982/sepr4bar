@@ -17,7 +17,7 @@ public class SinglePlayerFailureModel extends FailureModel {
     private final static int MAX_DAMAGE_SINGLE = 5;
     private final static int DAMAGE_INCREASE_SINGLE = 1;
     //A component will have a 1 in 50 chance of failing (per second)
-    private final static double DEFAULT_FAIL_CHANCE = 1 / 50;
+    private final static double DEFAULT_FAIL_CHANCE = 1.0 / 25.0;
 
     public SinglePlayerFailureModel(PowerPlant plant) {
         super(plant);

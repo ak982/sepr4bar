@@ -21,6 +21,7 @@ public class Valve extends Component implements ValveView {
     
     public Valve(String name) {
         super(name);
+        this.isOpen = true;
     }
     
     @Override

@@ -1,6 +1,6 @@
 package dab.gui.auxpanels;
 
-import dab.engine.newsim.Simulator;
+import dab.engine.newsim.AbstractSimulator;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -24,12 +24,12 @@ public class ButtonPanel extends JPanel {
 	private JLabel valve1_label;
 	private JLabel valve2_label;
 	private JLabel rods_label;
-    private Simulator simulator;
+    private AbstractSimulator simulator;
 	
 	/**
 	 * Initialises the ButtonPanel to a standard layout.
 	 */
-	public ButtonPanel(Simulator sim){
+	public ButtonPanel(AbstractSimulator sim){
 		setLayout(null);
         simulator = sim;
 		

@@ -4,6 +4,7 @@
  */
 package dab.gui.mainpanels;
 
+import dab.engine.newsim.SinglePlayerSimulator;
 import dab.engine.simulator.Simulator;
 import dab.gui.gamepanel.GamePanel;
 
@@ -12,7 +13,7 @@ import dab.gui.gamepanel.GamePanel;
  * @author eduard
  */
 public class SinglePlayerPanel extends GamePanel {
-    public SinglePlayerPanel(Simulator sim) {
+    public SinglePlayerPanel(SinglePlayerSimulator sim) {
         super(sim);
     }
 }

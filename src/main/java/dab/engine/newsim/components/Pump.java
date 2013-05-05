@@ -7,6 +7,7 @@ package dab.engine.newsim.components;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dab.engine.newsim.interfaces.PumpView;
 import dab.engine.newsim.utils.BlockedHydroState;
+import dab.engine.newsim.utils.Constants;
 import dab.engine.newsim.utils.HydraulicState;
 import dab.engine.newsim.utils.ContainerHydroState;
 import dab.engine.newsim.utils.Matter;
@@ -16,6 +17,7 @@ import dab.engine.newsim.utils.Matter;
  * @author eduard
  */
 public class Pump extends FailableComponent implements PumpView {
+    
     @JsonProperty
     private double power;
     
@@ -25,10 +27,11 @@ public class Pump extends FailableComponent implements PumpView {
     public Pump(String name, double power) {
         super(name);
         this.power = power;
+        this.status = true;
     }
     
     public double getPower() {
-        if (hasFailed()) {
+        if (hasFailed() || getStatus() == false) {
             return 0;
         } else {
             return power;
@@ -39,13 +42,17 @@ public class Pump extends FailableComponent implements PumpView {
         this.power = power;
     }
     
+    private double calculateApparentPressure(double pressure) {
+        return pressure - Math.max((pressure - Constants.ATMOSPHERIC_PRESSURE) * getPower(), 0);
+    }
+    
     @Override
     protected HydraulicState getHydroState() {
-        if (getStatus() == false || getOutputComponent().getHydroState() instanceof BlockedHydroState) {
+        if (getOutputComponent().getHydroState() instanceof BlockedHydroState) {
             return new BlockedHydroState();
         } else {
             ContainerHydroState chs = (ContainerHydroState) getOutputComponent().getHydroState();
-            return new ContainerHydroState(chs.getPressure() - getPower(), chs.getCompressibleVolume(), chs.getArea());
+            return new ContainerHydroState(calculateApparentPressure(chs.getPressure()), chs.getCompressibleVolume(), chs.getArea());
         }
     }
 

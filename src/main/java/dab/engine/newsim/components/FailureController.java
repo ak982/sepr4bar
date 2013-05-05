@@ -70,7 +70,8 @@ public class FailureController {
      * set hasFailed to true
      */
     public void fail() {
-        fail(0);
+        if (!hasFailed())
+            fail(0);
     }
 
     public void fail(int ammount) {

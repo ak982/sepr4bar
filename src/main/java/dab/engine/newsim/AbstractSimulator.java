@@ -13,19 +13,16 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dab.engine.newsim.PowerPlant;
+import dab.engine.newsim.components.Condenser;
+import dab.engine.newsim.components.Reactor;
 import dab.engine.newsim.interfaces.CondenserView;
 import dab.engine.newsim.interfaces.FailableObject;
 import dab.engine.newsim.interfaces.PumpView;
 import dab.engine.newsim.interfaces.ReactorView;
 import dab.engine.newsim.interfaces.TurbineView;
 import dab.engine.newsim.interfaces.ValveView;
-import dab.engine.simulator.CannotControlException;
-import dab.engine.simulator.CannotRepairException;
-import dab.engine.simulator.GameManager;
 import dab.engine.simulator.GameOverException;
-import dab.engine.simulator.KeyNotFoundException;
-import dab.engine.simulator.PlantController;
-import dab.engine.simulator.PlantStatus;
+
 import dab.engine.simulator.SoftFailReport;
 
 
@@ -54,7 +51,7 @@ public abstract class AbstractSimulator {
     }
     
     public PumpView getPump(int i) {
-        return powerPlant.getPumps().get(i);
+        return getPumps().get(i - 1);
     }
     
     public ReactorView getReactor() {
@@ -74,7 +71,7 @@ public abstract class AbstractSimulator {
     }
     
     public ValveView getValve(int i) {
-        return powerPlant.getValves().get(i);
+        return powerPlant.getValves().get(i - 1);
     }
     
 
@@ -84,7 +81,7 @@ public abstract class AbstractSimulator {
      * @param int pump number
      */
     public boolean getPumpFailed(int pumpNum){
-        return powerPlant.getPumps().get(pumpNum).hasFailed();
+        return powerPlant.getPumps().get(pumpNum - 1).hasFailed();
     }
 
     /**
@@ -100,7 +97,7 @@ public abstract class AbstractSimulator {
      * @return String[] failed components
      */
     public String[] listFailedComponents() {
-        return (String[])getFailureModel().listFailedComponents().toArray();
+        return getFailureModel().listFailedComponents().toArray(new String[0]);
     }
 
     /**
@@ -119,15 +116,15 @@ public abstract class AbstractSimulator {
     }
 
     public void changeValveState(int valveNumber, boolean isOpen) {
-        powerPlant.getValves().get(valveNumber).setOpen(isOpen);
+        powerPlant.getValves().get(valveNumber - 1).setOpen(isOpen);
     }
 
     public void changePumpState(int pumpNumber, boolean isPumping) {
-        powerPlant.getPumps().get(pumpNumber).setStatus(isPumping);
+        powerPlant.getPumps().get(pumpNumber - 1).setStatus(isPumping);
     }
 
     public void repairPump(int pumpNumber) {
-        powerPlant.getPumps().get(pumpNumber).getFailureController().repair();
+        powerPlant.getPumps().get(pumpNumber - 1).getFailureController().repair();
     }
     
     public void repairCondenser() {
@@ -143,11 +140,11 @@ public abstract class AbstractSimulator {
     }
 
     public boolean valveIsOpen(int valveNum) {
-        return powerPlant.getValves().get(valveNum).getOpen();
+        return powerPlant.getValves().get(valveNum - 1).getOpen();
     }
 
     public boolean pumpIsActive(int pumpNum) {
-        return powerPlant.getPumps().get(pumpNum).getStatus();
+        return powerPlant.getPumps().get(pumpNum - 1).getStatus();
     }
 
     public Pressure reactorPressure() {
@@ -158,8 +155,8 @@ public abstract class AbstractSimulator {
         return powerPlant.getReactor().temperature();
     }
 
-    public double reactorWaterLevel() {
-        return powerPlant.getReactor().getWaterLevelRatio();
+    public Percentage reactorWaterLevel() {
+        return new Percentage(powerPlant.getReactor().getWaterLevelRatio());
     }
 
     public Energy energyGenerated() {

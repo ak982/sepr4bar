@@ -25,7 +25,7 @@ import dab.engine.utilities.Temperature;
  */
 public class Condenser extends Container implements FailableObject, CondenserView {
 
-    private static final double INITIAL_WATER_RATIO = 0.1;
+    private static final double INITIAL_WATER_RATIO = 0.3;
     
     @JsonProperty
     private HeatSink heatSink;
@@ -41,6 +41,15 @@ public class Condenser extends Container implements FailableObject, CondenserVie
                 volume / area);
         heatSink = new HeatSink(name + " Cooling Pump");
         failController = new FailureController();
+    }
+    
+    @Override
+    public double getWaterMass() {
+        return water.getMass();
+    }
+    
+    public HeatSink getHeatSink() {
+        return heatSink;
     }
     
     private void condenseSteam() {
@@ -80,7 +89,10 @@ public class Condenser extends Container implements FailableObject, CondenserVie
                     getWater().remove(deltaWater.getParticleNr());
                     //System.out.println("C: After: " + outputComponent.getHydroState().pressure() + " " + getBottomPressure());
                 } else {
-                    break;
+                    // residual flow
+                    /*Water deltaWater = new Water(getWater().getTemperature(), new Kilograms(Math.min(0.01, getWaterMass())));
+                    send(deltaWater);
+                    getWater().remove(deltaWater.getParticleNr());*/
                 }
             }
         }       
