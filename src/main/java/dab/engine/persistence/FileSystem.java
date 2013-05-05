@@ -42,7 +42,7 @@ public class FileSystem {
                 //sepr.teameel. = 13 chars long
                 //if(file.getName().toLowerCase().endsWith(".nuke") && file.getName().startsWith(userName, 13))
                 //if (file.getName().matches("sepr.teameel." + username + ".([0-9]+).nuke")) {
-                if (file.getName().endsWith(".nuke")){
+                if (file.getName().endsWith(".sav")){
                     acceptableSaveGameFiles.add(file.getName());
                 }
 

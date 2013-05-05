@@ -53,9 +53,11 @@ public class InfoPanel extends JPanel {
                 + "<br>" + 
                 "R Water Level " + simulator.reactorWaterLevel() + "<br>" + 
                 "R Temperature " + simulator.reactorTemperature() + "<br>" + 
+                "R Core temperature" + simulator.getReactor().coreTemperature() + "<br>" +
                 "R Pressure " + simulator.reactorPressure() + "<br>" + 
-                "R Bottom Pressure" + (int)simulator.getReactor().getBottomPressure() + "<br>"+
+                "R Bottom Pressure" + (int)simulator.getReactor().getBottomPressure() + "<br>" +
                 "R Water mass" + (int)(simulator.getReactor().getWaterMass() * 10)+ "<br>" + "<br>" +
+                
                 "C Water Level " + simulator.condenserWaterLevel() + "<br>" + 
                 "C Temperature " + simulator.condenserTemperature() + "<br>" + 
                 "C Pressure " + simulator.condenserPressure()+ "<br>" +

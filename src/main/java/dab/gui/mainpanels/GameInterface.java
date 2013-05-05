@@ -5,7 +5,7 @@ import dab.engine.simulator.FailMode;
 import dab.engine.simulator.GameOverException;
 import dab.engine.utilities.Pressure;
 import dab.gui.application.MainWindow;
-import dab.gui.auxpanels.ButtonPanel;
+import dab.gui.auxpanels.ControlPanel;
 import dab.gui.auxpanels.InfoPanel;
 import dab.gui.auxpanels.ObamaPanel;
 import dab.gui.gamepanel.GameOver;
@@ -70,27 +70,16 @@ public abstract class GameInterface extends JPanel implements KeyListener {
         JSplitPane topLevelSplitPane;
         
         topLevelSplitPane = new JSplitPane();
-        topLevelSplitPane.setDividerSize(5);
-        topLevelSplitPane.setResizeWeight(0.2);
+        //topLevelSplitPane.setDividerSize(5);
         
         leftPane = new JSplitPane();
-        leftPane.setDividerSize(5);
+        //leftPane.setDividerSize(5);
         leftPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
         
         rightPane = new JSplitPane();
-        rightPane.setDividerSize(5);
+        //rightPane.setDividerSize(5);
         rightPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-        rightPane.setResizeWeight(0.2);
-        /* 
-        obamaPanel = new ObamaPanel(simulator);
-        infoPanel = new InfoPanel(simulator);
-        buttonPanel = new ButtonPanel(simulator);
-                     
-        leftPane.setLeftComponent(getGamePanel());
-        leftPane.setRightComponent(obamaPanel);
-        rightPane.setLeftComponent(infoPanel);
-        rightPane.setRightComponent(buttonPanel);        
-        */
+        rightPane.setResizeWeight(0.7);
         
         topLevelSplitPane.setLeftComponent(leftPane);
         topLevelSplitPane.setRightComponent(rightPane);
@@ -116,7 +105,7 @@ public abstract class GameInterface extends JPanel implements KeyListener {
     protected abstract GamePanel getGamePanel();
     protected abstract ObamaPanel getObamaPanel();
     protected abstract InfoPanel  getInfoPanel();
-    protected abstract ButtonPanel getButtonPanel();
+    protected abstract ControlPanel getButtonPanel();
     
     protected void step() {
         try {

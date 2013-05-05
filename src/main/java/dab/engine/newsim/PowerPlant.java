@@ -6,6 +6,7 @@ package dab.engine.newsim;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dab.engine.newsim.components.Condenser;
@@ -23,8 +24,6 @@ import java.util.ArrayList;
  * Excuse my seemingly duplication of code, but all of the components are 
  * sufficiently different and thus can not be grouped together
  */
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class PowerPlant {
     
     @JsonProperty

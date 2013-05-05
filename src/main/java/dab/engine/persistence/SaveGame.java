@@ -31,8 +31,6 @@ public class SaveGame {
     }
 
     @JsonProperty
-    private PowerPlant powerPlant;
-    @JsonProperty
     private SinglePlayerFailureModel failureModel;
     @JsonProperty
     private String userName;
@@ -43,8 +41,7 @@ public class SaveGame {
      *  @param FailureModel
      *  @param String
      */
-    public SaveGame(PowerPlant physicalModel, SinglePlayerFailureModel failureModel, String userName) {
-        this.powerPlant = physicalModel;
+    public SaveGame(SinglePlayerFailureModel failureModel, String userName) {
         this.failureModel = failureModel;
         this.userName = userName;
     }
@@ -63,10 +60,6 @@ public class SaveGame {
     public String getUserName() {
         return userName;
     }
-
-    public PowerPlant getPowerPlant() {
-        return powerPlant;
-    }
     
     public SinglePlayerFailureModel getFailureModel() {
         return failureModel;
@@ -79,6 +72,6 @@ public class SaveGame {
      */
     private String fileName() {
         Calendar cal = Calendar.getInstance();
-        return "DaBAR" + userName + "." + cal.getTimeInMillis() + ".sav";
+        return "sepr.DaBAR." + userName + "." + cal.getTimeInMillis() + ".sav";
     }
 }

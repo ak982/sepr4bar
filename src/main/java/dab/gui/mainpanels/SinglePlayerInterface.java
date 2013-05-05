@@ -8,7 +8,7 @@ import dab.engine.newsim.AbstractSimulator;
 import dab.engine.newsim.SinglePlayerSimulator;
 import dab.engine.simulator.Simulator;
 import dab.gui.application.MainWindow;
-import dab.gui.auxpanels.ButtonPanel;
+import dab.gui.auxpanels.ControlPanel;
 import dab.gui.auxpanels.InfoPanel;
 import dab.gui.auxpanels.ObamaPanel;
 import dab.gui.auxpanels.SinglePlayerObama;
@@ -24,14 +24,14 @@ public class SinglePlayerInterface extends GameInterface{
     private SinglePlayerSimulator simulator;
     private SinglePlayerObama obamaPanel;
     private InfoPanel infoPanel;
-    private ButtonPanel buttonPanel;
+    private ControlPanel buttonPanel;
 
     public SinglePlayerInterface(MainWindow mainWindow, SinglePlayerSimulator simulator) {
         super(mainWindow);
         this.simulator = simulator;
         gamePanel = new SinglePlayerPanel(simulator); 
         obamaPanel = new SinglePlayerObama(simulator);
-        buttonPanel = new ButtonPanel(simulator);
+        buttonPanel = new ControlPanel(simulator);
         infoPanel   = new InfoPanel(simulator);
         super.setupPanes();
         start();
@@ -59,7 +59,7 @@ public class SinglePlayerInterface extends GameInterface{
     }
 
     @Override
-    protected ButtonPanel getButtonPanel() {
+    protected ControlPanel getButtonPanel() {
         return buttonPanel;
     }
     

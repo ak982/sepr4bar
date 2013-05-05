@@ -4,6 +4,7 @@
  */
 package dab.engine.newsim.utils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Random;
 
 /**
@@ -11,7 +12,9 @@ import java.util.Random;
  * @author eduard
  */
 public class RandomGenerator {
+    @JsonProperty
     private Random generator;
+    
     public RandomGenerator() {
         generator = new Random();
     }

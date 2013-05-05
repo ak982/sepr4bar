@@ -4,6 +4,9 @@
  */
 package dab.engine.newsim;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dab.engine.simulator.FailMode;
 import dab.engine.simulator.SoftFailReport;
 import dab.engine.simulator.UserCommands;
@@ -12,6 +15,8 @@ import dab.engine.simulator.UserCommands;
  *
  * @author eduard
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class SinglePlayerFailureModel extends FailureModel {
 
     private final static int MAX_DAMAGE_SINGLE = 5;

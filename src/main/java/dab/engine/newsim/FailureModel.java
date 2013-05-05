@@ -1,6 +1,9 @@
 package dab.engine.newsim;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dab.engine.newsim.interfaces.FailableObject;
 import dab.engine.newsim.utils.Constants;
 import dab.engine.newsim.utils.RandomGenerator;
@@ -39,17 +42,22 @@ import java.util.Random;
  *
  * @author Marius Dumitrescu
  */
+
 public abstract class FailureModel {
+    
     protected SoftFailReport lastFailReport = new SoftFailReport();
-    protected RandomGenerator dice;
+    
+    protected RandomGenerator dice = new RandomGenerator();
+    
+    @JsonProperty
     protected PowerPlant powerPlant;
     
- 
+    @JsonProperty
     private int difficulty;
 
     public FailureModel(PowerPlant plant) {
         this.powerPlant = plant;
-        this.dice = new RandomGenerator();
+        
     }
 
 
@@ -61,6 +69,10 @@ public abstract class FailureModel {
     
     protected double getDifficultyModifier() {
         return difficulty;
+    }
+    
+    PowerPlant getPowerPlant() {
+        return powerPlant;
     }
     
     protected abstract double getHardwareFailChance();
@@ -191,7 +203,11 @@ public abstract class FailureModel {
      * @return Software failure report
      */
     public SoftFailReport getSoftFailReport() {
-        return lastFailReport.getCopy();
+        if (lastFailReport == null) {
+            return new SoftFailReport();
+        } else {
+            return lastFailReport.getCopy();
+        }
     }
     
     public void setDifficulty(int difficulty) {

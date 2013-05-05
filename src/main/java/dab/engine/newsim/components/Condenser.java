@@ -59,9 +59,13 @@ public class Condenser extends Container implements FailableObject, CondenserVie
                 double boilingPoint = Water.getBoilingTemperature(getPressure());
                 if (boilingPoint > steam.getTemperature()) { // remove steam such that it equalizes to the boiling point
                     double newSteamPressure = Math.max(Water.getBoilingPressure(steam.getTemperature()), Constants.ATMOSPHERIC_PRESSURE);
+                    
 
                     int newQuantity = steam.getParticlesAtState(newSteamPressure, getCompressibleVolume());
                     int deltaQuantity = steam.getParticleNr() - newQuantity;
+                    if (deltaQuantity < 0) {
+                        System.out.println("BAD");
+                    }
                     steam.remove(deltaQuantity);
                     getWater().add(new Water(steam.getTemperature(), deltaQuantity));
                 }

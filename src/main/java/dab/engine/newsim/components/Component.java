@@ -4,6 +4,8 @@
  */
 package dab.engine.newsim.components;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dab.engine.newsim.utils.HydraulicState;
 import dab.engine.newsim.utils.Matter;
@@ -12,6 +14,7 @@ import dab.engine.newsim.utils.Matter;
  *
  * @author eduard
  */
+@JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public abstract class Component {
     
     @JsonProperty

@@ -33,7 +33,15 @@ public class Reactor extends Container implements ReactorView {
     private static final double EXCESSWATER_THRESHOLD = 0.8; // always keep the water level below 80% of the volume
     private static final double INITIAL_WATER_RATIO = 0.5;
     private static final double CORE_MIN_HEIGHT_RATIO = 0.1;
-    private static final double CORE_MAX_HEIGHT_RATIO = 0.2;
+    private static final double CORE_MAX_HEIGHT_RATIO = 0.3;
+    private static final double QUENCH_PROPORTION = 0.3; // 30% of the reactor will be filled with cold water
+    private static final double ROD_SPEED = 0.08 / Constants.TICKS_PER_SECOND;
+    
+    @JsonProperty
+    private boolean hasBeenQuenched, quenchedQueued;
+    
+    @JsonProperty
+    private double targetRodPosition;
     
     @JsonProperty
     private ReactorCore core;
@@ -47,6 +55,9 @@ public class Reactor extends Container implements ReactorView {
                 area,
                 volume / area);
         core = new ReactorCore();
+        hasBeenQuenched = false;
+        quenchedQueued = false;
+        targetRodPosition = 0;
     }
 
     @Override
@@ -65,12 +76,14 @@ public class Reactor extends Container implements ReactorView {
             // if pressure is smaller than atmosferic one, then we don't condense anything,
             // otherwise we condense such that we reach the boiling point at that pressure
             if (getPressure()> Constants.ATMOSPHERIC_PRESSURE) {
-                double boilingPoint = Water.getBoilingTemperature(getPressure() * 1.5);
+                double boilingPoint = Water.getBoilingTemperature(getPressure());
                 if (boilingPoint > steam.getTemperature()) { // remove steam such that it equalizes to the boiling point
                     double newSteamPressure = Math.max(Water.getBoilingPressure(steam.getTemperature()), Constants.ATMOSPHERIC_PRESSURE);
+                    
 
                     int newQuantity = steam.getParticlesAtState(newSteamPressure, getCompressibleVolume());
                     int deltaQuantity = steam.getParticleNr() - newQuantity;
+                    System.out.println("Condensed in reactor " + deltaQuantity);
                     steam.remove(deltaQuantity);
                     getWater().add(new Water(steam.getTemperature(), deltaQuantity));
                 }
@@ -141,19 +154,37 @@ public class Reactor extends Container implements ReactorView {
         return new ContainerHydroState(getBottomPressure(), getCompressibleVolume(), area);
     }
     
+    private void updateRodPosition() {
+        if (core.getRodPosition() < targetRodPosition) {
+            core.setRodPosition(new Ratio(Math.min(targetRodPosition, core.getRodPosition() + ROD_SPEED)));
+        } else {
+            core.setRodPosition(new Ratio(Math.max(targetRodPosition, core.getRodPosition() - ROD_SPEED)));
+        }
+    }
+    
     public void step() throws GameOverException {
+        updateRodPosition();
         // condense any super-heated steam
         condenseSteam();
         
         // heatup water, convert some of it into steam
         steam.add(getWater().addEnergy(core.getEnergyPerTick(getCoreSubmersedLevel()), steam.getPressure(getCompressibleVolume())));
 
-        // heatup the core (only in case of low water level. eg. not fully submersed)
-        core.step(getCoreSubmersedLevel(), getWater());
+        if (quenchedQueued) {
+            // water ad 280 degrees. That should settle things.
+            System.out.println(Constants.WATER_PARTICLES_PER_KILOGRAM);
+            double quenchWaterVolume = getTotalVolume() * QUENCH_PROPORTION;
+            double quenchWaterMass = quenchWaterVolume * Constants.NORMAL_DENSITY_WATER;
+            water.add(new Water(280, (int)(quenchWaterMass * Constants.WATER_PARTICLES_PER_KILOGRAM)));
+            hasBeenQuenched = true;
+            quenchedQueued = false;
+        }
         
         discardExcessWater();
         equalizePressure();
         
+        // heatup the core (only in case of low water level. eg. not fully submersed)
+        core.step(getCoreSubmersedLevel(), getWater());  
     }
 
     @Override
@@ -162,6 +193,12 @@ public class Reactor extends Container implements ReactorView {
     }
 
     //<editor-fold desc="implemented interfaces">
+    @Override
+    public void quench() {
+        if (!hasBeenQuenched)
+            quenchedQueued = true;
+    }
+    
     @Override
     public Temperature temperature() {
         return new Temperature(water.getTemperature());
@@ -174,7 +211,7 @@ public class Reactor extends Container implements ReactorView {
     
     @Override
     public void moveControlRods(Percentage extracted) {
-        core.setRodPosition(new Ratio(extracted.ratio()));
+        targetRodPosition = extracted.ratio();
     }
 
     @Override

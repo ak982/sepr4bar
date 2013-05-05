@@ -10,7 +10,8 @@ public class PumpButton extends ControlButton {
 
     private PumpView pump;
 
-    public PumpButton(PumpView pump) {
+    public PumpButton(PumpView pump, String name) {
+        super(name);
         this.pump = pump;
     }
 

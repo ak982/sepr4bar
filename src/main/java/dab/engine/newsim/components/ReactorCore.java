@@ -9,6 +9,7 @@ import dab.engine.newsim.utils.RadioactiveMatter;
 import dab.engine.newsim.utils.Ratio;
 import dab.engine.newsim.utils.Water;
 import dab.engine.newsim.utils.Kilograms;
+import dab.engine.simulator.GameOverException;
 import dab.engine.utilities.Percentage;
 
 /**
@@ -24,12 +25,13 @@ public class ReactorCore {
     // transfer ease is just how much of the rod's temperature is going to DROP
     // every second, if the rods are fully submersed, their temperature will be an averaged with that of water's
     private static final double MAXIMUM_TRANSFER_EASE_PER_TICK = 0.5 / Constants.TICKS_PER_SECOND;
+    private static final double MELTING_TEMPERATURE = 1000;
     private double controlRodPosition;
     private RadioactiveMatter fuelRods;
 
     public ReactorCore() {
         controlRodPosition = 0;
-        fuelRods = new RadioactiveMatter(new Kilograms(1));
+        fuelRods = new RadioactiveMatter(new Kilograms(1000));
     }
 
     public double getEnergyPerTick(Ratio submersed) {
@@ -39,7 +41,7 @@ public class ReactorCore {
     // assume specific energy of 2kj/kgK, calculate temperature increase
     // allow cooling down of submersed part
     // calculate rodTemperature as weighted average between submersed and nonsubmersed
-    public void step(Ratio submersed, Water water) {
+    public void step(Ratio submersed, Water water) throws GameOverException {
         Ratio exposed = new Ratio(submersed.getOppositeValue());
         // if rods aren't fully submerged then they cool down less
         double transferEase = submersed.getValue() * MAXIMUM_TRANSFER_EASE_PER_TICK;
@@ -50,6 +52,10 @@ public class ReactorCore {
 
         // submersed fuelRods are cooled down (by the water surrounding them)
         fuelRods.equilibrateTemperature(transferDifficulty, water.getTemperature());
+        
+        if (fuelRods.getTemperature() > MELTING_TEMPERATURE) {
+            throw new GameOverException("core meltdown");
+        }
 
     }
 

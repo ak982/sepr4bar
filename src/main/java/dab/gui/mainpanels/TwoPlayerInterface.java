@@ -12,7 +12,7 @@ import dab.engine.newsim.AbstractSimulator;
 import dab.engine.newsim.TwoPlayerSimulator;
 import dab.engine.simulator.Simulator;
 import dab.gui.application.MainWindow;
-import dab.gui.auxpanels.ButtonPanel;
+import dab.gui.auxpanels.ControlPanel;
 import dab.gui.auxpanels.InfoPanel;
 import dab.gui.auxpanels.ObamaPanel;
 import dab.gui.auxpanels.TwoPlayerObama;
@@ -29,7 +29,7 @@ public class TwoPlayerInterface extends GameInterface{
     private TwoPlayerScreen gamePanel;
     private TwoPlayerSimulator simulator;
     private TwoPlayerObama obamaPanel;
-    private ButtonPanel buttonPanel;
+    private ControlPanel buttonPanel;
     private InfoPanel infoPanel;
     
     private BunnyController controller;
@@ -45,7 +45,7 @@ public class TwoPlayerInterface extends GameInterface{
         controller = new BunnyController(environment, hitboundsController, new Point(100, 100));
         gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller);
         obamaPanel = new TwoPlayerObama(simulator, controller);
-        buttonPanel = new ButtonPanel(simulator);
+        buttonPanel = new ControlPanel(simulator);
         infoPanel = new InfoPanel(simulator);
         super.setupPanes();
         start();
@@ -125,7 +125,7 @@ public class TwoPlayerInterface extends GameInterface{
     }
 
     @Override
-    protected ButtonPanel getButtonPanel() {
+    protected ControlPanel getButtonPanel() {
         return buttonPanel;
     }
 

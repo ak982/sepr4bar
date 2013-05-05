@@ -28,7 +28,7 @@ public class Constants {
     public static final double NORMAL_DENSITY_WATER = 1000; // kg / m3
     public static final double LATENT_HEAT_WATER = 2260;    // kjoules FIXME: normally it's 2260
     public static final double SPECIFIC_HEAT_WATER = 4.2;   // kj / kgK;
-    public static final int    WATER_PARTICLES_PER_KILOGRAM = (int)(MOLAR_MASS_WATER * AVOGADRO_NUMBER);
+    public static final int    WATER_PARTICLES_PER_KILOGRAM = (int)(AVOGADRO_NUMBER / MOLAR_MASS_WATER);
     
     // steam properties
     public static final int    NORMAL_PARTICLES_PER_VOLUME_STEAM = (int)(ATMOSPHERIC_PRESSURE / (BOLTZMAN_CONSTANT * ROOM_TEMP));

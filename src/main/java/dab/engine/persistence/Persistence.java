@@ -1,5 +1,6 @@
 package dab.engine.persistence;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -35,6 +36,7 @@ public class Persistence {
      * @throws JsonProcessingException
      */
     public String serialize(Object obj) throws JsonProcessingException {
+        //mapper.setVisibilityChecker(mapper.getVisibilityChecker().with(JsonAutoDetect.Visibility.NONE));
         return mapper.writeValueAsString(obj);
     }
 
