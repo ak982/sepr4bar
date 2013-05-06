@@ -2,6 +2,7 @@ package dab.gui.auxpanels;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -44,6 +45,8 @@ public abstract class ControlButton extends JPanel {
         });
         
         label = new JLabel(labelText);
+        label.setFont(new Font("Bookman Old Style", Font.BOLD, 14));
+        label.setForeground(Color.WHITE);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         
 

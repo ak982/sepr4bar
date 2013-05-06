@@ -43,6 +43,7 @@ public class TwoPlayerInterface extends GameInterface{
         this.simulator = simulator;
         
         environment = new Environment();
+        simulator.setEnvironment(environment);
         hitboundsController = new HitBoundsController();
         controller = new BunnyController(environment, hitboundsController, new Point(100, 100));
         gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller, simulator.getTurbine());

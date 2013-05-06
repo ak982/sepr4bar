@@ -3,7 +3,9 @@ package dab.gui.auxpanels;
 import dab.engine.simulator.UserCommands;
 import dab.engine.newsim.interfaces.ReactorView;
 import dab.engine.utilities.Percentage;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -40,6 +42,8 @@ public class ControlRodSlider extends JSlider{
         setMajorTickSpacing(25);
         setPaintTicks(true);
         setPaintLabels(true);
+        setFont(new Font("Bookman Old Style", Font.BOLD, 14));
+        setForeground(Color.WHITE);
        
         setUI(new MySliderUI(this));
         addChangeListener(new ChangeListener() {
