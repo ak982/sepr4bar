@@ -139,7 +139,7 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
 
     public void mousePressed(MouseEvent e) {
         Point clicked = new Point(e.getX(), e.getY());
-
+        System.out.println(clicked);
 
         //Also get the power generated, check if it is > then some amount,
         //if it is - subtrackt that amount and call this:

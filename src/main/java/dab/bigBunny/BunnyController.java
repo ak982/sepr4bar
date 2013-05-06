@@ -327,11 +327,11 @@ public class BunnyController {
                         newY = newLocation.getY();
                         
                     } else {
+                        breakComponent(h.getComponent());
                         perpendicularAngle = 270;
                         newY = handleHitWall(centreY, halfHeight, perpendicularAngle);              
                         newX = adjustX(newY, thisDirection);
                         newX = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getX();
-                        breakComponent(h.getComponent());
                     }
                         
                 } else {
@@ -341,12 +341,12 @@ public class BunnyController {
                         newY = newLocation.getY();
                         
                     }else {
+                        breakComponent(h.getComponent());
                         perpendicularAngle = 90;
                         newY = handleHitWall(centreY, halfHeight, perpendicularAngle);              
                         newX = adjustX(newY, thisDirection);
                         newX = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getX();
-                        breakComponent(h.getComponent());
-                    }
+                                            }
                 }
                 
                 
@@ -357,10 +357,10 @@ public class BunnyController {
                 } else {
                     perpendicularAngle = 0;
                 }
+                breakComponent(h.getComponent());
                 newX = handleHitWall(centreX, halfWidth, perpendicularAngle);               
                 newY = adjustY(newX, sgn(179 - perpendicularAngle), thisDirection);
                 newY = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getY();
-                breakComponent(h.getComponent());
             }
 
             orientation = fixOrientation(tempOrientation);
@@ -536,7 +536,7 @@ public class BunnyController {
     
     private void breakComponent(FailableComponentView c){
         if(!environment.getHeadache()){       
-            int damage = (int)(speed * HIT_DAMAGE);
+            int damage = (int)(modulus(speed) * HIT_DAMAGE);
             if (damage>MAX_DAMAGE) {damage = MAX_DAMAGE;}         
             c.fail(damage);
             environment.startHeadache();
