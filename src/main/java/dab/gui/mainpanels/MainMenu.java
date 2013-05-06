@@ -4,8 +4,8 @@
  */
 package dab.gui.mainpanels;
 
-import dab.engine.newsim.SinglePlayerSimulator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import dab.engine.newsim.SinglePlayerSimulator;
 import dab.engine.persistence.FileSystem;
 import dab.gui.application.MainWindow;
 import java.awt.Color;
@@ -23,7 +23,6 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.border.LineBorder;
 
 /**
  *
@@ -181,12 +180,12 @@ public class MainMenu extends MenuHandler{
         if (addSave) {
             add(save_menu);
         }
-        add(options);
         add(load_menu);
+        add(options);      
         add(quit);
         
-        int yLocation = 200;
-        if(getComponentCount()>6) { yLocation -= 100;}
+        int yLocation = 150;
+        if(getComponentCount()>6) { yLocation -= 130;}
         setBounds(400, yLocation, (int)one_player.getMinimumSize().getWidth(),
                 (int)one_player.getMinimumSize().getHeight()*getComponentCount());
         
