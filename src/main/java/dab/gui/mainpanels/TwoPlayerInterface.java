@@ -41,10 +41,11 @@ public class TwoPlayerInterface extends GameInterface{
     public TwoPlayerInterface(MainWindow mainWindow, TwoPlayerSimulator simulator) {
         super(mainWindow);
         this.simulator = simulator;
+        
         environment = new Environment();
         hitboundsController = new HitBoundsController();
         controller = new BunnyController(environment, hitboundsController, new Point(100, 100));
-        gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller);
+        gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller, simulator.getTurbine());
         obamaPanel = new TwoPlayerObama(simulator, controller);
         buttonPanel = new ControlPanel(simulator);
         infoPanel = new InfoPanel(simulator);
