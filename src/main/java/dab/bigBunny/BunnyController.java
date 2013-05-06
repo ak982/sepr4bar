@@ -55,7 +55,7 @@ public class BunnyController {
     public BunnyController(Environment e, HitBoundsController h, Point p) {
         this.environment = e;
         this.hitController = h;
-        this.radius = 10;
+        this.radius = 15;
         
         this.x = p.x;
         this.y = p.y;
@@ -315,7 +315,7 @@ public class BunnyController {
         halfWidth = hitBounds.getWidth() / 2;
         
         if (hit(newX, newY, centreY, centreX, halfHeight, halfWidth)) {              
-            breakComponent(h.getComponent());
+            
             thisDirection = adjustThisDirection();
 
             if (hitFromBelowOrAbove(x, centreX, y, centreY, halfHeight, halfWidth, thisDirection)) {      
@@ -331,6 +331,7 @@ public class BunnyController {
                         newY = handleHitWall(centreY, halfHeight, perpendicularAngle);              
                         newX = adjustX(newY, thisDirection);
                         newX = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getX();
+                        breakComponent(h.getComponent());
                     }
                         
                 } else {
@@ -344,6 +345,7 @@ public class BunnyController {
                         newY = handleHitWall(centreY, halfHeight, perpendicularAngle);              
                         newX = adjustX(newY, thisDirection);
                         newX = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getX();
+                        breakComponent(h.getComponent());
                     }
                 }
                 
@@ -358,6 +360,7 @@ public class BunnyController {
                 newX = handleHitWall(centreX, halfWidth, perpendicularAngle);               
                 newY = adjustY(newX, sgn(179 - perpendicularAngle), thisDirection);
                 newY = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getY();
+                breakComponent(h.getComponent());
             }
 
             orientation = fixOrientation(tempOrientation);
@@ -544,12 +547,6 @@ public class BunnyController {
            
     public void hasBeenShot(){
         health --;
-        System.out.println(health);
-        if (health <= 0){
-            
-           //Nice animation of dying bunny, and gameover
-       
-        }
     }
     
  

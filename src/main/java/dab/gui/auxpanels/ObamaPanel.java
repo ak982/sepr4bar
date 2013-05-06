@@ -46,7 +46,7 @@ public abstract class ObamaPanel extends JPanel {
         lblSpeech.setFont(new Font("Bookman Old Style", Font.BOLD, 14));
         lblSpeech.setBounds(0, -80, 1000, 300);
         lblSpeech.setIconTextGap(50);
-        lblSpeech.setIcon(new ImageIcon("resources/mainInterface/ObamaSpeechBubble.png"));
+        lblSpeech.setIcon(new ImageIcon("src/main/resources/dab/gui/auxpanels/speech.png"));
         add(lblSpeech);
     }
     

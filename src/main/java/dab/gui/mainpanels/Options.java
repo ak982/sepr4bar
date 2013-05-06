@@ -115,7 +115,8 @@ public class Options extends MenuHandler{
       add(sound);
       add(back);
      
-      setBounds(400, 100, (int)easy.getMinimumSize().getWidth(), (int)easy.getMinimumSize().getHeight()*getComponentCount());
+        setBounds(getTheX(), 100, (int)easy.getMinimumSize().getWidth(), 
+                (int)easy.getMinimumSize().getHeight()*getComponentCount());
      }
       
     private void setSelected(){
