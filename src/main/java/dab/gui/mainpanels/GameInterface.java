@@ -36,6 +36,7 @@ public abstract class GameInterface extends JPanel implements KeyListener {
         this.mainWindow = mainWindow;
   
         counter = 0;
+        //FIXME: play music
         music = new Sounds("resources/music/backgroundSound.wav", true);
   
         ActionListener taskStep = new ActionListener() {
