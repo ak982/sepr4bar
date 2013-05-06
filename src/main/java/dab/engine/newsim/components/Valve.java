@@ -5,6 +5,7 @@
 package dab.engine.newsim.components;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dab.engine.newsim.interfaces.FailableComponentView;
 import dab.engine.newsim.interfaces.ValveView;
 import dab.engine.newsim.utils.BlockedHydroState;
 import dab.engine.newsim.utils.HydraulicState;
@@ -14,7 +15,7 @@ import dab.engine.newsim.utils.Matter;
  * simplest component of them all
  * @author eduard
  */
-public class Valve extends Component implements ValveView {
+public class Valve extends Component implements ValveView, FailableComponentView {
 
     @JsonProperty
     private boolean isOpen;
@@ -50,6 +51,26 @@ public class Valve extends Component implements ValveView {
     @Override
     public void setOpen(boolean openStatus) {
         isOpen = openStatus;
+    }
+
+    @Override
+    public boolean hasFailed() {
+        return false;
+    }
+
+    @Override
+    public void fixDamage() {
+        ;
+    }
+
+    @Override
+    public int getDamage() {
+        return 0;
+    }
+
+    @Override
+    public void fail(int dmg) {
+        ;
     }
     
 }
