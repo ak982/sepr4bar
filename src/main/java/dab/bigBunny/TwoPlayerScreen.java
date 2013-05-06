@@ -102,11 +102,18 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
 
         // draw slimes
         for (Slime s : environment.getSlimes()) {
+            AffineTransform afSlime = new AffineTransform();
           float f = s.getFreshness();
+          
+          afSlime.translate(s.getLocation().getX(), s.getLocation().getY());
+          afSlime.rotate(s.getRotation());
+          afSlime.translate(- slime.getWidth()/2, - slime.getHeight()/2);
+          
           g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,f));           
-          g2D.drawImage(slime, (int)s.getLocation().getX() - slime.getWidth()/2, 
+          /*g2D.drawImage(slime, (int)s.getLocation().getX() - slime.getWidth()/2, 
                  (int) s.getLocation().getY() - slime.getHeight()/2, slime.getWidth(),
-                  slime.getHeight(), this);
+                  slime.getHeight(), this);*/
+          g2D.drawImage(slime, afSlime, this);
           
         }
         

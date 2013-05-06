@@ -4,9 +4,6 @@
  */
 package dab.engine.newsim.interfaces;
 
-import dab.engine.utilities.Percentage;
-import dab.engine.utilities.Pressure;
-import dab.engine.utilities.Temperature;
 
 /**
  *

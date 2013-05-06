@@ -82,7 +82,7 @@ public abstract class Container extends Component implements ContainerView  {
     //<editor-fold desc="Implemented interfaces">
     @Override
     public Percentage waterLevel() {
-        return new Percentage(getWaterLevelRatio());
+        return new Percentage(getWaterLevelRatio() * 100);
     }
 
     @Override

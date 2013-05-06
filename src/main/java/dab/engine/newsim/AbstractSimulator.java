@@ -158,7 +158,7 @@ public abstract class AbstractSimulator {
     }
 
     public Percentage reactorWaterLevel() {
-        return new Percentage(powerPlant.getReactor().getWaterLevelRatio());
+        return powerPlant.getReactor().waterLevel();
     }
 
     public Energy energyGenerated() {

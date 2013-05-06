@@ -216,7 +216,7 @@ public class Reactor extends Container implements ReactorView {
 
     @Override
     public Percentage controlRodPosition() {
-        return new Percentage(core.getRodPosition());
+        return new Percentage(core.getRodPosition() * 100);
     }
 
     @Override
