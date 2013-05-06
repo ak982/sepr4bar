@@ -536,7 +536,7 @@ public class BunnyController {
     
     private void breakComponent(FailableComponentView c){
         if(!environment.getHeadache()){       
-            int damage = (int)(speed * HIT_DAMAGE);
+            int damage = (int)(modulus(speed) * HIT_DAMAGE);
             if (damage>MAX_DAMAGE) {damage = MAX_DAMAGE;}         
             c.fail(damage);
             environment.startHeadache();
