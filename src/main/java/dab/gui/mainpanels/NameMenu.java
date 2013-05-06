@@ -4,8 +4,6 @@
  */
 package dab.gui.mainpanels;
 
-import dab.engine.newsim.AbstractSimulator;
-import dab.engine.newsim.DualPlayerFailureModel;
 import dab.engine.newsim.SinglePlayerSimulator;
 import dab.engine.newsim.TwoPlayerSimulator;
 import dab.gui.application.MainWindow;
@@ -18,13 +16,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
