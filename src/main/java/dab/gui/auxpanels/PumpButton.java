@@ -25,6 +25,7 @@ public class PumpButton extends ControlButton {
 
     @Override
     public void update() {
+        super.update();
         if (pump.hasFailed()) {
             setFailed();
         } else {

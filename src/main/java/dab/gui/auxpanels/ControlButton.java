@@ -19,6 +19,7 @@ public abstract class ControlButton extends JPanel {
     JToggleButton underlyingButton;
     JLabel label;
     private Icon activePressed, brokenIcon, disabledIcon;
+    protected boolean softFailed = false;
 
     public ControlButton(String labelText) {
         try {
@@ -37,7 +38,8 @@ public abstract class ControlButton extends JPanel {
         underlyingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                onClick();
+                if (!softFailed)
+                    onClick();
             }
         });
         
@@ -69,8 +71,15 @@ public abstract class ControlButton extends JPanel {
             changeState(disabledIcon, true, false);
         }
     }
+    
+    public void setSoftFailed() {
+        softFailed = true;
+        setFailed();
+    }
 
     protected abstract void onClick();
 
-    public abstract void update();
+    public void update() {
+        softFailed = false;
+    }
 }

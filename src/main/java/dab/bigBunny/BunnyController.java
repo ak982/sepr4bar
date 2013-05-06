@@ -75,6 +75,10 @@ public class BunnyController {
         this(environment, hitBoundsController, new Point(100, 100));
     }
 
+    public boolean hasHeadache() {
+        return environment.getHeadache();
+    }
+    
     public void step() {
         softwareFailure = environment.getSoftwareFailure();
         updateMovement();    

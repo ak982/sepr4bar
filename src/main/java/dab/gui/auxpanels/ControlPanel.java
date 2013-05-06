@@ -1,6 +1,7 @@
 package dab.gui.auxpanels;
 
 import dab.engine.newsim.AbstractSimulator;
+import dab.engine.simulator.FailMode;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -25,11 +26,6 @@ public class ControlPanel extends JPanel {
 	private dab.gui.auxpanels.PumpButton  btnPump1, btnPump2;
     private dab.gui.auxpanels.ValveButton btnValve1, btnValve2;
 	private ControlRodSlider controlRodSlider;
-	private JLabel pump1_label;
-	private JLabel pump2_label;
-	private JLabel valve1_label;
-	private JLabel valve2_label;
-	private JLabel rods_label;
     private AbstractSimulator simulator;
 	
 	/**
@@ -82,11 +78,18 @@ public class ControlPanel extends JPanel {
 	}
     
     public void update() {
-        btnPump1.update();
-        btnPump2.update();
-        btnValve1.update();
-        btnValve2.update();
-        
+        if (simulator.getSoftwareStatus() != FailMode.WORKING) {
+            btnPump1.setSoftFailed();
+            btnPump2.setSoftFailed();
+            btnValve1.setSoftFailed();
+            btnValve2.setSoftFailed();
+        } else {
+            btnPump1.update();
+            btnPump2.update();
+            btnValve1.update();
+            btnValve2.update();
+        }
+
     }
 	
 	@Override

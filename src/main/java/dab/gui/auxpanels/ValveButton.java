@@ -25,6 +25,7 @@ public class ValveButton extends ControlButton {
     
     @Override
     public void update() {
+        super.update();
         setStatus(valve.getOpen());
     }
 }

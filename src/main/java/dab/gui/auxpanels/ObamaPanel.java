@@ -1,5 +1,7 @@
 package dab.gui.auxpanels;
 
+import dab.engine.newsim.AbstractSimulator;
+import dab.engine.newsim.components.Reactor;
 import java.awt.Color;
 import java.awt.Font;
 
@@ -21,10 +23,15 @@ public abstract class ObamaPanel extends JPanel {
     protected JLabel lblObama;
     protected JLabel lblSpeech;
     protected JLabel lblWords;
+    AbstractSimulator simulator;
+    
 
-    public ObamaPanel() {
+    public ObamaPanel(AbstractSimulator sim) {
+        this.simulator = sim;
+        
         setBackground(Color.WHITE);
         setLayout(null);        
+        
 
         lblWords = new JLabel();
         lblWords.setFont(new Font("Bookman Old Style", Font.BOLD, 14));
@@ -32,7 +39,7 @@ public abstract class ObamaPanel extends JPanel {
         lblWords.setVerticalAlignment(SwingConstants.TOP);
         lblWords.setHorizontalAlignment(SwingConstants.LEFT);
         lblWords.setHorizontalTextPosition(SwingConstants.RIGHT);
-        lblWords.setBounds(210, 30, 400, 400);
+        lblWords.setBounds(210, 30, 800, 800);
         add(lblWords);
 
         lblSpeech = new JLabel();
@@ -42,7 +49,33 @@ public abstract class ObamaPanel extends JPanel {
         lblSpeech.setIcon(new ImageIcon("resources/mainInterface/ObamaSpeechBubble.png"));
         add(lblSpeech);
     }
+    
+    protected void setText(String text) {
+        lblWords.setText("<html>" + text + "</html>");
+    }
+    
+    protected final String makeWarning(String playerName, String message) {
+        return "WARNING, " + playerName + ": " + message + "<br>";
+    }
 
-    // update the panel with warnings and stuff
+    protected String getWarningMessages(String playerName) {
+        String temp = "";
+        
+        if (simulator.getReactor().coreTemperature().inKelvin() > 800) {
+            temp += makeWarning(playerName, "REACTOR CORE TEMPERATURE TOO HIGH! QUENCH IT!");
+        }
+        
+        if (simulator.getReactor().waterLevel().ratio() > Reactor.EXCESSWATER_THRESHOLD - 0.05) {
+            temp += makeWarning(playerName, "Water level in reactor too high, discarding some of it.");;
+        }
+
+         for (String failedComponent : simulator.listFailedComponents()) {
+            temp += makeWarning(playerName, "The " + failedComponent + " HAS FAILED");
+         }
+         
+         return temp;
+    }
+
+    // update the panel with reactor warnings and stuff
     public abstract void update();
 }

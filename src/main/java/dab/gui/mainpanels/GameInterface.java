@@ -54,6 +54,7 @@ public abstract class GameInterface extends JPanel implements KeyListener {
         // rock and roll baby!
         addKeyListener(this);
         animator.start();
+        repaint();
         
     }
     
@@ -122,7 +123,7 @@ public abstract class GameInterface extends JPanel implements KeyListener {
             }
             handleMusic();
             counter++;
-            requestFocus();
+            requestFocusInWindow();
         } catch (GameOverException e) {
 
             // stop the game loop when game over
@@ -134,7 +135,7 @@ public abstract class GameInterface extends JPanel implements KeyListener {
         
          //addKeyListener(this);
     }
-    
+            
     public void handleMusic(){    
         try {      
             if(music.isAlive() && !mainWindow.getMusic()) {

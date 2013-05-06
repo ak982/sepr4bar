@@ -50,7 +50,13 @@ public class ControlRodSlider extends JSlider{
                 }
             }
         });
+        
     }
+    
+    public void update() {
+        setValue((int)(reactor.controlRodPosition().ratio() * 100));
+    }
+    
     /**
      *
      * A private class used to overwrite the natural look of a basic slider
