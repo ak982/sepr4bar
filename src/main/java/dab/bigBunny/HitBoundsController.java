@@ -30,11 +30,11 @@ public class HitBoundsController {
             Circle circle1 = new Circle(component, x, y, width, width);
             Circle circle2 = new Circle(component, x,y+height-width , width, width);
             
-            RecCircle recCircle;
+            RecCircle recCircle = null;
             TheRectangle rectangle;
                       
             if (component instanceof TurbineView) { 
-               rectangle = new TheRectangle(component, x, y+width/2, width, height-width);
+                rectangle = new TheRectangle(component, x, y+width/2, width, height-width);
                 recCircle = new RecCircle(component, x, y, width, height, circle1, circle2, rectangle);           
             } else if(component instanceof ReactorView) {
                 rectangle = new TheRectangle(component, x, y+width/2, width, height-width/2);

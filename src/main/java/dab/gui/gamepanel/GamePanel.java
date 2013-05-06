@@ -57,7 +57,6 @@ public abstract class GamePanel extends JLayeredPane {
         uiComponents.add(new UIComponent(this, simulator.getTurbine(),   new Point(367, 64), "turbine.png", "turbine_broken.png"));
         uiComponents.add(new UIComponent(this, simulator.getCondenser(), new Point(798, 389), "coolant.png", "coolant_broken.png"));
        // uiComponents.add(new UIComponent(this, simulator.getValve(1), new Point(798, 389), "coolant.png", "coolant_broken.png"));
-        uiComponents.add(new UIComponent(this, simulator.getCondenser(), new Point(798, 389), "coolant.png", "coolant_broken.png"));
         
         for (UIComponent c : uiComponents) {
             add(c, PALETTE_LAYER);

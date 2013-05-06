@@ -319,7 +319,7 @@ public class BunnyController {
             thisDirection = adjustThisDirection();
 
             if (hitFromBelowOrAbove(x, centreX, y, centreY, halfHeight, halfWidth, thisDirection)) {      
-                           
+                
                 if (thisDirection > 180) {
                     if(circle2 !=null) {
                         newLocation = checkIntersectsCircle(newLocation, circle2);
@@ -348,9 +348,7 @@ public class BunnyController {
                         newX = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getX();
                                             }
                 }
-                
-                
-              
+             
             } else {
                 if ((thisDirection < 270) && (thisDirection > 90)) {
                     perpendicularAngle = 180;

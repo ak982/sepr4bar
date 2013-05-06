@@ -93,10 +93,5 @@
 	    <version>2.6.0</version>
 	    <scope>test</scope>
     </dependency>
-      <dependency>
-          <groupId>unknown.binary</groupId>
-          <artifactId>AbsoluteLayout</artifactId>
-          <version>SNAPSHOT</version>
-      </dependency>
   </dependencies>
 </project>
