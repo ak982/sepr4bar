@@ -63,7 +63,7 @@ public class ControlPanel extends JPanel {
         
         buttonPane.setLeftComponent(subButtonPanel);
         buttonPane.setRightComponent(bottomPanel);
-        //bottomPanel.add(new QuenchButton(sim.getReactor()));
+        bottomPanel.add(new QuenchButton(sim.getReactor()));
         buttonPane.setResizeWeight(0.5);
         
         /*rods_label = new JLabel("Control Rods");
