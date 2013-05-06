@@ -54,6 +54,7 @@ public class ControlPanel extends JPanel {
         topPane.setOpaque(false);
         subButtonPanel.setOpaque(false);
         bottomPanel.setOpaque(false);
+        buttonPane.setOpaque(false);
         
 		btnPump2 = new PumpButton(sim.getPump(2), "Coolant Pump");
         subButtonPanel.add(btnPump2);  
@@ -103,7 +104,7 @@ public class ControlPanel extends JPanel {
         super.paintComponent(g);
        // Image img = new ImageIcon("src/main/resources/dab/gui/panel.png").getImage();
          Graphics2D g2D = (Graphics2D) g;
-        g2D.drawImage(background, 0, 0, 6000, 6000,  null);
+        g2D.drawImage(background, 0, 0, this.getWidth(), this.getHeight(),  null);
 
     }
 }
