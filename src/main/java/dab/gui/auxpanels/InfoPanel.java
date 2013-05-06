@@ -38,7 +38,7 @@ public class InfoPanel extends JPanel {
 
         screenText.setBackground(Color.BLACK);
 
-        screenText.setBorder(BorderFactory.createMatteBorder(25, 25, 18, 18, new ImageIcon("resources/bckgroundBLUE.png")));
+        screenText.setBorder(BorderFactory.createMatteBorder(25, 25, 18, 18, new ImageIcon("src/main/resources/dab/gui/panel.png")));
 
         screenText.setOpaque(true);
         screenText.setHorizontalAlignment(SwingConstants.CENTER);

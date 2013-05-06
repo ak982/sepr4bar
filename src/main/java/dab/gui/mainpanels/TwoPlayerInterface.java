@@ -10,6 +10,7 @@ import dab.bigBunny.HitBoundsController;
 import dab.bigBunny.TwoPlayerScreen;
 import dab.engine.newsim.AbstractSimulator;
 import dab.engine.newsim.TwoPlayerSimulator;
+import dab.engine.simulator.GameOverException;
 import dab.engine.simulator.Simulator;
 import dab.gui.application.MainWindow;
 import dab.gui.auxpanels.ControlPanel;
@@ -63,11 +64,14 @@ public class TwoPlayerInterface extends GameInterface{
     }
 
     @Override
-    protected void step() {
+    protected void step() throws GameOverException {
         super.step();
         controller.step();
         environment.step();
-        gamePanel.repaint();      
+        gamePanel.repaint();    
+        if (controller.getHealth() <= 0){
+            throw new GameOverException();
+        }
     }
     
      @Override

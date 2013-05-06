@@ -1,17 +1,13 @@
 package dab.gui.mainpanels;
 
 import dab.engine.newsim.AbstractSimulator;
-import dab.engine.simulator.FailMode;
 import dab.engine.simulator.GameOverException;
-import dab.engine.utilities.Pressure;
 import dab.gui.application.MainWindow;
 import dab.gui.auxpanels.ControlPanel;
 import dab.gui.auxpanels.InfoPanel;
 import dab.gui.auxpanels.ObamaPanel;
-import dab.gui.gamepanel.GameOver;
 import dab.gui.gamepanel.GamePanel;
 import dab.gui.sound.Sounds;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,8 +28,8 @@ public abstract class GameInterface extends JPanel implements KeyListener {
     protected JSplitPane leftPane, rightPane;
 
 
-    public GameInterface (MainWindow mainWindow) {
-        this.mainWindow = mainWindow;
+    public GameInterface (MainWindow mw) {
+        this.mainWindow = mw;
   
         counter = 0;
         music = new Sounds("resources/music/backgroundSound.wav", true);
@@ -41,7 +37,15 @@ public abstract class GameInterface extends JPanel implements KeyListener {
         ActionListener taskStep = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-               step();
+                try {
+                    step();
+                } catch (GameOverException e) {
+                    // stop the game loop when game over
+                    animator.stop();
+                    music.interrupt();
+                    mainWindow.setGameOver(true);
+                    showGameOverMenu();
+                }
             }
         };
         animator = new Timer(1000/30, taskStep);
@@ -107,8 +111,7 @@ public abstract class GameInterface extends JPanel implements KeyListener {
     protected abstract InfoPanel  getInfoPanel();
     protected abstract ControlPanel getButtonPanel();
     
-    protected void step() {
-        try {
+    protected void step() throws GameOverException {
            
             if (counter % 3 == 0) {
                 getSimulator().step();
@@ -122,14 +125,6 @@ public abstract class GameInterface extends JPanel implements KeyListener {
             handleMusic();
             counter++;
             requestFocus();
-        } catch (GameOverException e) {
-
-            // stop the game loop when game over
-            animator.stop();
-            music.interrupt();
-        mainWindow.setGameOver(true);
-        showGameOverMenu();   
-        }
         
          //addKeyListener(this);
     }

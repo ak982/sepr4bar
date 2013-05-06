@@ -10,16 +10,11 @@ import dab.gui.application.MainWindow;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -144,9 +139,9 @@ public class NameMenu extends MenuHandler{
         if(!onePlayerMode){
             add(enter_name2);
             add(Box.createRigidArea(new Dimension(0,10)));
-            setBounds(400,200,theWidth,280);
+            setBounds(getTheX(),200,theWidth,280);
         } else{
-            setBounds(400,200,theWidth,220);
+            setBounds(getTheX(),200,theWidth,220);
         }
         add(ok); 
         add(back);

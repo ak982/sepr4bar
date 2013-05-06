@@ -540,12 +540,6 @@ public class BunnyController {
            
     public void hasBeenShot(){
         health --;
-        System.out.println(health);
-        if (health <= 0){
-            
-           //Nice animation of dying bunny, and gameover
-       
-        }
     }
     
  
