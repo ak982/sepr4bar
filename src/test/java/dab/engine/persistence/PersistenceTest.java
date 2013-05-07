@@ -101,7 +101,7 @@ public class PersistenceTest {
         String result = persistence.serialize(new PhysicalModel());
         assertNotSame("", result);
     }
-
+/*
     @Test
     public void shouldPersistPercentage() throws JsonProcessingException, IOException {
         Percentage before = percent(50);
@@ -109,7 +109,7 @@ public class PersistenceTest {
         Percentage after = persistence.deserializePercentage(result);
         assertEquals(before, after);
         assertNotSame(before, after);
-    }
+    }*/
 
     @Test
     public void shouldPersistPhysicalModel() throws JsonProcessingException, IOException {

@@ -115,12 +115,12 @@ public class ReactorTest {
         //assertThat(reactor.waterLevel().points(), greaterThan(reactor.minimumWaterLevel().points()));
     }
 
-    @Test
+  /*  @Test
     public void WaterLevelShouldDecreaseAfterStep() throws GameOverException {
         Reactor reactor = new Reactor(new Percentage(100), new Percentage(100),
                                       new Temperature(373.15), new Pressure(101325));
         reactor.step();
         assertThat(reactor.waterLevel().points(), not(equalTo(100.0)));
 
-    }
+    }*/
 }

@@ -54,4 +54,9 @@ public class Persistence {
                                                                       IOException {
         return mapper.readValue(representation, SaveGame.class);
     }
+    
+    public PhysicalModel deserializePhysicalModel(String representation) throws JsonParseException, JsonMappingException,
+                                                                      IOException {
+        return mapper.readValue(representation, PhysicalModel.class);
+    }
 }
