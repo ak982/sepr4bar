@@ -114,7 +114,7 @@ public class VisualTestBench implements ActionListener {
         System.out.println(plant.getReactor());
         System.out.println(plant.getCondenser());
         
-        System.out.println("Turbine: " + plant.getTurbine().getLastEnergy());
+        //System.out.println("Turbine: " + plant.getTurbine().getLastEnergy());
         
         
         

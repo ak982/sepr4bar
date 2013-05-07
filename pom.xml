@@ -28,7 +28,7 @@
 			<configuration>
 				<archive>
 					<manifest>
-						<mainClass>dab.gui.application.VisualTestBench</mainClass>
+						<mainClass>dab.gui.application.MainWindow</mainClass>
 					</manifest>
 				</archive>
 			</configuration>
@@ -93,10 +93,5 @@
 	    <version>2.6.0</version>
 	    <scope>test</scope>
     </dependency>
-      <dependency>
-          <groupId>unknown.binary</groupId>
-          <artifactId>AbsoluteLayout</artifactId>
-          <version>SNAPSHOT</version>
-      </dependency>
   </dependencies>
 </project>

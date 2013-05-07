@@ -38,7 +38,7 @@ public class Reactor extends Container implements ReactorView {
     private static final double ROD_SPEED = 0.08 / Constants.TICKS_PER_SECOND;
     
     @JsonProperty
-    private boolean hasBeenQuenched, quenchedQueued;
+    private boolean hasBeenQuenched, quenchedQueued, emergencyOff;
     
     @JsonProperty
     private double targetRodPosition;
@@ -63,6 +63,10 @@ public class Reactor extends Container implements ReactorView {
     @Override
     public double getWaterMass() {
         return water.getMass();
+    }
+    
+    public void setEmergencyOff(boolean status) {
+        emergencyOff = status;
     }
     
     // calculate the equilibrium pressure of the steam in this container and the one described by hydroState
@@ -155,16 +159,25 @@ public class Reactor extends Container implements ReactorView {
     }
     
     private void updateRodPosition() {
-        if (core.getRodPosition() < targetRodPosition) {
-            core.setRodPosition(new Ratio(Math.min(targetRodPosition, core.getRodPosition() + ROD_SPEED)));
+        double apparentTargetPosition;
+        // when we're in emergency mode, the rods drop back down to 0
+        // when we're not in emergency mode, they pop back up.
+        if (emergencyOff) {
+            apparentTargetPosition = 0;
         } else {
-            core.setRodPosition(new Ratio(Math.max(targetRodPosition, core.getRodPosition() - ROD_SPEED)));
+            apparentTargetPosition = targetRodPosition;
+        }
+        
+        if (core.getRodPosition() < apparentTargetPosition) {
+            core.setRodPosition(new Ratio(Math.min(apparentTargetPosition, core.getRodPosition() + ROD_SPEED)));
+        } else {
+            core.setRodPosition(new Ratio(Math.max(apparentTargetPosition, core.getRodPosition() - ROD_SPEED)));
         }
     }
     
     public void step() throws GameOverException {
         updateRodPosition();
-        // condense any super-heated steam
+        // condense any cold steam
         condenseSteam();
         
         // heatup water, convert some of it into steam

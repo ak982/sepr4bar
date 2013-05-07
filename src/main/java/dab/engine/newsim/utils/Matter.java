@@ -34,9 +34,11 @@ public abstract class Matter {
      */
     protected void add(Matter x) {
         int newParticleNr = particleNr + x.getParticleNr();
-        double newTemperature = (particleNr * temperature + x.getParticleNr() * x.getTemperature()) / newParticleNr;
-        particleNr = newParticleNr;
-        temperature = newTemperature;
+        if (newParticleNr != 0) {
+            double newTemperature = (particleNr * temperature + x.getParticleNr() * x.getTemperature()) / newParticleNr;
+            particleNr = newParticleNr;
+            temperature = newTemperature;
+        }
     }
     
     public double calculateTemperatureEqulibrium(Matter x) {

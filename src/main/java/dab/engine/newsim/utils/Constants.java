@@ -26,7 +26,7 @@ public class Constants {
     public static final double MOLAR_MASS_WATER = 0.018;    // kg / mol
     public static final double NORMAL_BOILING_POINT = NORMAL_FREEZING_POINT + 100;
     public static final double NORMAL_DENSITY_WATER = 1000; // kg / m3
-    public static final double LATENT_HEAT_WATER = 2260;    // kjoules FIXME: normally it's 2260
+    public static final double LATENT_HEAT_WATER = 2260;    // kjoules
     public static final double SPECIFIC_HEAT_WATER = 4.2;   // kj / kgK;
     public static final int    WATER_PARTICLES_PER_KILOGRAM = (int)(AVOGADRO_NUMBER / MOLAR_MASS_WATER);
     

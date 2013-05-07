@@ -11,5 +11,4 @@ package dab.engine.newsim.interfaces;
 public interface PumpView extends FailableComponentView {
     public void setStatus(boolean newStatus);
     public boolean getStatus();
-    // FIXME: add power
 }

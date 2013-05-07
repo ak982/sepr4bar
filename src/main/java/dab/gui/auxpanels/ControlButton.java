@@ -1,5 +1,6 @@
 package dab.gui.auxpanels;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -31,11 +32,11 @@ public abstract class ControlButton extends JPanel {
             throw new RuntimeException(e);
         }
         
-        
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         underlyingButton = new JToggleButton();
         underlyingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         underlyingButton.setContentAreaFilled(false);
+        underlyingButton.setBorder(null);
         underlyingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {

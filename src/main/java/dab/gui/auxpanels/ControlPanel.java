@@ -52,6 +52,7 @@ public class ControlPanel extends JPanel {
         subButtonPanel.setOpaque(false);
         bottomPanel.setOpaque(false);
         buttonPane.setOpaque(false);
+        buttonPane.setBorder(null);
         
 		btnPump2 = new PumpButton(sim.getPump(2), "Coolant Pump");
         subButtonPanel.add(btnPump2);  
@@ -99,6 +100,7 @@ public class ControlPanel extends JPanel {
             btnPump2.update();
             btnValve1.update();
             btnValve2.update();
+            controlRodSlider.update();
         }
 
     }

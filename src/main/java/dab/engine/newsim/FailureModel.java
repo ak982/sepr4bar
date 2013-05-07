@@ -72,7 +72,9 @@ public abstract class FailureModel {
         
         // implement turbine safety rules
         if (powerPlant.getTurbine().hasFailed()) {
-            powerPlant.getReactor().moveControlRods(percent(0));
+            powerPlant.getReactor().setEmergencyOff(true);
+        } else {
+            powerPlant.getReactor().setEmergencyOff(false);
         }
     }
     
@@ -94,19 +96,8 @@ public abstract class FailureModel {
         this.difficulty = difficulty;
     }
 
-    
-    /*protected abstract int getTicksUntilComponentFail();
-    protected abstract void resetHardFailTime();
-    protected abstract void updateSoftwareFailureState();
-    */
     protected abstract FailMode getSoftwareFailureMode();
     public abstract SoftFailReport generateSoftwareReport(UserCommands targetCommand, double targetParameter);
-    
-    /*protected int getTicksPassed() {
-        return ticksPassed;
-    }*/
-    
-
     
     // names of failed components
     public ArrayList<String> listFailedComponents() {
@@ -121,21 +112,6 @@ public abstract class FailureModel {
         return out;
 
     }
-
-    /**
-     * @param UserCommand
-     * @param double target
-     * @return boolean (whether a software failure has occurred)
-     */
-    //public abstract boolean softFailCheck(UserCommands targetCommand, double targetParameter); 
-    
-    /* {
-        if (softFailCheck(targetCommand, targetParameter) == false) {
-            return lastFailReport;
-        } else {
-            return new SoftFailReport(FailMode.WORKING, targetCommand, targetParameter);
-        }
-    }*/
 
     /**
      * @param UserCommand
@@ -158,57 +134,5 @@ public abstract class FailureModel {
         }
     }
 
-    /**
-     * @param UserCommand
-     * @param double paramater Execute the failed command to the command
-     * specified with the parameter specified
-     */
-    /*public void doFailedCommand(UserCommands command, double parameter) {
-        try {
-            switch (command) {
-                case TURNON:
-                    controller.changePumpState((int) parameter, true);
-                    break;
-                case TURNOFF:
-                    controller.changePumpState((int) parameter, false);
-                    break;
-                case OPEN:
-                    controller.changeValveState((int) parameter, true);
-                    break;
-                case CLOSE:
-                    controller.changeValveState((int) parameter, false);
-                    break;
-                case MOVE:
-                    try {
-                        controller.moveControlRods(new Percentage(parameter));
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-            }
-        } catch (KeyNotFoundException e) {
-            e.printStackTrace();
-        } catch (CannotControlException e) {
-            //TODO:Might need to do something more here, not sure.
-        }
-    }*/
-
-    /**
-     * @return Software failure report
-     */
-    
-    
-    /*public SoftFailReport getSoftFailReport() {
-        if (lastFailReport == null) {
-            return new SoftFailReport();
-        } else {
-            return lastFailReport.getCopy();
-        }
-    }*/
-    
-
-    
-    /*public void setPlayerMode(boolean onePlayerMode){
-        this.onePlayerMode = onePlayerMode;
-    }*/
+ 
 }

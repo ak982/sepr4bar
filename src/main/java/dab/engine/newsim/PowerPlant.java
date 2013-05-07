@@ -27,13 +27,13 @@ import java.util.ArrayList;
 public class PowerPlant {
     
     @JsonProperty
-    private ArrayList<Reactor> reactors;
+    private Reactor reactor;
     
     @JsonProperty
-    private ArrayList<Condenser> condensers;
+    private Condenser condenser;
     
     @JsonProperty
-    private ArrayList<Turbine> turbines;
+    private Turbine turbine;
     
     @JsonProperty
     private ArrayList<Pump> pumps;
@@ -43,16 +43,14 @@ public class PowerPlant {
     
     public PowerPlant() {
         // setup the arrayLists
-        reactors   = new ArrayList<>(1);
-        condensers = new ArrayList<>(1);
-        turbines   = new ArrayList<>(1);
         pumps      = new ArrayList<>(2);
         valves     = new ArrayList<>(2);
         
         // setup the components
-        Reactor reactor = new Reactor("Reactor", 10, 1);
-        Condenser condenser = new Condenser("Condenser", 10, 0.7);
-        Turbine turbine = new Turbine("Turbine");
+        reactor = new Reactor("Reactor", 10, 1);
+        condenser = new Condenser("Condenser", 10, 0.7);
+        turbine = new Turbine("Turbine");
+        
         Pump pump = new Pump("Condenser to Reactor Pump", 0.3);
         Valve reactorToTurbine = new Valve("Valve 1");
         Valve condenserToPump  = new Valve("Valve 2");
@@ -66,35 +64,28 @@ public class PowerPlant {
         pump.setOutputComponent(reactor);
         
         // add them to the array lists
-        reactors.add(reactor);
-        condensers.add(condenser);
-        turbines.add(turbine);
         pumps.add(pump);
         valves.add(reactorToTurbine);
         valves.add(condenserToPump);
     }
     
     public void step() throws GameOverException {
-        for (Reactor r : reactors) {
-            r.step();
-        }
-        
-        for (Condenser c : condensers) {
-            c.step();
-        }
+        reactor.step();
+        condenser.step();
+        turbine.step();
     }
     
     //<editor-fold desc="getters">
     public Reactor getReactor() {
-        return reactors.get(0);
+        return reactor;
     }
     
     public Condenser getCondenser() {
-        return condensers.get(0);
+        return condenser;
     }
     
     public Turbine getTurbine() {
-        return turbines.get(0);
+        return turbine;
     }
     
     public ArrayList<Pump> getPumps() {
@@ -107,11 +98,9 @@ public class PowerPlant {
     
     protected ArrayList<FailableObject> getFailableComponents() {
         ArrayList<FailableObject> failables = new ArrayList<>();
-        for (Condenser c : condensers) {
-            failables.add(c);
-            failables.add(c.getHeatSink());
-        }
-        failables.addAll(turbines);
+        failables.add(condenser);
+        failables.add(condenser.getHeatSink());
+        failables.add(turbine);
         failables.addAll(pumps);
         
         return failables;

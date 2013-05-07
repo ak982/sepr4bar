@@ -37,7 +37,7 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
     private JProgressBar bar;
     private HitBoundsController hitboundsController;
     private TurbineView turbine;
-    final double GUNSHOT_POWER_REDUCTION = 5;
+    final double GUNSHOT_POWER_REDUCTION = 10000; // 10kj
 
     public TwoPlayerScreen(AbstractSimulator simulator, Environment en, HitBoundsController h,BunnyController bc, TurbineView turbine) {
         super(simulator);

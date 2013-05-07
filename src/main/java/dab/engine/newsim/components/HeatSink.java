@@ -41,8 +41,7 @@ public class HeatSink implements FailableObject, PumpView {
         this.name = name;
        
     }
-    
-    // FIXME: magic number
+
     public void step() {
         if (hasFailed() || getStatus() == false) {
             return;

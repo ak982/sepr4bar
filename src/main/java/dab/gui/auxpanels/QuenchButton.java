@@ -7,6 +7,8 @@ package dab.gui.auxpanels;
 import dab.engine.newsim.interfaces.ReactorView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
 /**
@@ -15,18 +17,16 @@ import javax.swing.JToggleButton;
  */
 public class QuenchButton extends JToggleButton {
     private ReactorView linkedReactor;
-    private boolean quenched;
     
     public QuenchButton(ReactorView reactor) {
         this.linkedReactor = reactor;
-        quenched = false;
         setText("Quench!!");
+        setIcon(new ImageIcon(QuenchButton.class.getResource("active.png")));
         addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
                 linkedReactor.quench();
-                quenched = true;
                 setSelected(true);
                 setEnabled(false);
             }
