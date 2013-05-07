@@ -6,13 +6,10 @@ import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
@@ -76,9 +73,8 @@ public class ControlPanel extends JPanel {
         //sliderPanel.add(controlRodSlider);
         topPane.setLeftComponent(controlRodSlider);
         topPane.setRightComponent(buttonPane);
-        topPane.setResizeWeight(0.4);
-        
-       add(topPane);
+        topPane.setResizeWeight(0.4);        
+        add(topPane);
 		
         try {
             background = ImageIO.read(new File("src/main/resources/dab/gui/panel.png"));
@@ -99,8 +95,7 @@ public class ControlPanel extends JPanel {
             btnPump2.update();
             btnValve1.update();
             btnValve2.update();
-        }
-
+        }                
     }
 	
 	@Override

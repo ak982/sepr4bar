@@ -49,7 +49,6 @@ public abstract class ControlButton extends JPanel {
         label.setForeground(Color.WHITE);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-
         setFocusable(false);
         add(label);
         add(underlyingButton);
