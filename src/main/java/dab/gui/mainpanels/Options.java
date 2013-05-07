@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLayeredPane;
 import javax.swing.JToggleButton;
 
@@ -94,7 +95,9 @@ public class Options extends MenuHandler{
 
             @Override
             public void actionPerformed(ActionEvent e){
-               mainWindow.changeMenu(new HelpScreen(mainWindow, invoker));
+               //mainWindow.changeMenu(new HelpScreen(mainWindow, invoker));
+                JDialog help = new HelpScreen();
+                help.setVisible(true);
             }
         });
          
