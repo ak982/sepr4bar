@@ -11,6 +11,7 @@ import java.awt.event.KeyListener;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -22,17 +23,13 @@ import javax.swing.JPanel;
  *
  */
 
-public class HelpScreen extends MenuHandler {
+public class HelpScreen extends JDialog {
 
     private MainWindow mainWindow;
     private JLayeredPane invoker;
     private Dimension size;
     
-    public HelpScreen(MainWindow mw, final JLayeredPane invoker){
-        super(invoker);
-        this.mainWindow = mw;
-        this.invoker = invoker;
-       
+    public HelpScreen(){
         
         //initialize the help screen with back button and an image
        
@@ -49,9 +46,9 @@ public class HelpScreen extends MenuHandler {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                //go back to the caller (options) when pressed
-                mainWindow.changeMenu(new Options(mainWindow, invoker));
-                
+                //disapear
+                HelpScreen.this.setVisible(false);
+              
             }
         });
         back.setBounds(10, 10, 70, 30);

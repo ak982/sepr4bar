@@ -5,19 +5,31 @@
 package dab.gui.gamepanel;
 
 import dab.engine.newsim.interfaces.ReactorView;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
-import javax.swing.JComponent;
+import javax.swing.ImageIcon;
 
-/**
- *
- * @author eduard
- */
-public class UIReactor extends JComponent {
+public class UIReactor extends UIComponent {
+    protected Image rodsImage;
+    private ReactorView component;
 
-    public UIReactor(GamePanel parent, ReactorView component, Point location, String stdImgPath, String dmgImgPath) {
-        //super(parent, component, location, stdImgPath, dmgImgPath);
+    public UIReactor(GamePanel parent, ReactorView component, Point location, String stdImgPath, String dmgImgPath, String controlRods) {
+        super(parent, component, location, stdImgPath, dmgImgPath);
         
-        //also do stuff regarding the control rods and what not
+        this.rodsImage  = new ImageIcon(GamePanel.class.getResource(controlRods)).getImage();
+        this.component = component;
+        
+        
+    }
+    
+    
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        int rodsPosition = (int)((component.controlRodPosition()).points()*50);
+        System.out.println("rods " + rodsPosition);
+        g.drawImage(rodsImage,0 ,-rodsPosition, this);
     }
     
 }

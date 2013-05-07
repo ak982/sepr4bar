@@ -4,11 +4,12 @@
  */
 package dab.bigBunny;
 
+import dab.engine.newsim.interfaces.CondenserView;
 import dab.engine.newsim.interfaces.FailableComponentView;
 import dab.engine.newsim.interfaces.PumpView;
 import dab.engine.newsim.interfaces.ReactorView;
 import dab.engine.newsim.interfaces.TurbineView;
-import java.awt.Rectangle;
+import dab.engine.newsim.interfaces.ValveView;
 import java.util.ArrayList;
 
 /**
@@ -26,11 +27,17 @@ public class HitBoundsController {
         
         if (component instanceof PumpView) {
             hittableComponents.add(new Circle(component, x, y, width, height));
+        } else if (component instanceof ValveView){
+              if(height < width){
+                    hittableComponents.add(new Circle(component, x, y, height, height));
+                } else {
+                    hittableComponents.add(new Circle(component, x, y+height-width, width, width));
+                }         
         } else {
             Circle circle1 = new Circle(component, x, y, width, width);
             Circle circle2 = new Circle(component, x,y+height-width , width, width);
             
-            RecCircle recCircle = null;
+            RecCircle recCircle;
             TheRectangle rectangle;
                       
             if (component instanceof TurbineView) { 
@@ -47,7 +54,8 @@ public class HitBoundsController {
                     rectangle = new TheRectangle(component, x, y+width/2, width, height-width);
                     recCircle = new RecCircle(component, x, y, width, height, circle1, circle2, rectangle);              
                 }
-            }
+            } 
+              
             hittableComponents.add(recCircle);
         }
     }
