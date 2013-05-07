@@ -65,6 +65,13 @@ public class Reactor extends Container implements ReactorView {
         return water.getMass();
     }
     
+    protected double getTargetRodPosition() {
+        return targetRodPosition;
+    }
+    protected boolean getHasBeenQuenched() {
+        return hasBeenQuenched;
+    }
+    
     // calculate the equilibrium pressure of the steam in this container and the one described by hydroState
     private double getEqualizedSteamPressure(HydraulicState hydroValue) {
         double v1 = getCompressibleVolume(), v2 = hydroValue.getCompressibleVolume();
@@ -171,7 +178,7 @@ public class Reactor extends Container implements ReactorView {
         steam.add(getWater().addEnergy(core.getEnergyPerTick(getCoreSubmersedLevel()), steam.getPressure(getCompressibleVolume())));
 
         if (quenchedQueued) {
-            // water ad 280 degrees. That should settle things.
+            // water at 280 degrees. That should settle things.
             System.out.println(Constants.WATER_PARTICLES_PER_KILOGRAM);
             double quenchWaterVolume = getTotalVolume() * QUENCH_PROPORTION;
             double quenchWaterMass = quenchWaterVolume * Constants.NORMAL_DENSITY_WATER;
