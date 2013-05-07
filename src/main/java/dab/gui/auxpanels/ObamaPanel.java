@@ -65,7 +65,7 @@ public abstract class ObamaPanel extends JPanel {
             temp += makeWarning(playerName, "REACTOR CORE TEMPERATURE TOO HIGH! QUENCH IT!");
         }
         
-        if (simulator.getReactor().waterLevel().ratio() > Reactor.EXCESSWATER_THRESHOLD - 0.05) {
+        if (simulator.getReactor().waterLevel().ratio() >= Reactor.EXCESSWATER_THRESHOLD) {
             temp += makeWarning(playerName, "Water level in reactor too high, discarding some of it.");;
         }
 
