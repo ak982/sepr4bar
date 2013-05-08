@@ -48,19 +48,29 @@ public class SinglePlayerFailureModelTest {
         assertEquals(failureModel.getTimerDecrease(), SinglePlayerFailureModel.DEFAULT_TIMER_DECREASE, delta);
         
         OptionsHolder.getInstance().setDifficulty(Difficulty.MEDIUIM);
-        assertEquals(failureModel.getTimerDecrease(), SinglePlayerFailureModel.DEFAULT_TIMER_DECREASE - 0.1, 0.05);
+        assertEquals(failureModel.getTimerDecrease(), SinglePlayerFailureModel.DEFAULT_TIMER_DECREASE - 0.1, delta);
         
         OptionsHolder.getInstance().setDifficulty(Difficulty.HARD);
-        assertEquals(failureModel.getTimerDecrease(), SinglePlayerFailureModel.DEFAULT_TIMER_DECREASE - 0.2, 0.05);
+        assertEquals(failureModel.getTimerDecrease(), SinglePlayerFailureModel.DEFAULT_TIMER_DECREASE - 0.2, delta);
     }
     
     @Test
     public void testHardWareFailureTimes() throws GameOverException {
-        assertEquals(failureModel.hardwareTimer.getRemainingTime(), SinglePlayerFailureModel.INITIAL_HARDWARE_FAIL_INTERVAL, delta);
-        passTime(SinglePlayerFailureModel.INITIAL_HARDWARE_FAIL_INTERVAL + 1.0 / Constants.TICKS_PER_SECOND);
+        assertEquals(SinglePlayerFailureModel.INITIAL_HARDWARE_FAIL_INTERVAL, failureModel.hardwareTimer.getRemainingTime(), delta);
+        passTime(SinglePlayerFailureModel.INITIAL_HARDWARE_FAIL_INTERVAL);
         assertTrue(failureModel.hardwareTimer.getRemainingTime() > 0);
         assertTrue(failureModel.hardwareTimer.getRemainingTime() < SinglePlayerFailureModel.INITIAL_HARDWARE_FAIL_INTERVAL);
-        assertEquals(failureModel.hardwareTimer.getRemainingTime(), SinglePlayerFailureModel.INITIAL_HARDWARE_FAIL_INTERVAL * failureModel.getTimerDecrease(), delta);
+        assertEquals(SinglePlayerFailureModel.INITIAL_HARDWARE_FAIL_INTERVAL * failureModel.getTimerDecrease(), failureModel.hardwareTimer.getRemainingTime(), 1);
+    }
+    
+    @Test
+    public void testSoftwareFailuers() throws GameOverException {
+        assertEquals(SinglePlayerFailureModel.DEFAULT_SOFTWARE_FAIL_INTERVAL, failureModel.softwareTimer.getRemainingTime(), delta);
+        assertFalse(failureModel.softwareTimer.isActive());
+        passTime(SinglePlayerFailureModel.DEFAULT_SOFTWARE_FAIL_INTERVAL);
+        assertTrue(failureModel.softwareTimer.isActive());
+        passTime(failureModel.softwareTimer.getTimeLeftActive());
+        assertFalse(failureModel.softwareTimer.isActive());
     }
     
     

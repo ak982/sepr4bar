@@ -16,33 +16,41 @@ public class TickClock {
     protected double SECONDS_PER_TICK = 1.0 / Constants.TICKS_PER_SECOND;
     
     @JsonProperty
-    private double timeUntilNextEvent;
+    private int ticksUntilNextEvent;
     
     @JsonProperty
-    private double lastInterval;
+    private int lastInterval;
     
     public TickClock(double initialTimer) {
-        timeUntilNextEvent = initialTimer;
-        lastInterval = timeUntilNextEvent;
+        ticksUntilNextEvent = (int)(initialTimer * Constants.TICKS_PER_SECOND);
+        lastInterval = ticksUntilNextEvent;
     }
     
     /**
      * Notify the clock that a tick has occurred.
      */
     public void tick() {
-        timeUntilNextEvent = Math.max(0, timeUntilNextEvent - SECONDS_PER_TICK);
+        ticksUntilNextEvent = Math.max(0, ticksUntilNextEvent - 1);
     }
     
     public double getRemainingTime() {
-        return timeUntilNextEvent;
+        return ticksUntilNextEvent * SECONDS_PER_TICK;
+    }
+    
+    /**
+     * 
+     * @return if the remaining time is zero (the alarm clock is isRinging)
+     */
+    public boolean isRinging() {
+        return ticksUntilNextEvent == 0;
     }
     
     public void resetRemainingTime(double time) {
-        lastInterval = time;
-        timeUntilNextEvent = time;
+        ticksUntilNextEvent = (int)(time * Constants.TICKS_PER_SECOND);
+        lastInterval = ticksUntilNextEvent;
     }
     
     public double getLastInterval() {
-        return lastInterval;
+        return lastInterval * SECONDS_PER_TICK;
     }
 }

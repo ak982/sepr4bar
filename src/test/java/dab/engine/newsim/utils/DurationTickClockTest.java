@@ -37,8 +37,10 @@ public class DurationTickClockTest {
         clock = new DurationTickClock(10, 5);
         passTime(1);
         assertEquals(4, clock.getTimeLeftActive(), delta);
-        passTime(5);
-        assertEquals(0, clock.getTimeLeftActive(), delta);
+        passTime(4);
+        assertEquals(0, clock.getTimeLeftActive(), 0);
+        passTime(4);
+        assertEquals(0, clock.getTimeLeftActive(), 0);
     }
 
     @Test

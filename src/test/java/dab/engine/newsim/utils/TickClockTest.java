@@ -37,8 +37,10 @@ public class TickClockTest {
         assertEquals(10, clock.getRemainingTime(), delta);
         passTime(5);
         assertEquals(5, clock.getRemainingTime(), delta);
-        passTime(6);
-        assertEquals(0, clock.getRemainingTime(), delta);
+        passTime(5);
+        assertEquals(0, clock.getRemainingTime(), 0);
+        passTime(1);
+        assertEquals(0, clock.getRemainingTime(), 0);
     }
 
     @Test

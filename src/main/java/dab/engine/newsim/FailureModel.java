@@ -55,8 +55,6 @@ public abstract class FailureModel {
     @JsonProperty
     protected PowerPlant powerPlant;
     
-    @JsonProperty
-    private int difficulty;
     
     protected FailureModel() {
         

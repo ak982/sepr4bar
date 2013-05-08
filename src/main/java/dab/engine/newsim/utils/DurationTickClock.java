@@ -13,33 +13,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class DurationTickClock extends TickClock {
     @JsonProperty
-    private double timeLeftActive;
+    private int timeLeftActive;
     
     @JsonProperty
-    private double lastActiveTime;
+    private int lastActiveTime;
     
     public DurationTickClock(double initialTimer, double initialDuration) {
         super(initialTimer);
-        this.timeLeftActive = initialDuration;
-        this.lastActiveTime = initialDuration;
+        this.timeLeftActive = (int)(initialDuration * Constants.TICKS_PER_SECOND);
+        this.lastActiveTime = timeLeftActive;
     }
     
     @Override
     public void tick() {
         super.tick();
-        timeLeftActive = Math.max(0, timeLeftActive - SECONDS_PER_TICK);
+        timeLeftActive = Math.max(0, timeLeftActive - 1);
     }
     
     public double getTimeLeftActive() {
-        return timeLeftActive;
+        return timeLeftActive * SECONDS_PER_TICK;
     }
     
     public void resetTimeLeftActive(double timeLeftActive) {
-        lastActiveTime = timeLeftActive;
-        this.timeLeftActive = timeLeftActive;
+        this.timeLeftActive = (int)(timeLeftActive * Constants.TICKS_PER_SECOND);
+        this.lastActiveTime = this.timeLeftActive;
     }
     
     public double getLastActiveTime() {
-        return lastActiveTime;
+        return lastActiveTime * SECONDS_PER_TICK;
+    }
+    
+    public boolean isActive() {
+        return timeLeftActive != 0;
     }
 }

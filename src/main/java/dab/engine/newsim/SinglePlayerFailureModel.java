@@ -34,6 +34,7 @@ public class SinglePlayerFailureModel extends FailureModel {
     protected final static double DEFAULT_SOFTWARE_FAIL_INTERVAL = 30;
     protected final static double MINIMUM_SOFTWARE_FAIL_INTERVAL = 10;
     protected final static double DEFAULT_SOFTWARE_FAIL_DURATION = 5;
+    protected final static double MAXIMUM_SOFTWARE_FAIL_DURATION = 9;
     //A component will have a 1 in 50 chance of failing (per second)
     //private final static double DEFAULT_FAIL_CHANCE = 1.0 / 25.0;
     
@@ -57,8 +58,11 @@ public class SinglePlayerFailureModel extends FailureModel {
         super(plant);
         setDamagesToComponents(MAX_DAMAGE_SINGLE, DAMAGE_INCREASE_SINGLE);
         failList = new RandomBuffer<>(plant.getFailableComponents());
+        
         hardwareTimer = new TickClock(INITIAL_HARDWARE_FAIL_INTERVAL);
-        softwareTimer = new DurationTickClock(DEFAULT_SOFTWARE_FAIL_INTERVAL, DEFAULT_SOFTWARE_FAIL_DURATION);
+        
+        // initially the software fail is not active
+        softwareTimer = new DurationTickClock(DEFAULT_SOFTWARE_FAIL_INTERVAL, 0);
     }
 
     public void afterLoad() {
@@ -73,12 +77,11 @@ public class SinglePlayerFailureModel extends FailureModel {
     
     @Override
     public void step() throws GameOverException {
-        final double SECONDS_PER_TICK = 1.0 / Constants.TICKS_PER_SECOND;
         super.step();
         hardwareTimer.tick();
         softwareTimer.tick();
         
-        if (hardwareTimer.getRemainingTime() <= 0) {
+        if (hardwareTimer.isRinging()) {
             // fail next component in line
             failList.get().getFailureController().fail();
             hardwareTimer.resetRemainingTime(hardwareTimer.getLastInterval() * getTimerDecrease());
@@ -87,11 +90,11 @@ public class SinglePlayerFailureModel extends FailureModel {
             }
         }
         
-        if (softwareTimer.getTimeLeftActive() <= 0) {
+        if (!softwareTimer.isActive()) {
             softwareFailType = FailMode.WORKING;
         }
         
-        if (softwareTimer.getRemainingTime() <= 0) {
+        if (softwareTimer.isRinging()) {
             // generate software failure
             double roll = dice.rollDouble();
             if (roll < 0.8) {
@@ -102,6 +105,10 @@ public class SinglePlayerFailureModel extends FailureModel {
             
             softwareTimer.resetTimeLeftActive(DEFAULT_SOFTWARE_FAIL_DURATION * getDifficultyModifier());
             softwareTimer.resetRemainingTime(softwareTimer.getLastInterval() * getTimerDecrease());
+            
+            if (softwareTimer.getTimeLeftActive() > MAXIMUM_SOFTWARE_FAIL_DURATION) {
+                softwareTimer.resetTimeLeftActive(MAXIMUM_SOFTWARE_FAIL_DURATION);
+            }
             
             if (softwareTimer.getRemainingTime() < MINIMUM_SOFTWARE_FAIL_INTERVAL) {
                 softwareTimer.resetRemainingTime(MINIMUM_SOFTWARE_FAIL_INTERVAL);
