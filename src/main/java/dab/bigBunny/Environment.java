@@ -126,7 +126,7 @@ public class Environment {
             headacheTime--;
             if (headacheTime <= 0) {
                 headache = false;
-                System.out.println("stoping the headache");
+                System.out.println("stopping the headache");
             }
         }
     }
