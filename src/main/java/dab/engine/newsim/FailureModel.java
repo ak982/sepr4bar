@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dab.engine.newsim.interfaces.FailableObject;
 import dab.engine.newsim.utils.Constants;
+import dab.engine.newsim.utils.Difficulty;
+import dab.engine.newsim.utils.OptionsHolder;
 import dab.engine.newsim.utils.RandomBuffer;
 import dab.engine.newsim.utils.RandomGenerator;
 import dab.engine.simulator.FailMode;
@@ -92,11 +94,17 @@ public abstract class FailureModel {
     }
     
     protected double getDifficultyModifier() {
-        return difficulty;
+        return (OptionsHolder.getInstance().getDifficulty().asDouble());
     }
     
     public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
+        if (difficulty == 1) {
+            OptionsHolder.getInstance().setDifficulty(Difficulty.EASY);
+        } else if (difficulty == 2) {
+            OptionsHolder.getInstance().setDifficulty(Difficulty.MEDIUIM);
+        } else {
+            OptionsHolder.getInstance().setDifficulty(Difficulty.HARD);
+        }
     }
 
     protected abstract FailMode getSoftwareFailureMode();

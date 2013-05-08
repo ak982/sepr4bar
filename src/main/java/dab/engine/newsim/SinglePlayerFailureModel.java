@@ -10,7 +10,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dab.engine.newsim.interfaces.FailableObject;
 import dab.engine.newsim.utils.Constants;
+import dab.engine.newsim.utils.DurationTickClock;
 import dab.engine.newsim.utils.RandomBuffer;
+import dab.engine.newsim.utils.TickClock;
 import dab.engine.simulator.FailMode;
 import dab.engine.simulator.GameOverException;
 import dab.engine.simulator.SoftFailReport;
@@ -24,35 +26,22 @@ import dab.engine.simulator.UserCommands;
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class SinglePlayerFailureModel extends FailureModel {
 
-    private final static int MAX_DAMAGE_SINGLE = 5;
-    private final static int DAMAGE_INCREASE_SINGLE = 1;
-    private final static int INITIAL_HARDWARE_FAIL_INTERVAL = 15;
-    private final static int MINIMUM_HARDWARE_FAIL_INTERVAL = 4;
-    private final static double DEFAULT_TIMER_DECREASE = 0.9;
-    private final static double DEFAULT_SOFTWARE_FAIL_INTERVAL = 30;
-    private final static double MINIMUM_SOFTWARE_FAIL_INTERVAL = 10;
-    private final static double DEFAULT_SOFTWARE_FAIL_DURATION = 5;
+    protected final static int MAX_DAMAGE_SINGLE = 5;
+    protected final static int DAMAGE_INCREASE_SINGLE = 1;
+    protected final static int INITIAL_HARDWARE_FAIL_INTERVAL = 15;
+    protected final static int MINIMUM_HARDWARE_FAIL_INTERVAL = 4;
+    protected final static double DEFAULT_TIMER_DECREASE = 0.9;
+    protected final static double DEFAULT_SOFTWARE_FAIL_INTERVAL = 30;
+    protected final static double MINIMUM_SOFTWARE_FAIL_INTERVAL = 10;
+    protected final static double DEFAULT_SOFTWARE_FAIL_DURATION = 5;
     //A component will have a 1 in 50 chance of failing (per second)
     //private final static double DEFAULT_FAIL_CHANCE = 1.0 / 25.0;
-
-    
-    
-    
     
     @JsonProperty
-    private double timeLeftHardware = INITIAL_HARDWARE_FAIL_INTERVAL;
+    TickClock hardwareTimer;
     
     @JsonProperty
-    private double hardwareFailInterval = INITIAL_HARDWARE_FAIL_INTERVAL;
-    
-    @JsonProperty
-    private double timeLeftSoftware = DEFAULT_SOFTWARE_FAIL_INTERVAL;
-    
-    @JsonProperty
-    private double softwareFailInterval = DEFAULT_SOFTWARE_FAIL_INTERVAL;
-    
-    @JsonProperty
-    private double softwareFailTimeRemaining = 0;
+    DurationTickClock softwareTimer;
     
     @JsonProperty
     private FailMode softwareFailType = FailMode.WORKING;
@@ -68,6 +57,8 @@ public class SinglePlayerFailureModel extends FailureModel {
         super(plant);
         setDamagesToComponents(MAX_DAMAGE_SINGLE, DAMAGE_INCREASE_SINGLE);
         failList = new RandomBuffer<>(plant.getFailableComponents());
+        hardwareTimer = new TickClock(INITIAL_HARDWARE_FAIL_INTERVAL);
+        softwareTimer = new DurationTickClock(DEFAULT_SOFTWARE_FAIL_INTERVAL, DEFAULT_SOFTWARE_FAIL_DURATION);
     }
 
     public void afterLoad() {
@@ -76,7 +67,7 @@ public class SinglePlayerFailureModel extends FailureModel {
         
     }
     
-    private double getTimerDecrease() {
+    protected double getTimerDecrease() {
         return 0.9 - (getDifficultyModifier() - 1) / 10;
     }
     
@@ -84,32 +75,24 @@ public class SinglePlayerFailureModel extends FailureModel {
     public void step() throws GameOverException {
         final double SECONDS_PER_TICK = 1.0 / Constants.TICKS_PER_SECOND;
         super.step();
-        timeLeftHardware -= SECONDS_PER_TICK;
-        softwareFailTimeRemaining -= SECONDS_PER_TICK;
-        timeLeftSoftware -= SECONDS_PER_TICK;
+        hardwareTimer.tick();
+        softwareTimer.tick();
         
-        if (timeLeftHardware < 0) {
-            hardwareFailInterval *= getTimerDecrease();
+        if (hardwareTimer.getRemainingTime() <= 0) {
+            // fail next component in line
             failList.get().getFailureController().fail();
-            timeLeftHardware = hardwareFailInterval;
-            if (timeLeftHardware < MINIMUM_HARDWARE_FAIL_INTERVAL) {
-                timeLeftHardware = MINIMUM_HARDWARE_FAIL_INTERVAL;
+            hardwareTimer.resetRemainingTime(hardwareTimer.getLastInterval() * getTimerDecrease());
+            if (hardwareTimer.getRemainingTime() < MINIMUM_HARDWARE_FAIL_INTERVAL) {
+                hardwareTimer.resetRemainingTime(MINIMUM_HARDWARE_FAIL_INTERVAL);
             }
         }
         
-        if (softwareFailTimeRemaining < 0) {
+        if (softwareTimer.getTimeLeftActive() <= 0) {
             softwareFailType = FailMode.WORKING;
-            softwareFailTimeRemaining = 0;
         }
         
-        if (timeLeftSoftware < 0) {
-            softwareFailInterval *= getTimerDecrease();
-            softwareFailTimeRemaining = DEFAULT_SOFTWARE_FAIL_DURATION * getDifficultyModifier();
-            timeLeftSoftware = softwareFailInterval;
-            if (timeLeftSoftware < MINIMUM_SOFTWARE_FAIL_INTERVAL) {
-                timeLeftSoftware = MINIMUM_SOFTWARE_FAIL_INTERVAL;
-            }
-            
+        if (softwareTimer.getRemainingTime() <= 0) {
+            // generate software failure
             double roll = dice.rollDouble();
             if (roll < 0.8) {
                 softwareFailType = FailMode.UNRESPONSIVE;
@@ -117,6 +100,12 @@ public class SinglePlayerFailureModel extends FailureModel {
                 softwareFailType = FailMode.INCORRECT;
             }
             
+            softwareTimer.resetTimeLeftActive(DEFAULT_SOFTWARE_FAIL_DURATION * getDifficultyModifier());
+            softwareTimer.resetRemainingTime(softwareTimer.getLastInterval() * getTimerDecrease());
+            
+            if (softwareTimer.getRemainingTime() < MINIMUM_SOFTWARE_FAIL_INTERVAL) {
+                softwareTimer.resetRemainingTime(MINIMUM_SOFTWARE_FAIL_INTERVAL);
+            }           
         }
         
     }
@@ -139,11 +128,10 @@ public class SinglePlayerFailureModel extends FailureModel {
             return new SoftFailReport(FailMode.WORKING, targetCommand, targetParameter);
         }
     }
-
+    
     @Override
     protected FailMode getSoftwareFailureMode() {
-        return softwareFailType;
-        
+        return softwareFailType;   
     }
     
 }

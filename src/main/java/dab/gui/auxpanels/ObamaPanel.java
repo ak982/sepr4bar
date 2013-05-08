@@ -1,6 +1,5 @@
 package dab.gui.auxpanels;
 
-import com.sun.corba.se.impl.orbutil.closure.Constant;
 import dab.engine.newsim.AbstractSimulator;
 import dab.engine.newsim.components.Reactor;
 import dab.engine.newsim.utils.Constants;
