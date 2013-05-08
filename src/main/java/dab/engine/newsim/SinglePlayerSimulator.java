@@ -55,10 +55,11 @@ public class SinglePlayerSimulator extends AbstractSimulator {
         try {
             SaveGame saveGame = SaveGame.load(listGames()[gameNumber]);
             this.failureModel = saveGame.getFailureModel();
+            failureModel.afterLoad();
             this.powerPlant = failureModel.getPowerPlant();
             this.userName = saveGame.getUserName();
-        } catch (JsonParseException ex) {
         } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

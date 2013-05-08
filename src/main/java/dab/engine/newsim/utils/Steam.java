@@ -11,6 +11,10 @@ package dab.engine.newsim.utils;
  */
 public class Steam extends Matter {
     
+    protected Steam() {
+        super();
+    }
+    
     public Steam(double temp, Kilograms mass) {
         super(temp, mass);
     }

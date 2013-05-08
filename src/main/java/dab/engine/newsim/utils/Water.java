@@ -10,6 +10,10 @@ package dab.engine.newsim.utils;
  */
 public class Water extends Matter {
    
+    protected Water() {
+        super();
+    }
+    
     public Water(double temperature, Kilograms mass) {
         super(temperature, mass);
     }

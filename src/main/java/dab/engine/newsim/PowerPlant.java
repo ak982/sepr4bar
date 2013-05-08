@@ -69,6 +69,16 @@ public class PowerPlant {
         valves.add(condenserToPump);
     }
     
+    // FIXME: massive hack to fix loading (jackson and cycled-abstract)
+    public void resetConnections() {
+        reactor.setOutputComponent(valves.get(0));
+        valves.get(0).setOutputComponent(turbine);
+        turbine.setOutputComponent(condenser);
+        condenser.setOutputComponent(valves.get(1));
+        valves.get(1).setOutputComponent(pumps.get(0));
+        pumps.get(0).setOutputComponent(reactor);
+    }
+    
     public void step() throws GameOverException {
         reactor.step();
         condenser.step();

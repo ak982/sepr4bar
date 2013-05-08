@@ -20,6 +20,10 @@ public class Valve extends Component implements ValveView, FailableComponentView
     @JsonProperty
     private boolean isOpen;
     
+    protected Valve() {
+        super();
+    }
+    
     public Valve(String name) {
         super(name);
         this.isOpen = true;

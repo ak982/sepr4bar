@@ -25,8 +25,17 @@ import java.io.IOException;
  */
 public class Persistence {
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper;
 
+    public Persistence() {
+        mapper = new ObjectMapper();
+        mapper.setVisibilityChecker(mapper.getSerializationConfig().getDefaultVisibilityChecker()
+                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+    }
+    
     /**
      *
      * @param obj

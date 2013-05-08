@@ -46,6 +46,9 @@ public class Reactor extends Container implements ReactorView {
     @JsonProperty
     private ReactorCore core;
    
+    private Reactor() {
+        super();
+    }
 
     public Reactor(String name, double volume, double area) {
         super(
@@ -223,6 +226,11 @@ public class Reactor extends Container implements ReactorView {
     }
     
     @Override
+    public Percentage targetRodPosition() {
+        return new Percentage(targetRodPosition * 100);
+    }
+    
+    @Override
     public void moveControlRods(Percentage extracted) {
         targetRodPosition = extracted.ratio();
     }
@@ -253,4 +261,6 @@ public class Reactor extends Container implements ReactorView {
     }
     
     //</editor-fold>
+
+
 }

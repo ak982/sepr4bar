@@ -10,6 +10,10 @@ package dab.engine.newsim.utils;
  */
 public class RadioactiveMatter extends Matter {
 
+    protected RadioactiveMatter() {
+        super();
+    }
+    
     public RadioactiveMatter(Kilograms mass) {
         super(Constants.ROOM_TEMP, mass);
     }

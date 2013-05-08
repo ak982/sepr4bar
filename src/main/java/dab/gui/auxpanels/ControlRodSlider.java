@@ -58,6 +58,7 @@ public class ControlRodSlider extends JSlider{
     }
     
     public void update() {
+        setValue((int)reactor.targetRodPosition().points());
         reactor.moveControlRods(new Percentage(getValue()));
     }
     

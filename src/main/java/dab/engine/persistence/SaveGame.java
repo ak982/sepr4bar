@@ -25,6 +25,11 @@ public class SaveGame {
      *  @param String
      *  @return SaveGame
      */
+    
+    private SaveGame() {
+        
+    }
+    
     public static SaveGame load(String filename) throws JsonParseException, IOException {
         Persistence p = new Persistence();
         return p.deserializeSaveGame(FileSystem.readString(filename));

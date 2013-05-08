@@ -16,6 +16,7 @@ public interface ReactorView extends ContainerView, FailableComponentView {
     
     public void moveControlRods(Percentage extracted);
     public Percentage controlRodPosition();
+    public Percentage targetRodPosition();
     //public boolean discardingWater();
     
     public Temperature coreTemperature();

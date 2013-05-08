@@ -27,6 +27,10 @@ public abstract class Container extends Component implements ContainerView  {
     @JsonProperty
     protected double area, height;
     
+    protected Container() {
+        super();
+    }
+    
     public Container(String name, Water water, Steam steam, double area, double height) {
         super(name);
         this.water  = water;

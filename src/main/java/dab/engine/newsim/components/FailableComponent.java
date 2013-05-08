@@ -17,6 +17,10 @@ public abstract class FailableComponent extends Component implements FailableObj
     @JsonProperty
     private FailureController failController;
     
+    protected FailableComponent() {
+        
+    }
+    
     public FailableComponent(String name) {
         super(name);
         failController = new FailureController();

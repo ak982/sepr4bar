@@ -34,8 +34,9 @@ public class SinglePlayerFailureModel extends FailureModel {
     //A component will have a 1 in 50 chance of failing (per second)
     //private final static double DEFAULT_FAIL_CHANCE = 1.0 / 25.0;
 
-    @JsonProperty
-    private RandomBuffer<FailableObject> failList;
+    
+    
+    
     
     @JsonProperty
     private double timeLeftHardware = INITIAL_HARDWARE_FAIL_INTERVAL;
@@ -54,6 +55,13 @@ public class SinglePlayerFailureModel extends FailureModel {
     
     @JsonProperty
     private FailMode softwareFailType = FailMode.WORKING;
+
+    // loaded manually
+    private RandomBuffer<FailableObject> failList = null;
+    
+    private SinglePlayerFailureModel() {
+        super();
+    }
     
     public SinglePlayerFailureModel(PowerPlant plant) {
         super(plant);
@@ -61,6 +69,12 @@ public class SinglePlayerFailureModel extends FailureModel {
         failList = new RandomBuffer<>(plant.getFailableComponents());
     }
 
+    public void afterLoad() {
+        powerPlant.resetConnections();
+        failList = new RandomBuffer<>(powerPlant.getFailableComponents());
+        
+    }
+    
     private double getTimerDecrease() {
         return DEFAULT_TIMER_DECREASE * getDifficultyModifier();
     }

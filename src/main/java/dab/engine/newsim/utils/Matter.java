@@ -4,6 +4,8 @@
  */
 package dab.engine.newsim.utils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Note about particleNr: pV = NRT. Considering Avogadro's number (number of
  * atoms per mol) as 600. R then becomes 1.38 * 10^(-2) so, quantities remain
@@ -13,9 +15,17 @@ package dab.engine.newsim.utils;
  */
 public abstract class Matter {
 
+    @JsonProperty
     protected double temperature;
+    
+    @JsonProperty
     protected int particleNr;
 
+    protected Matter() {
+        this.temperature = 0;
+        this.particleNr = 0;
+    }
+    
     protected Matter(double temperature, Kilograms mass) {
         this.temperature = temperature;
         this.particleNr = (int) (mass.getValue() * getParticlesPerKilo());

@@ -4,6 +4,7 @@
  */
 package dab.engine.newsim.components;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dab.engine.newsim.utils.Constants;
 import dab.engine.newsim.utils.RadioactiveMatter;
 import dab.engine.newsim.utils.Ratio;
@@ -26,7 +27,11 @@ public class ReactorCore {
     // every second, if the rods are fully submersed, their temperature will be an averaged with that of water's
     private static final double MAXIMUM_TRANSFER_EASE_PER_TICK = 0.5 / Constants.TICKS_PER_SECOND;
     private static final double MELTING_TEMPERATURE = 1000;
+    
+    @JsonProperty
     private double controlRodPosition;
+    
+    @JsonProperty
     private RadioactiveMatter fuelRods;
 
     public ReactorCore() {

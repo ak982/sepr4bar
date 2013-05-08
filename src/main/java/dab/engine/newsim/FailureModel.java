@@ -55,7 +55,10 @@ public abstract class FailureModel {
     
     @JsonProperty
     private int difficulty;
-    ;
+    
+    protected FailureModel() {
+        
+    }
 
     public FailureModel(PowerPlant plant) {
         this.powerPlant = plant;

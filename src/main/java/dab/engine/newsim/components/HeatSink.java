@@ -33,6 +33,10 @@ public class HeatSink implements FailableObject, PumpView {
     @JsonProperty
     private String name;
    
+    protected HeatSink() {
+        
+    }
+    
     public HeatSink(String name) {
         steamTemp = Constants.ROOM_TEMP;
         waterTemp = Constants.ROOM_TEMP;

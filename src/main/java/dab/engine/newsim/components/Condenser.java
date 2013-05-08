@@ -32,6 +32,10 @@ public class Condenser extends Container implements FailableObject, CondenserVie
     @JsonProperty
     private FailureController failController;
     
+    protected Condenser() {
+        
+    }
+    
     public Condenser(String name, double volume, double area) {
         super(
                 name,

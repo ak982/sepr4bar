@@ -19,8 +19,13 @@ public class Turbine extends FailableComponent implements TurbineView {
     
     @JsonProperty
     double totalEnergyGenerated;
+    
     @JsonProperty
     Steam receivedLastStep;
+    
+    protected Turbine() {
+        super();
+    }
     
     public Turbine(String name) {
         super(name);

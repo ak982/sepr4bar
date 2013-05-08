@@ -5,6 +5,7 @@
 package dab.engine.newsim.components;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dab.engine.newsim.utils.HydraulicState;
@@ -16,15 +17,19 @@ import dab.engine.newsim.utils.Matter;
  */
 @JsonIdentityInfo(generator= ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public abstract class Component {
-    
-    @JsonProperty
-    protected Component outputComponent = null;
-    
+
     @JsonProperty
     protected String name;
     
     @JsonProperty
     protected boolean debugMode = false;
+    
+    @JsonIgnore
+    protected Component outputComponent = null;
+    
+    protected Component() {
+        
+    }
     
     protected Component(String name) {
         this.name = name;
