@@ -12,14 +12,14 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class RadioactiveMatterTest {
-    @Test
+  /*  @Test
     public void testSameTemperature() {
         RadioactiveMatter matter = new RadioactiveMatter(new Kilograms(10));
         double otherTemperature = 300; double temperature = matter.getTemperature();
         Ratio ratio = new Ratio(0.7);
         matter.equilibrateTemperature(ratio, otherTemperature);
         assertEquals(300, matter.getTemperature());
-    }
+    }*/
     @Test
     public void testLowerTemperature() {
         RadioactiveMatter matter = new RadioactiveMatter(new Kilograms(10));

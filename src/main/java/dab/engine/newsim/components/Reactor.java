@@ -81,6 +81,9 @@ public class Reactor extends Container implements ReactorView {
     protected boolean getHasBeenQuenched() {
         return hasBeenQuenched;
     }
+    protected boolean quenchedQueued() {
+        return quenchedQueued;
+    }
     
     // calculate the equilibrium pressure of the steam in this container and the one described by hydroState
     private double getEqualizedSteamPressure(HydraulicState hydroValue) {
