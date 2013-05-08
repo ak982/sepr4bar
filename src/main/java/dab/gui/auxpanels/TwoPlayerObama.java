@@ -5,6 +5,7 @@
 package dab.gui.auxpanels;
 
 import dab.bigBunny.BunnyController;
+import dab.bigBunny.TwoPlayerScreen;
 import dab.engine.newsim.SinglePlayerSimulator;
 import dab.engine.newsim.TwoPlayerSimulator;
 import dab.engine.simulator.FailMode;
@@ -31,6 +32,12 @@ public class TwoPlayerObama extends ObamaPanel {
     public void update() {
         String temp = getWarningMessages(getSimulator().getUsername1());
 
+        if (simulator.getTurbine().outputPower() < TwoPlayerScreen.GUNSHOT_POWER_REDUCTION * 2) {
+            temp += getSimulator().getUsername1() + ", you don't have enough energy. <br> "
+                    + "Generate more energy to shoot " + getSimulator().getUsername2() + "<br>"
+                    + "Remember, it costs less energy if you hit him <br>";
+        }
+        
         if (simulator.getSoftwareStatus() != FailMode.WORKING) {
             temp += "" + getSimulator().getUsername2() + " has used it's psypower to disable the software!" + "<br>";
         }

@@ -1,7 +1,9 @@
 package dab.gui.auxpanels;
 
+import com.sun.corba.se.impl.orbutil.closure.Constant;
 import dab.engine.newsim.AbstractSimulator;
 import dab.engine.newsim.components.Reactor;
+import dab.engine.newsim.utils.Constants;
 import java.awt.Color;
 import java.awt.Font;
 
@@ -61,12 +63,20 @@ public abstract class ObamaPanel extends JPanel {
     protected String getWarningMessages(String playerName) {
         String temp = "";
         
-        if (simulator.getReactor().coreTemperature().inKelvin() > 800) {
+        if (simulator.getReactor().coreTemperature().inKelvin() > 550) {
             temp += makeWarning(playerName, "REACTOR CORE TEMPERATURE TOO HIGH! QUENCH IT!");
         }
         
+        if (simulator.getReactor().pressure().inPascals() > 80 * Constants.ATMOSPHERIC_PRESSURE) {
+            temp += makeWarning(playerName, "Reactor pressure dagerously high.");
+        }
+        
         if (simulator.getReactor().waterLevel().ratio() >= Reactor.EXCESSWATER_THRESHOLD) {
-            temp += makeWarning(playerName, "Water level in reactor too high, discarding some of it.");;
+            temp += makeWarning(playerName, "Water level in reactor too high, discarding some of it.");
+        }
+        
+        if (simulator.getReactor().waterLevel().ratio() < Reactor.CORE_MAX_HEIGHT_RATIO) {
+            temp += makeWarning(playerName, "Water level too low in reactor, core will start heating up.");
         }
 
          for (String failedComponent : simulator.listFailedComponents()) {

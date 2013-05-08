@@ -38,10 +38,11 @@ public class SinglePlayerSimulator extends AbstractSimulator {
      * Save game
      * @throws JsonProcessignException
      */
-    public void saveGame() throws JsonProcessingException {
+    public SaveGame saveGame() throws JsonProcessingException {
         SaveGame saveGame = new SaveGame(failureModel, userName);
         try {
             saveGame.save();
+            return saveGame;
         } catch (IOException e) {
             throw new RuntimeException(e);
         } 
@@ -58,6 +59,7 @@ public class SinglePlayerSimulator extends AbstractSimulator {
             failureModel.afterLoad();
             this.powerPlant = failureModel.getPowerPlant();
             this.userName = saveGame.getUserName();
+            
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

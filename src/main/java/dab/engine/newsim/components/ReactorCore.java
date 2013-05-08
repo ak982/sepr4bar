@@ -26,7 +26,7 @@ public class ReactorCore {
     // transfer ease is just how much of the rod's temperature is going to DROP
     // every second, if the rods are fully submersed, their temperature will be an averaged with that of water's
     private static final double MAXIMUM_TRANSFER_EASE_PER_TICK = 0.5 / Constants.TICKS_PER_SECOND;
-    private static final double MELTING_TEMPERATURE = 1000;
+    private static final double MELTING_TEMPERATURE = 700;
     
     @JsonProperty
     private double controlRodPosition;

@@ -48,7 +48,7 @@ public class DaIntro extends JPanel {
         
         story = new StoryReader("WelcomeStory.txt");
         story.rotateX(Math.PI / 9);
-        story.move(-200, 500, -500);
+        story.move(-200, 1000, -500);
         try {
             // load background raw img
             BufferedImage tempImg = ImageIO.read(DaIntro.class.getResourceAsStream("intro_bkg.png"));
@@ -87,7 +87,8 @@ public class DaIntro extends JPanel {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 // update 3d story position
-                story.move(0, -1, 1);
+                //story.move(0, -1, 0.8);
+                story.move(0, -1.5, 1.2);
                 repaint();
             }
         };

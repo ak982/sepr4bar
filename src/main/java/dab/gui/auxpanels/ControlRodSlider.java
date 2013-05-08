@@ -49,9 +49,7 @@ public class ControlRodSlider extends JSlider{
         addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                if (!getValueIsAdjusting()){
-                    ;
-                }
+                    reactor.moveControlRods(new Percentage(getValue()));
             }
         });
         
@@ -59,7 +57,7 @@ public class ControlRodSlider extends JSlider{
     
     public void update() {
         setValue((int)reactor.targetRodPosition().points());
-        reactor.moveControlRods(new Percentage(getValue()));
+        
     }
     
     /**

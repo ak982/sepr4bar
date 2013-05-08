@@ -26,11 +26,12 @@ public class SinglePlayerFailureModel extends FailureModel {
 
     private final static int MAX_DAMAGE_SINGLE = 5;
     private final static int DAMAGE_INCREASE_SINGLE = 1;
-    private final static int INITIAL_HARDWARE_FAIL_INTERVAL = 5;
+    private final static int INITIAL_HARDWARE_FAIL_INTERVAL = 15;
     private final static int MINIMUM_HARDWARE_FAIL_INTERVAL = 4;
-    private final static double DEFAULT_TIMER_DECREASE = 0.1;
-    private final static double DEFAULT_SOFTWARE_FAIL_INTERVAL = 6;
+    private final static double DEFAULT_TIMER_DECREASE = 0.9;
+    private final static double DEFAULT_SOFTWARE_FAIL_INTERVAL = 30;
     private final static double MINIMUM_SOFTWARE_FAIL_INTERVAL = 10;
+    private final static double DEFAULT_SOFTWARE_FAIL_DURATION = 5;
     //A component will have a 1 in 50 chance of failing (per second)
     //private final static double DEFAULT_FAIL_CHANCE = 1.0 / 25.0;
 
@@ -76,7 +77,7 @@ public class SinglePlayerFailureModel extends FailureModel {
     }
     
     private double getTimerDecrease() {
-        return DEFAULT_TIMER_DECREASE * getDifficultyModifier();
+        return 0.9 - (getDifficultyModifier() - 1) / 10;
     }
     
     @Override
@@ -103,7 +104,8 @@ public class SinglePlayerFailureModel extends FailureModel {
         
         if (timeLeftSoftware < 0) {
             softwareFailInterval *= getTimerDecrease();
-            softwareFailTimeRemaining = DEFAULT_SOFTWARE_FAIL_INTERVAL * getDifficultyModifier();
+            softwareFailTimeRemaining = DEFAULT_SOFTWARE_FAIL_DURATION * getDifficultyModifier();
+            timeLeftSoftware = softwareFailInterval;
             if (timeLeftSoftware < MINIMUM_SOFTWARE_FAIL_INTERVAL) {
                 timeLeftSoftware = MINIMUM_SOFTWARE_FAIL_INTERVAL;
             }

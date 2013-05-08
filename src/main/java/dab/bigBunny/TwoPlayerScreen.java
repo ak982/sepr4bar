@@ -37,7 +37,7 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
     private JProgressBar bar;
     private HitBoundsController hitboundsController;
     private TurbineView turbine;
-    final double GUNSHOT_POWER_REDUCTION = 10000; // 10kj
+    public static final double GUNSHOT_POWER_REDUCTION = 10000; // 10kj
 
     public TwoPlayerScreen(AbstractSimulator simulator, Environment en, HitBoundsController h,BunnyController bc, TurbineView turbine) {
         super(simulator);
@@ -144,11 +144,13 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
         //Also get the power generated, check if it is > then some amount,
         //if it is - subtrackt that amount and call this:
         if(turbine.outputPower() > GUNSHOT_POWER_REDUCTION) {
-            turbine.reducePower(GUNSHOT_POWER_REDUCTION);
             double distance = clicked.distance(controller.getCoordinates());
-            if (distance <= controller.getRadius()) {                
+            if (distance < controller.getRadius() + 5) {        // make it easyer to hit         
                 controller.hasBeenShot();
+                turbine.reducePower(GUNSHOT_POWER_REDUCTION * 0.8);
+                // don't reduce power if we hit him
             } else {
+                turbine.reducePower(GUNSHOT_POWER_REDUCTION);
                 environment.addBullet(clicked); //bullet hole if missed         
             }
         }

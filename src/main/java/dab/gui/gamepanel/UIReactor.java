@@ -27,7 +27,7 @@ public class UIReactor extends UIComponent {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int rodsPosition = (int)((component.controlRodPosition()).points()*50);
+        int rodsPosition = (int)((component.controlRodPosition()).points()*0.6);
         System.out.println("rods " + rodsPosition);
         g.drawImage(rodsImage,0 ,-rodsPosition, this);
     }

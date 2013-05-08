@@ -31,11 +31,14 @@ public class Reactor extends Container implements ReactorView {
 
     private static final double INIT_WATER_TEMP = Constants.ROOM_TEMP + 40;
     public  static final double EXCESSWATER_THRESHOLD = 0.8; // always keep the water level below 80% of the volume
+    public  static final double MAX_PRESSURE = 100 * Constants.ATMOSPHERIC_PRESSURE;
+    
     private static final double INITIAL_WATER_RATIO = 0.5;
     private static final double CORE_MIN_HEIGHT_RATIO = 0.1;
-    private static final double CORE_MAX_HEIGHT_RATIO = 0.3;
+    public  static final double CORE_MAX_HEIGHT_RATIO = 0.3;
     private static final double QUENCH_PROPORTION = 0.3; // 30% of the reactor will be filled with cold water
     private static final double ROD_SPEED = 0.08 / Constants.TICKS_PER_SECOND;
+    
     
     @JsonProperty
     private boolean hasBeenQuenched, quenchedQueued, emergencyOff;
@@ -199,6 +202,10 @@ public class Reactor extends Container implements ReactorView {
         discardExcessWater();
         equalizePressure();
         
+        if (getPressure() > MAX_PRESSURE) {
+            throw new GameOverException();
+        }
+        
         // heatup the core (only in case of low water level. eg. not fully submersed)
         core.step(getCoreSubmersedLevel(), getWater());  
     }
@@ -227,7 +234,9 @@ public class Reactor extends Container implements ReactorView {
     
     @Override
     public Percentage targetRodPosition() {
+        System.out.println(targetRodPosition);
         return new Percentage(targetRodPosition * 100);
+        
     }
     
     @Override
