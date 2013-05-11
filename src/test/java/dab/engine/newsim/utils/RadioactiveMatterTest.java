@@ -55,7 +55,7 @@ public class RadioactiveMatterTest {
     
     @Test
     public void testSpecificHeat() {
-        matter.addEnergy(2000); // 2kj
+        matter.addEnergy(RadioactiveMatter.SPECIFIC_HEAT * 1000); // 2kj
         assertEquals(initialTemperature + 1, matter.getTemperature(), 0.0001);
     }
     

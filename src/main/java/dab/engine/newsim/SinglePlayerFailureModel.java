@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dab.engine.newsim.interfaces.FailableObject;
 import dab.engine.newsim.utils.Constants;
 import dab.engine.newsim.utils.DurationTickClock;
+import dab.engine.newsim.utils.OptionsHolder;
 import dab.engine.newsim.utils.RandomBuffer;
 import dab.engine.newsim.utils.TickClock;
 import dab.engine.simulator.FailMode;
@@ -78,6 +79,9 @@ public class SinglePlayerFailureModel extends FailureModel {
     @Override
     public void step() throws GameOverException {
         super.step();
+        if (OptionsHolder.getInstance().isGodModeOn()) {
+            return; // exit from the function
+        }
         hardwareTimer.tick();
         softwareTimer.tick();
         

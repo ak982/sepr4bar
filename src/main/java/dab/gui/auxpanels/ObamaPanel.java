@@ -5,6 +5,8 @@ import dab.engine.newsim.components.Reactor;
 import dab.engine.newsim.utils.Constants;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridBagLayout;
+import javax.swing.BoxLayout;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -21,7 +23,6 @@ import javax.swing.SwingConstants;
  */
 public abstract class ObamaPanel extends JPanel {
 
-    protected JLabel lblObama;
     protected JLabel lblSpeech;
     protected JLabel lblWords;
     AbstractSimulator simulator;
@@ -31,7 +32,7 @@ public abstract class ObamaPanel extends JPanel {
         this.simulator = sim;
         
         setBackground(Color.WHITE);
-        setLayout(null);        
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));        
         
 
         lblWords = new JLabel();
@@ -41,7 +42,7 @@ public abstract class ObamaPanel extends JPanel {
         lblWords.setHorizontalAlignment(SwingConstants.LEFT);
         lblWords.setHorizontalTextPosition(SwingConstants.RIGHT);
         lblWords.setBounds(210, 30, 800, 800);
-        add(lblWords);
+        //add(lblWords);
 
         lblSpeech = new JLabel();
         lblSpeech.setFont(new Font("Bookman Old Style", Font.BOLD, 14));
@@ -49,6 +50,7 @@ public abstract class ObamaPanel extends JPanel {
         lblSpeech.setIconTextGap(50);
         lblSpeech.setIcon(new ImageIcon("src/main/resources/dab/gui/auxpanels/speech.png"));
         add(lblSpeech);
+        lblSpeech.add(lblWords);
     }
     
     protected void setText(String text) {

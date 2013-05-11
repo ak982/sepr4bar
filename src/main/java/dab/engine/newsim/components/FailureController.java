@@ -79,6 +79,6 @@ public class FailureController {
         if(damage>=THE_BIGGEST_DAMAGE) {
             damage = THE_BIGGEST_DAMAGE;
         }
-        System.out.println("damage" + damage);
+       // System.out.println("damage" + damage);
     }    
 }

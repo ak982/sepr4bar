@@ -6,6 +6,7 @@ package dab.engine.newsim;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import dab.engine.newsim.utils.OptionsHolder;
 import dab.engine.persistence.SaveGame;
 import java.io.IOException;
 
@@ -26,11 +27,14 @@ public class SinglePlayerSimulator extends AbstractSimulator {
     
     public SinglePlayerSimulator(String playerName) {
         this();
-        this.userName = playerName;
+        setUsername(playerName);
     }
     
-    public void setUsername(String userName) {
+    public final void setUsername(String userName) {
         this.userName = userName;
+        if (userName.equals("glados")) {
+            OptionsHolder.getInstance().setGodModeOn(true);
+        }
     }
     
     /**

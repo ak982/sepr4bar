@@ -198,7 +198,7 @@ public class Reactor extends Container implements ReactorView {
 
         if (quenchedQueued) {
             // water at 280 degrees. That should settle things.
-            System.out.println(Constants.WATER_PARTICLES_PER_KILOGRAM);
+           // System.out.println(Constants.WATER_PARTICLES_PER_KILOGRAM);
             double quenchWaterVolume = getTotalVolume() * QUENCH_PROPORTION;
             double quenchWaterMass = quenchWaterVolume * Constants.NORMAL_DENSITY_WATER;
             water.add(new Water(280, (int)(quenchWaterMass * Constants.WATER_PARTICLES_PER_KILOGRAM)));
@@ -241,7 +241,7 @@ public class Reactor extends Container implements ReactorView {
     
     @Override
     public Percentage targetRodPosition() {
-        System.out.println(targetRodPosition);
+       // System.out.println(targetRodPosition);
         return new Percentage(targetRodPosition * 100);
         
     }
