@@ -4,10 +4,11 @@
  */
 package dab.gui.mainpanels;
 
-import dab.engine.newsim.SinglePlayerSimulator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import dab.engine.newsim.SinglePlayerSimulator;
 import dab.engine.persistence.FileSystem;
 import dab.gui.application.MainWindow;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
@@ -15,13 +16,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
@@ -35,14 +34,13 @@ public class MainMenu extends MenuHandler{
     
     public MainMenu(MainWindow mw, final JLayeredPane invoker) {
         
-        super(invoker);
-        
+        super(invoker);        
         this.mainWindow = mw;
-        this.invoker = invoker;
-        
+        this.invoker = invoker;       
            
-        JButton new_game = new JButton(new ImageIcon("resources/menu/NewGameButton.png") {});         
-        new_game.addActionListener(new ActionListener() {
+        JButton one_player = new JButton(new ImageIcon("src/main/resources/dab/gui/Buttons/onePlayer.png") {});         
+        one_player.setBackground(Color.black);
+        one_player.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
@@ -50,7 +48,8 @@ public class MainMenu extends MenuHandler{
             }
         });
 
-        JButton two_player = new JButton("two player");
+        JButton two_player = new JButton(new ImageIcon("src/main/resources/dab/gui/Buttons/twoPlayer.png"));
+        two_player.setBackground(Color.black);
         two_player.addActionListener(new ActionListener() {
 
             @Override
@@ -61,10 +60,8 @@ public class MainMenu extends MenuHandler{
         
        
         JButton save_menu = new JButton();
-        save_menu.setOpaque(true);
-        save_menu.setIconTextGap(0);
-        save_menu.setContentAreaFilled(false);
-        save_menu.setIcon(new ImageIcon("resources/menu/saveButton.png"));
+        save_menu.setBackground(Color.black);
+        save_menu.setIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/save.png"));
         save_menu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -79,11 +76,9 @@ public class MainMenu extends MenuHandler{
         });
         
          
-            JButton load_menu = new JButton();
-            load_menu.setOpaque(true);
-            load_menu.setIconTextGap(0);
-            load_menu.setContentAreaFilled(false);
-            load_menu.setIcon(new ImageIcon("resources/menu/LoadGameButton.png"));
+            JButton load_menu = new JButton();            
+            load_menu.setBackground(Color.black);
+            load_menu.setIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/load.png"));
             load_menu.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -99,10 +94,8 @@ public class MainMenu extends MenuHandler{
                         saved_games_array.add(bits[2] + " " + date.format(d));
                     }
                     JButton save_menu = new JButton();
-                    save_menu.setOpaque(true);
-                    save_menu.setIconTextGap(0);
-                    save_menu.setContentAreaFilled(false);
-                    save_menu.setIcon(new ImageIcon("resources/menu/LoadGameButton.png"));
+                    save_menu.setBackground(Color.black);
+                    save_menu.setIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/load.png"));
 
                     //a jlist of saved games to be used
                     final JList sampleJList = new JList(saved_games_array.toArray(new String[saved_games_array.size()]));
@@ -113,7 +106,7 @@ public class MainMenu extends MenuHandler{
                     final JPopupMenu popupMenu = new JPopupMenu();
 
                     popupMenu.setBorder(BorderFactory.createEmptyBorder());
-                    JButton load = new JButton("Load");
+                    JButton load = new JButton("load");
                     load.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -134,7 +127,8 @@ public class MainMenu extends MenuHandler{
                 }
             });        
 
-        JButton options = new JButton("options");
+        JButton options = new JButton(new ImageIcon("src/main/resources/dab/gui/Buttons/options.png"));
+        options.setBackground(Color.black);
         options.addActionListener(new ActionListener() {
 
             @Override
@@ -143,7 +137,8 @@ public class MainMenu extends MenuHandler{
             }
         });
      
-        JButton resume = new JButton("resume");
+        JButton resume = new JButton(new ImageIcon("src/main/resources/dab/gui/Buttons/resume.png"));
+        resume.setBackground(Color.black);
         resume.addActionListener(new ActionListener() {
 
             @Override
@@ -153,8 +148,9 @@ public class MainMenu extends MenuHandler{
             }
         });  
         
-        JButton exit_game = new JButton("exit");
-        exit_game.addActionListener(new ActionListener() {
+        JButton quit = new JButton(new ImageIcon("src/main/resources/dab/gui/Buttons/quit.png"));
+        quit.setBackground(Color.black);
+        quit.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
@@ -178,17 +174,30 @@ public class MainMenu extends MenuHandler{
             add(resume);
         }
                 
-        add(new_game);
+        add(one_player);
         add(two_player);
         if (addSave) {
             add(save_menu);
         }
-        add(options);
         add(load_menu);
-        add(exit_game);
-                
-        setBounds(400, 200, (int)new_game.getMinimumSize().getWidth(),
-                (int)new_game.getMinimumSize().getHeight()*getComponentCount());
+        add(options);      
+        add(quit);
+              
+        //different coorditations for buttons depending on whether they are used in the 
+        //game, or start menu (different alignment and different amount of buttons)
+        int h;
+        if(getComponentCount() >5){
+            h = 40;
+        } else {
+            h=150;
+        }
+        if(invoker instanceof DaMMenu) {           
+            setBounds(getTheX(), h, (int)one_player.getMinimumSize().getWidth(),
+                (int)one_player.getMinimumSize().getHeight()*getComponentCount());
+        } else {
+            setBounds(getTheX(), h, (int)one_player.getMinimumSize().getWidth(),
+                (int)one_player.getMinimumSize().getHeight()*getComponentCount());
+        }       
     }
     
     private void startGame(boolean playerMode){

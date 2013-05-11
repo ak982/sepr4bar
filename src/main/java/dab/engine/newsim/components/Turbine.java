@@ -4,6 +4,7 @@
  */
 package dab.engine.newsim.components;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dab.engine.newsim.interfaces.TurbineView;
 import dab.engine.newsim.utils.BlockedHydroState;
 import dab.engine.newsim.utils.HydraulicState;
@@ -16,23 +17,30 @@ import dab.engine.newsim.utils.Matter;
  */
 public class Turbine extends FailableComponent implements TurbineView {
     
+    @JsonProperty
     double totalEnergyGenerated;
-    double energyGeneratedLast;
+    
+    @JsonProperty
+    Steam receivedLastStep;
+    
+    protected Turbine() {
+        super();
+    }
     
     public Turbine(String name) {
         super(name);
         totalEnergyGenerated = 0;
-        energyGeneratedLast  = 0;
+        receivedLastStep = new Steam(0, 0);
     }
     
-    public double getLastEnergy() {
-        return energyGeneratedLast;
+    private double convertReceivedSteamToEnergy() {
+        return receivedLastStep.getMass() * 100;
     }
-    
-    
     
     public void step() {
-       ; // FIXME: don't do nothing currently
+       //System.out.println(receivedLastStep.getMass());
+       totalEnergyGenerated += convertReceivedSteamToEnergy();
+       receivedLastStep.remove(receivedLastStep.getParticleNr());
     }
     
     @Override
@@ -44,15 +52,10 @@ public class Turbine extends FailableComponent implements TurbineView {
         }
     }
 
-    /*
-     * FIXME: magicnumber: * 100
-     */
     @Override
     protected void receiveMatter(Matter m) {
         if (hasFailed()) throw new RuntimeException("turbine failed, shouldn't receive any steam");
-        Steam steamReceived = (Steam)m;
-        energyGeneratedLast = steamReceived.getMass() * 100;
-        totalEnergyGenerated += energyGeneratedLast;
+        receivedLastStep.add((Steam)m);
         // even maybe remove some of the actual energy?
         outputComponent.receiveMatter(m);
     }
@@ -60,6 +63,11 @@ public class Turbine extends FailableComponent implements TurbineView {
     @Override
     public double outputPower() {
         return totalEnergyGenerated;
+    }
+
+    @Override
+    public void reducePower( double gunshotReduction) {
+        totalEnergyGenerated -= gunshotReduction;
     }
 
 }

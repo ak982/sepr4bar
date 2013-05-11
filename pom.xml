@@ -25,19 +25,43 @@
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-jar-plugin</artifactId>
+		
 			<configuration>
 				<archive>
 					<manifest>
-						<mainClass>dab.gui.application.VisualTestBench</mainClass>
+						<mainClass>dab.gui.application.MainWindow</mainClass>
 					</manifest>
 				</archive>
 			</configuration>
 			<version>2.4</version>
 		</plugin>
 
+		<plugin>
+ <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <executions>
+      <execution>
+        <phase>package</phase>
+        <goals>
+          <goal>attached</goal>
+        </goals>
+      </execution>
+    </executions>
+    <configuration>
+      <descriptorRefs>
+        <descriptorRef>jar-with-dependencies</descriptorRef>
+      </descriptorRefs>
+<archive>
+      <manifest>
+        <mainClass>dab.gui.application.MainWindow</mainClass>
+      </manifest>
+    </archive>
+    </configuration>
+  </plugin>
+
         </plugins>
     </build>
-  <properties>
+    <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   
@@ -87,6 +111,5 @@
 	    <version>2.6.0</version>
 	    <scope>test</scope>
     </dependency>
-
   </dependencies>
 </project>

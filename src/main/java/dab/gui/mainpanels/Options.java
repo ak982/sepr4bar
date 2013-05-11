@@ -5,12 +5,13 @@
 package dab.gui.mainpanels;
 
 import dab.gui.application.MainWindow;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 /**
@@ -32,9 +33,20 @@ public class Options extends MenuHandler{
         this.invoker = invoker;
         
         
-        easy = new JToggleButton("easy");
-        normal = new JToggleButton("normal");
+        easy = new JToggleButton();
+        easy.setSelectedIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/easy.png"));
+        easy.setIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/easyOff.png"));
+        easy.setBackground(Color.BLACK);
+        
+        normal = new JToggleButton();
+        normal.setSelectedIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/normal.png"));
+        normal.setIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/normalOff.png"));
+        normal.setBackground(Color.black);
+        
         hard = new JToggleButton("hard");
+        hard.setSelectedIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/hard.png"));
+        hard.setIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/hardOff.png"));
+        hard.setBackground(Color.black);
         setSelected();
         
         easy.addActionListener(new ActionListener() {
@@ -45,8 +57,7 @@ public class Options extends MenuHandler{
                 setSelected();              
             }
         });
-        
-        
+              
         normal.addActionListener(new ActionListener() {
 
             @Override
@@ -55,8 +66,7 @@ public class Options extends MenuHandler{
                 setSelected(); 
             }
         });
-        
-        
+               
         hard.addActionListener(new ActionListener() {
 
             @Override
@@ -66,7 +76,10 @@ public class Options extends MenuHandler{
             }
         });
         
-        JToggleButton sound = new JToggleButton("sound");
+        JToggleButton sound = new JToggleButton();
+        sound.setSelectedIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/music.png"));
+        sound.setIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/musicOff.png"));
+        sound.setBackground(Color.black);
         sound.setSelected(mainWindow.getMusic());
         sound.addActionListener(new ActionListener() {
 
@@ -76,16 +89,20 @@ public class Options extends MenuHandler{
             }
         });
            
-        JButton help = new JButton("help");
+        JButton help = new JButton(new ImageIcon("src/main/resources/dab/gui/Buttons/help.png"));
+         help.setBackground(Color.black);
          help.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
-               mainWindow.changeMenu(new HelpScreen(mainWindow, invoker));
+               //mainWindow.changeMenu(new HelpScreen(mainWindow, invoker));
+                JDialog help = new HelpScreen();
+                help.setVisible(true);
             }
         });
          
-        JButton back = new JButton("back");
+        JButton back = new JButton(new ImageIcon("src/main/resources/dab/gui/Buttons/back.png"));
+        back.setBackground(Color.black);
         back.addActionListener(new ActionListener() {
 
             @Override
@@ -101,8 +118,8 @@ public class Options extends MenuHandler{
       add(sound);
       add(back);
      
-      setBounds(400, 200, (int)back.getMinimumSize().getWidth(),
-                (int)back.getMinimumSize().getHeight()*getComponentCount());
+        setBounds(getTheX(), 100, (int)easy.getMinimumSize().getWidth(), 
+                (int)easy.getMinimumSize().getHeight()*getComponentCount());
      }
       
     private void setSelected(){

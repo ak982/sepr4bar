@@ -3,6 +3,9 @@ package dab.gui.auxpanels;
 import dab.engine.simulator.UserCommands;
 import dab.engine.newsim.interfaces.ReactorView;
 import dab.engine.utilities.Percentage;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -31,34 +34,39 @@ public class ControlRodSlider extends JSlider{
      * @param
      * @param
      */
-    public ControlRodSlider(ReactorView r) {
+    
+    public ControlRodSlider(ReactorView reac) {
         super(JSlider.VERTICAL, 0, 100, 0);
-        this.reactor = r;
-        setBounds(10, 80, 100, 200);
+        this.reactor = reac;
         setOpaque(false);
         setMajorTickSpacing(25);
         setPaintTicks(true);
         setPaintLabels(true);
+        setFont(new Font("Bookman Old Style", Font.BOLD, 14));
+        setForeground(Color.WHITE);
+       
         setUI(new MySliderUI(this));
         addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                if (!getValueIsAdjusting()){
-                    //notify observer only when the rods are released
                     reactor.moveControlRods(new Percentage(getValue()));
-                    // int y = control_rods.getHeight();
-                    //  control_rods.setBounds(44,(int)( y-getValue()/1.5-87), 300, 300);
-                }
             }
         });
+        
     }
+    
+    public void update() {
+        setValue((int)reactor.targetRodPosition().points());
+        
+    }
+    
     /**
      *
      * A private class used to overwrite the natural look of a basic slider
      */
     private class MySliderUI extends BasicSliderUI {
         Image knobImage;
-        public MySliderUI( JSlider aSlider ) {
+        MySliderUI( JSlider aSlider ) {
             super( aSlider );
             try {
                 this.knobImage = ImageIO.read( new File("resources/controlPanel/orangeSlider.png") );
@@ -74,7 +82,7 @@ public class ControlRodSlider extends JSlider{
         @Override
         public void paintThumb(Graphics g)  {
             // overwrite the default slider icon
-            g.drawImage( this.knobImage, thumbRect.x-10, thumbRect.y-1, 40, 16, null );
+            g.drawImage( this.knobImage, thumbRect.x, thumbRect.y, 30, 10, null );
             repaint();
         }
     }

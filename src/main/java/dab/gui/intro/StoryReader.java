@@ -77,7 +77,7 @@ class StoryReader {
 
         // image needs to be *at least* large enough to hold our text
         // later we'll 'clip off' unnecesarry bits 
-        BufferedImage image = new BufferedImage(900, 1300, Image.SCALE_DEFAULT);
+        BufferedImage image = new BufferedImage(1200, 3000, Image.SCALE_DEFAULT);
         int imageMidPoint = image.getWidth() / 2; // used for centering text
 
         Graphics gTemp = image.getGraphics();

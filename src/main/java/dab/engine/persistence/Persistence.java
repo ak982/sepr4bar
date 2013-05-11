@@ -1,7 +1,9 @@
 package dab.engine.persistence;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -24,8 +26,18 @@ import java.io.IOException;
  */
 public class Persistence {
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper;
 
+    public Persistence() {
+        mapper = new ObjectMapper();
+        mapper.setVisibilityChecker(mapper.getSerializationConfig().getDefaultVisibilityChecker()
+                .withFieldVisibility(JsonAutoDetect.Visibility.NONE)
+                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+    
     /**
      *
      * @param obj
@@ -35,6 +47,7 @@ public class Persistence {
      * @throws JsonProcessingException
      */
     public String serialize(Object obj) throws JsonProcessingException {
+        //mapper.setVisibilityChecker(mapper.getVisibilityChecker().with(JsonAutoDetect.Visibility.NONE));
         return mapper.writeValueAsString(obj);
     }
 
@@ -51,5 +64,10 @@ public class Persistence {
     public SaveGame deserializeSaveGame(String representation) throws JsonParseException, JsonMappingException,
                                                                       IOException {
         return mapper.readValue(representation, SaveGame.class);
+    }
+    
+    public PhysicalModel deserializePhysicalModel(String representation) throws JsonParseException, JsonMappingException,
+                                                                      IOException {
+        return mapper.readValue(representation, PhysicalModel.class);
     }
 }

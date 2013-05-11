@@ -27,6 +27,10 @@ public abstract class Container extends Component implements ContainerView  {
     @JsonProperty
     protected double area, height;
     
+    protected Container() {
+        super();
+    }
+    
     public Container(String name, Water water, Steam steam, double area, double height) {
         super(name);
         this.water  = water;
@@ -82,7 +86,7 @@ public abstract class Container extends Component implements ContainerView  {
     //<editor-fold desc="Implemented interfaces">
     @Override
     public Percentage waterLevel() {
-        return new Percentage(getWaterLevelRatio());
+        return new Percentage(getWaterLevelRatio() * 100);
     }
 
     @Override

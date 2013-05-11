@@ -6,7 +6,6 @@ package dab.engine.newsim.components;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dab.engine.newsim.interfaces.ReactorView;
-import dab.engine.newsim.utils.AverageBuffer;
 import dab.engine.newsim.utils.BlockedHydroState;
 import dab.engine.newsim.utils.Constants;
 import dab.engine.newsim.utils.Steam;
@@ -16,10 +15,8 @@ import dab.engine.newsim.utils.ContainerHydroState;
 import dab.engine.newsim.utils.Water;
 import dab.engine.newsim.utils.Kilograms;
 import dab.engine.newsim.utils.Matter;
-import dab.engine.simulator.CannotRepairException;
 import dab.engine.simulator.GameOverException;
 import dab.engine.utilities.Percentage;
-import dab.engine.utilities.Pressure;
 import dab.engine.utilities.Temperature;
 
 /**
@@ -30,14 +27,28 @@ public class Reactor extends Container implements ReactorView {
 
 
     private static final double INIT_WATER_TEMP = Constants.ROOM_TEMP + 40;
-    private static final double EXCESSWATER_THRESHOLD = 0.8; // always keep the water level below 80% of the volume
+    public  static final double EXCESSWATER_THRESHOLD = 0.8; // always keep the water level below 80% of the volume
+    public  static final double MAX_PRESSURE = 100 * Constants.ATMOSPHERIC_PRESSURE;
+    
     private static final double INITIAL_WATER_RATIO = 0.5;
     private static final double CORE_MIN_HEIGHT_RATIO = 0.1;
-    private static final double CORE_MAX_HEIGHT_RATIO = 0.2;
+    public  static final double CORE_MAX_HEIGHT_RATIO = 0.3;
+    private static final double QUENCH_PROPORTION = 0.3; // 30% of the reactor will be filled with cold water
+    private static final double ROD_SPEED = 0.08 / Constants.TICKS_PER_SECOND;
+    
+    
+    @JsonProperty
+    private boolean hasBeenQuenched, quenchedQueued, emergencyOff;
+    
+    @JsonProperty
+    private double targetRodPosition;
     
     @JsonProperty
     private ReactorCore core;
    
+    private Reactor() {
+        super();
+    }
 
     public Reactor(String name, double volume, double area) {
         super(
@@ -47,11 +58,28 @@ public class Reactor extends Container implements ReactorView {
                 area,
                 volume / area);
         core = new ReactorCore();
+        hasBeenQuenched = false;
+        quenchedQueued = false;
+        targetRodPosition = 0;
     }
 
     @Override
     public double getWaterMass() {
         return water.getMass();
+    }
+    
+    public void setEmergencyOff(boolean status) {
+        emergencyOff = status;
+    }
+
+    protected double getTargetRodPosition() {
+        return targetRodPosition;
+    }
+    protected boolean getHasBeenQuenched() {
+        return hasBeenQuenched;
+    }
+    protected boolean quenchedQueued() {
+        return quenchedQueued;
     }
     
     // calculate the equilibrium pressure of the steam in this container and the one described by hydroState
@@ -61,20 +89,22 @@ public class Reactor extends Container implements ReactorView {
         return (v1 * p1 + v2 * p2) / (v1 + v2);
     }
     
-        private void condenseSteam() {
-            // if pressure is smaller than atmosferic one, then we don't condense anything,
-            // otherwise we condense such that we reach the boiling point at that pressure
-            if (getPressure()> Constants.ATMOSPHERIC_PRESSURE) {
-                double boilingPoint = Water.getBoilingTemperature(getPressure() * 1.5);
-                if (boilingPoint > steam.getTemperature()) { // remove steam such that it equalizes to the boiling point
-                    double newSteamPressure = Math.max(Water.getBoilingPressure(steam.getTemperature()), Constants.ATMOSPHERIC_PRESSURE);
+    private void condenseSteam() {
+        // if pressure is smaller than atmosferic one, then we don't condense anything,
+        // otherwise we condense such that we reach the boiling point at that pressure
+        if (getPressure() > Constants.ATMOSPHERIC_PRESSURE) {
+            double boilingPoint = Water.getBoilingTemperature(getPressure() * 0.98);
+            if (boilingPoint > steam.getTemperature()) { // remove steam such that it equalizes to the boiling point
+                double newSteamPressure = Math.max(Water.getBoilingPressure(steam.getTemperature()), Constants.ATMOSPHERIC_PRESSURE);
 
-                    int newQuantity = steam.getParticlesAtState(newSteamPressure, getCompressibleVolume());
-                    int deltaQuantity = steam.getParticleNr() - newQuantity;
-                    steam.remove(deltaQuantity);
-                    getWater().add(new Water(steam.getTemperature(), deltaQuantity));
-                }
-            }        
+
+                int newQuantity = steam.getParticlesAtState(newSteamPressure, getCompressibleVolume());
+                int deltaQuantity = steam.getParticleNr() - newQuantity;
+                //System.out.println("Condensed in reactor " + deltaQuantity);
+                steam.remove(deltaQuantity);
+                getWater().add(new Water(steam.getTemperature(), deltaQuantity));
+            }
+        }
     }
     
     private Ratio getCoreSubmersedLevel() {
@@ -141,19 +171,50 @@ public class Reactor extends Container implements ReactorView {
         return new ContainerHydroState(getBottomPressure(), getCompressibleVolume(), area);
     }
     
+    private void updateRodPosition() {
+        double apparentTargetPosition;
+        // when we're in emergency mode, the rods drop back down to 0
+        // when we're not in emergency mode, they pop back up.
+        if (emergencyOff) {
+            apparentTargetPosition = 0;
+        } else {
+            apparentTargetPosition = targetRodPosition;
+        }
+        
+        if (core.getRodPosition() < apparentTargetPosition) {
+            core.setRodPosition(new Ratio(Math.min(apparentTargetPosition, core.getRodPosition() + ROD_SPEED)));
+        } else {
+            core.setRodPosition(new Ratio(Math.max(apparentTargetPosition, core.getRodPosition() - ROD_SPEED)));
+        }
+    }
+    
     public void step() throws GameOverException {
-        // condense any super-heated steam
+        updateRodPosition();
+        // condense any cold steam
         condenseSteam();
         
         // heatup water, convert some of it into steam
         steam.add(getWater().addEnergy(core.getEnergyPerTick(getCoreSubmersedLevel()), steam.getPressure(getCompressibleVolume())));
 
-        // heatup the core (only in case of low water level. eg. not fully submersed)
-        core.step(getCoreSubmersedLevel(), getWater());
+        if (quenchedQueued) {
+            // water at 280 degrees. That should settle things.
+            System.out.println(Constants.WATER_PARTICLES_PER_KILOGRAM);
+            double quenchWaterVolume = getTotalVolume() * QUENCH_PROPORTION;
+            double quenchWaterMass = quenchWaterVolume * Constants.NORMAL_DENSITY_WATER;
+            water.add(new Water(280, (int)(quenchWaterMass * Constants.WATER_PARTICLES_PER_KILOGRAM)));
+            hasBeenQuenched = true;
+            quenchedQueued = false;
+        }
         
         discardExcessWater();
         equalizePressure();
         
+        if (getPressure() > MAX_PRESSURE) {
+            throw new GameOverException();
+        }
+        
+        // heatup the core (only in case of low water level. eg. not fully submersed)
+        core.step(getCoreSubmersedLevel(), getWater());  
     }
 
     @Override
@@ -162,6 +223,12 @@ public class Reactor extends Container implements ReactorView {
     }
 
     //<editor-fold desc="implemented interfaces">
+    @Override
+    public void quench() {
+        if (!hasBeenQuenched)
+            quenchedQueued = true;
+    }
+    
     @Override
     public Temperature temperature() {
         return new Temperature(water.getTemperature());
@@ -173,13 +240,20 @@ public class Reactor extends Container implements ReactorView {
     }
     
     @Override
+    public Percentage targetRodPosition() {
+        System.out.println(targetRodPosition);
+        return new Percentage(targetRodPosition * 100);
+        
+    }
+    
+    @Override
     public void moveControlRods(Percentage extracted) {
-        core.setRodPosition(new Ratio(extracted.ratio()));
+        targetRodPosition = extracted.ratio();
     }
 
     @Override
     public Percentage controlRodPosition() {
-        return new Percentage(core.getRodPosition());
+        return new Percentage(core.getRodPosition() * 100);
     }
 
     @Override
@@ -203,4 +277,6 @@ public class Reactor extends Container implements ReactorView {
     }
     
     //</editor-fold>
+
+
 }

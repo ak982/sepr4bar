@@ -24,6 +24,10 @@ public class Pump extends FailableComponent implements PumpView {
     @JsonProperty
     private boolean status;
     
+    protected Pump() {
+        super();
+    }
+    
     public Pump(String name, double power) {
         super(name);
         this.power = power;

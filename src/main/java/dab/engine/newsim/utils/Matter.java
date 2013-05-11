@@ -4,6 +4,8 @@
  */
 package dab.engine.newsim.utils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Note about particleNr: pV = NRT. Considering Avogadro's number (number of
  * atoms per mol) as 600. R then becomes 1.38 * 10^(-2) so, quantities remain
@@ -13,9 +15,17 @@ package dab.engine.newsim.utils;
  */
 public abstract class Matter {
 
+    @JsonProperty
     protected double temperature;
+    
+    @JsonProperty
     protected int particleNr;
 
+    protected Matter() {
+        this.temperature = 0;
+        this.particleNr = 0;
+    }
+    
     protected Matter(double temperature, Kilograms mass) {
         this.temperature = temperature;
         this.particleNr = (int) (mass.getValue() * getParticlesPerKilo());
@@ -34,9 +44,11 @@ public abstract class Matter {
      */
     protected void add(Matter x) {
         int newParticleNr = particleNr + x.getParticleNr();
-        double newTemperature = (particleNr * temperature + x.getParticleNr() * x.getTemperature()) / newParticleNr;
-        particleNr = newParticleNr;
-        temperature = newTemperature;
+        if (newParticleNr != 0) {
+            double newTemperature = (particleNr * temperature + x.getParticleNr() * x.getTemperature()) / newParticleNr;
+            particleNr = newParticleNr;
+            temperature = newTemperature;
+        }
     }
     
     public double calculateTemperatureEqulibrium(Matter x) {
@@ -81,8 +93,8 @@ public abstract class Matter {
 
     abstract double getSpecificHeat();
 
-    public final int getParticlesPerKilo() {
-        return (int) (Constants.AVOGADRO_NUMBER / getMolarMass());
+    public final double getParticlesPerKilo() {
+        return Constants.AVOGADRO_NUMBER / getMolarMass();
     }
 
     public final double getMass() {

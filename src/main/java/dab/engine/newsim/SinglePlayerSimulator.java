@@ -25,6 +25,7 @@ public class SinglePlayerSimulator extends AbstractSimulator {
     } 
     
     public SinglePlayerSimulator(String playerName) {
+        this();
         this.userName = playerName;
     }
     
@@ -37,10 +38,11 @@ public class SinglePlayerSimulator extends AbstractSimulator {
      * Save game
      * @throws JsonProcessignException
      */
-    public void saveGame() throws JsonProcessingException {
-        SaveGame saveGame = new SaveGame(powerPlant, failureModel, userName);
+    public SaveGame saveGame() throws JsonProcessingException {
+        SaveGame saveGame = new SaveGame(failureModel, userName);
         try {
             saveGame.save();
+            return saveGame;
         } catch (IOException e) {
             throw new RuntimeException(e);
         } 
@@ -53,11 +55,13 @@ public class SinglePlayerSimulator extends AbstractSimulator {
     public void loadGame(int gameNumber) {
         try {
             SaveGame saveGame = SaveGame.load(listGames()[gameNumber]);
-            this.powerPlant = saveGame.getPowerPlant();
-            this.failureModel = new SinglePlayerFailureModel(powerPlant);
+            this.failureModel = saveGame.getFailureModel();
+            failureModel.afterLoad();
+            this.powerPlant = failureModel.getPowerPlant();
             this.userName = saveGame.getUserName();
-        } catch (JsonParseException ex) {
+            
         } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

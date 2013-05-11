@@ -5,19 +5,17 @@
 package dab.bigBunny;
 
 import dab.engine.newsim.AbstractSimulator;
+import dab.engine.newsim.interfaces.TurbineView;
 import dab.gui.gamepanel.GamePanel;
 import dab.gui.gamepanel.UIComponent;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
@@ -25,10 +23,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JProgressBar;
-import javax.swing.Timer;
 
 /**
  *
@@ -36,18 +31,17 @@ import javax.swing.Timer;
  */
 public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionListener {
 
-    BufferedImage bunny, slime;
-    BunnyController controller;
-    Environment environment;
-    JProgressBar bar;
-    private Rectangle bounds;
-    private JLabel box;
-    private ImageIcon boxToHit;
+    private BufferedImage bunny, slime, headache;
+    private BunnyController controller;
+    private Environment environment;
+    private JProgressBar bar;
     private HitBoundsController hitboundsController;
+    private TurbineView turbine;
+    public static final double GUNSHOT_POWER_REDUCTION = 10000; // 10kj
 
-    public TwoPlayerScreen(AbstractSimulator simulator, Environment en, HitBoundsController h,BunnyController bc) {
+    public TwoPlayerScreen(AbstractSimulator simulator, Environment en, HitBoundsController h,BunnyController bc, TurbineView turbine) {
         super(simulator);
-        
+        this.turbine = turbine;
         this.environment = en;
         this.hitboundsController = h;
         this.controller = bc;
@@ -63,17 +57,6 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
         bar.setBounds(10, 10, 100, 30);
         bar.setVisible(true);
         bar.setStringPainted(true);
-/*<<<<<<< HEAD
-
-        box = new JLabel("Box");
-        boxToHit = new ImageIcon("resources/HitableBox.png");
-        box.setIcon(boxToHit);
-        box.setBounds(500, 500, 40, 40);
-        this.add(box);
-        box.setVisible(true);
-        /*hitboundsController.addHitableComponent(new TheRectangle(uiComponents.get(0).getComponent(),500, 500, 40,40));
-        
-=======*/
        
         // FIXME: make reactor failable as well (well not really) :P
         for(UIComponent uc : uiComponents){
@@ -84,10 +67,19 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
         addMouseListener(this);
 
         try {
-            bunny = ImageIO.read(new File("resources/bunny.jpg"));
+            bunny = ImageIO.read(new File("src/main/resources/dab/gui/bunny.png"));
         } catch (Exception e) {
             System.err.println("Image not found");
         }
+        
+        
+        try {
+            headache = ImageIO.read(new File("src/main/resources/dab/gui/headache.png"));
+        } catch (Exception e) {
+            System.err.println("Image not found");
+        }
+        
+        
         
          try {
             slime = ImageIO.read(new File("src/main/resources/dab/gui/slime2.png"));
@@ -95,9 +87,6 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
             System.err.println("Image not found");
         }
         environment.setSlimeRadius(slime.getWidth()/2); 
-        
-       
-
     }
 
     @Override
@@ -113,11 +102,18 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
 
         // draw slimes
         for (Slime s : environment.getSlimes()) {
+            AffineTransform afSlime = new AffineTransform();
           float f = s.getFreshness();
+          
+          afSlime.translate(s.getLocation().getX(), s.getLocation().getY());
+          afSlime.rotate(s.getRotation());
+          afSlime.translate(- slime.getWidth()/2, - slime.getHeight()/2);
+          
           g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,f));           
-          g2D.drawImage(slime, (int)s.getLocation().getX() - slime.getWidth()/2, 
+          /*g2D.drawImage(slime, (int)s.getLocation().getX() - slime.getWidth()/2, 
                  (int) s.getLocation().getY() - slime.getHeight()/2, slime.getWidth(),
-                  slime.getHeight(), this);
+                  slime.getHeight(), this);*/
+          g2D.drawImage(slime, afSlime, this);
           
         }
         
@@ -131,30 +127,32 @@ public class TwoPlayerScreen extends GamePanel implements MouseListener, ActionL
            
         }
         
-        // draw a circle around the bunny
-        Ellipse2D.Double circle = new Ellipse2D.Double((double) controller.getX() - 10, (double) controller.getY() - 10, 20.0, 20.0);
-        g2D.drawImage(bunny, af, this);
-        g2D.setColor(Color.black);
-
-        g2D.draw(circle);
-     
+        
+        if (environment.getHeadache()){
+            g2D.drawImage(headache, af, this);
+        } else {
+            g2D.drawImage(bunny, af, this);
+        }
+        
         bar.setValue(controller.getHealth());
     }
 
     public void mousePressed(MouseEvent e) {
         Point clicked = new Point(e.getX(), e.getY());
-
+        System.out.println(clicked);
 
         //Also get the power generated, check if it is > then some amount,
         //if it is - subtrackt that amount and call this:
-        double distance = clicked.distance(controller.getCoordinates());
-        if (distance <= controller.getRadius()) {
-            //System.out.println("Bunny has been shot");
-            controller.hasBeenShot();
-            //Animation of shot bunny 
-        } else {
-            environment.addBullet(clicked); //bullet hole if missed
-         
+        if(turbine.outputPower() > GUNSHOT_POWER_REDUCTION) {
+            double distance = clicked.distance(controller.getCoordinates());
+            if (distance < controller.getRadius() + 5) {        // make it easyer to hit         
+                controller.hasBeenShot();
+                turbine.reducePower(GUNSHOT_POWER_REDUCTION * 0.8);
+                // don't reduce power if we hit him
+            } else {
+                turbine.reducePower(GUNSHOT_POWER_REDUCTION);
+                environment.addBullet(clicked); //bullet hole if missed         
+            }
         }
     }
 

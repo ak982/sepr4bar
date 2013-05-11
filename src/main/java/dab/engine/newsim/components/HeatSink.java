@@ -17,8 +17,8 @@ import javax.naming.Name;
  * @author eduard
  */
 public class HeatSink implements FailableObject, PumpView {
-    private static final int STEAM_PARTICLES = Constants.NORMAL_PARTICLES_PER_VOLUME_STEAM * 10; // around 0.6 kg of steam
-    private static final int WATER_PARTICLES = Constants.WATER_PARTICLES_PER_KILOGRAM * 3000;
+    private static final int STEAM_PARTICLES = Constants.NORMAL_PARTICLES_PER_VOLUME_STEAM * 1; // around 0.6 kg of steam
+    private static final int WATER_PARTICLES = Constants.WATER_PARTICLES_PER_KILOGRAM * 3;
     private static final double COOLING_EASE = 0.8 / Constants.TICKS_PER_SECOND;      // how much to change the temperature each step
     
     @JsonProperty
@@ -32,7 +32,19 @@ public class HeatSink implements FailableObject, PumpView {
     
     @JsonProperty
     private String name;
+    
+    protected double getSteamTemp() {
+        return this.steamTemp;
+    }
+    
+    protected double getWaterTemp() {
+        return this.waterTemp;
+    }
    
+    protected HeatSink() {
+        
+    }
+    
     public HeatSink(String name) {
         steamTemp = Constants.ROOM_TEMP;
         waterTemp = Constants.ROOM_TEMP;
@@ -41,8 +53,7 @@ public class HeatSink implements FailableObject, PumpView {
         this.name = name;
        
     }
-    
-    // FIXME: magic number
+
     public void step() {
         if (hasFailed() || getStatus() == false) {
             return;

@@ -55,7 +55,7 @@ public class BunnyController {
     public BunnyController(Environment e, HitBoundsController h, Point p) {
         this.environment = e;
         this.hitController = h;
-        this.radius = 10;
+        this.radius = 15;
         
         this.x = p.x;
         this.y = p.y;
@@ -75,6 +75,10 @@ public class BunnyController {
         this(environment, hitBoundsController, new Point(100, 100));
     }
 
+    public boolean hasHeadache() {
+        return environment.getHeadache();
+    }
+    
     public void step() {
         softwareFailure = environment.getSoftwareFailure();
         updateMovement();    
@@ -311,11 +315,11 @@ public class BunnyController {
         halfWidth = hitBounds.getWidth() / 2;
         
         if (hit(newX, newY, centreY, centreX, halfHeight, halfWidth)) {              
-            breakComponent(h.getComponent());
+            
             thisDirection = adjustThisDirection();
 
             if (hitFromBelowOrAbove(x, centreX, y, centreY, halfHeight, halfWidth, thisDirection)) {      
-                           
+                
                 if (thisDirection > 180) {
                     if(circle2 !=null) {
                         newLocation = checkIntersectsCircle(newLocation, circle2);
@@ -323,6 +327,7 @@ public class BunnyController {
                         newY = newLocation.getY();
                         
                     } else {
+                        breakComponent(h.getComponent());
                         perpendicularAngle = 270;
                         newY = handleHitWall(centreY, halfHeight, perpendicularAngle);              
                         newX = adjustX(newY, thisDirection);
@@ -336,21 +341,21 @@ public class BunnyController {
                         newY = newLocation.getY();
                         
                     }else {
+                        breakComponent(h.getComponent());
                         perpendicularAngle = 90;
                         newY = handleHitWall(centreY, halfHeight, perpendicularAngle);              
                         newX = adjustX(newY, thisDirection);
                         newX = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getX();
-                    }
+                                            }
                 }
-                
-                
-              
+             
             } else {
                 if ((thisDirection < 270) && (thisDirection > 90)) {
                     perpendicularAngle = 180;
                 } else {
                     perpendicularAngle = 0;
                 }
+                breakComponent(h.getComponent());
                 newX = handleHitWall(centreX, halfWidth, perpendicularAngle);               
                 newY = adjustY(newX, sgn(179 - perpendicularAngle), thisDirection);
                 newY = adjustBunnyWhenHit(perpendicularAngle, newX, newY).getY();
@@ -540,12 +545,6 @@ public class BunnyController {
            
     public void hasBeenShot(){
         health --;
-        System.out.println(health);
-        if (health <= 0){
-            
-           //Nice animation of dying bunny, and gameover
-       
-        }
     }
     
  

@@ -12,7 +12,8 @@ import dab.engine.newsim.interfaces.ValveView;
  */
 public class ValveButton extends ControlButton {
     private ValveView valve;
-    public ValveButton(ValveView valve) {
+    public ValveButton(ValveView valve, String name) {
+        super(name);
         this.valve = valve;       
     }
     
@@ -24,6 +25,7 @@ public class ValveButton extends ControlButton {
     
     @Override
     public void update() {
+        super.update();
         setStatus(valve.getOpen());
     }
 }

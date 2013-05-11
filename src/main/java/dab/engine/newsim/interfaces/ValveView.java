@@ -8,7 +8,7 @@ package dab.engine.newsim.interfaces;
  *
  * @author eduard
  */
-public interface ValveView {
+public interface ValveView extends FailableComponentView{
     public boolean getOpen();
     public void setOpen(boolean openStatus);
 }

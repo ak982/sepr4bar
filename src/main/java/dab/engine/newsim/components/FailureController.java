@@ -74,8 +74,8 @@ public class FailureController {
             fail(0);
     }
 
-    public void fail(int ammount) {
-        damage = (int) (damage + ammount + maxDamage);
+    public void fail(int amount) {
+        damage = (int) (damage + amount + maxDamage);
         if(damage>=THE_BIGGEST_DAMAGE) {
             damage = THE_BIGGEST_DAMAGE;
         }

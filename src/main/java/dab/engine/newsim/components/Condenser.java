@@ -32,6 +32,10 @@ public class Condenser extends Container implements FailableObject, CondenserVie
     @JsonProperty
     private FailureController failController;
     
+    protected Condenser() {
+        
+    }
+    
     public Condenser(String name, double volume, double area) {
         super(
                 name,
@@ -59,9 +63,13 @@ public class Condenser extends Container implements FailableObject, CondenserVie
                 double boilingPoint = Water.getBoilingTemperature(getPressure());
                 if (boilingPoint > steam.getTemperature()) { // remove steam such that it equalizes to the boiling point
                     double newSteamPressure = Math.max(Water.getBoilingPressure(steam.getTemperature()), Constants.ATMOSPHERIC_PRESSURE);
+                    
 
                     int newQuantity = steam.getParticlesAtState(newSteamPressure, getCompressibleVolume());
                     int deltaQuantity = steam.getParticleNr() - newQuantity;
+                    if (deltaQuantity < 0) {
+                        System.out.println("BAD");
+                    }
                     steam.remove(deltaQuantity);
                     getWater().add(new Water(steam.getTemperature(), deltaQuantity));
                 }
@@ -83,7 +91,7 @@ public class Condenser extends Container implements FailableObject, CondenserVie
                 break;
             } else {
                 if (hs.getPressure() < getBottomPressure()) { // if our pressure is larger than the other one
-                    Water deltaWater = new Water(getWater().getTemperature(), Math.min(3 * getWater().getParticlesPerKilo(), getWater().getParticleNr()));
+                    Water deltaWater = new Water(getWater().getTemperature(), Math.min((int)(3 * getWater().getParticlesPerKilo()), getWater().getParticleNr()));
                     //System.out.println("C: Before: " + outputComponent.getHydroState().pressure() + " " + getBottomPressure());
                     send(deltaWater); // send 3 kg of water
                     getWater().remove(deltaWater.getParticleNr());

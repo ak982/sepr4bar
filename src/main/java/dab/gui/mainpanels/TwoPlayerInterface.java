@@ -8,9 +8,15 @@ import dab.bigBunny.BunnyController;
 import dab.bigBunny.Environment;
 import dab.bigBunny.HitBoundsController;
 import dab.bigBunny.TwoPlayerScreen;
+import dab.engine.newsim.AbstractSimulator;
 import dab.engine.newsim.TwoPlayerSimulator;
+import dab.engine.simulator.GameOverException;
 import dab.engine.simulator.Simulator;
 import dab.gui.application.MainWindow;
+import dab.gui.auxpanels.ControlPanel;
+import dab.gui.auxpanels.InfoPanel;
+import dab.gui.auxpanels.ObamaPanel;
+import dab.gui.auxpanels.TwoPlayerObama;
 import dab.gui.gamepanel.GamePanel;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -22,25 +28,34 @@ import java.awt.event.KeyEvent;
 public class TwoPlayerInterface extends GameInterface{
      
     private TwoPlayerScreen gamePanel;
-     private BunnyController controller;
+    private TwoPlayerSimulator simulator;
+    private TwoPlayerObama obamaPanel;
+    private ControlPanel buttonPanel;
+    private InfoPanel infoPanel;
+    
+    private BunnyController controller;
     private Environment environment;
     private HitBoundsController hitboundsController;
-        private TwoPlayerSimulator simulator;
-    private MainWindow mainWindow;
+        
     
     public TwoPlayerInterface(MainWindow mainWindow, TwoPlayerSimulator simulator) {
-        super(mainWindow, simulator);
-            environment = new Environment();
-            hitboundsController = new HitBoundsController();
-            controller = new BunnyController(environment, hitboundsController, new Point(100, 100));           
-            gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller);
-            this.mainWindow = mainWindow;
-            this.simulator = simulator;
-            super.setupPanels();
+        super(mainWindow);
+        this.simulator = simulator;
+        
+        environment = new Environment();
+        simulator.setEnvironment(environment);
+        hitboundsController = new HitBoundsController();
+        controller = new BunnyController(environment, hitboundsController, new Point(100, 100));
+        gamePanel = new TwoPlayerScreen(simulator, environment, hitboundsController, controller, simulator.getTurbine());
+        obamaPanel = new TwoPlayerObama(simulator, controller);
+        buttonPanel = new ControlPanel(simulator);
+        infoPanel = new InfoPanel(simulator);
+        super.setupPanes();
+        start();
     }
 
     @Override
-    public GamePanel getGamePanel() {
+    public TwoPlayerScreen getGamePanel() {
         return gamePanel;
     }
 
@@ -51,11 +66,14 @@ public class TwoPlayerInterface extends GameInterface{
     }
 
     @Override
-    protected void step() {
+    protected void step() throws GameOverException {
         super.step();
         controller.step();
         environment.step();
-        gamePanel.repaint();        
+        gamePanel.repaint();    
+        if (controller.getHealth() <= 0){
+            throw new GameOverException();
+        }
     }
     
      @Override
@@ -102,4 +120,23 @@ public class TwoPlayerInterface extends GameInterface{
     }
     }
 
+    @Override
+    protected AbstractSimulator getSimulator() {
+        return simulator;
+    }
+
+    @Override
+    protected ObamaPanel getObamaPanel() {
+        return obamaPanel;
+    }
+
+    @Override
+    protected ControlPanel getButtonPanel() {
+        return buttonPanel;
+    }
+
+    @Override
+    protected InfoPanel getInfoPanel() {
+        return infoPanel;
+    }
 }

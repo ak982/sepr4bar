@@ -25,13 +25,16 @@ public class SaveGame {
      *  @param String
      *  @return SaveGame
      */
+    
+    private SaveGame() {
+        
+    }
+    
     public static SaveGame load(String filename) throws JsonParseException, IOException {
         Persistence p = new Persistence();
         return p.deserializeSaveGame(FileSystem.readString(filename));
     }
 
-    @JsonProperty
-    private PowerPlant powerPlant;
     @JsonProperty
     private SinglePlayerFailureModel failureModel;
     @JsonProperty
@@ -43,8 +46,7 @@ public class SaveGame {
      *  @param FailureModel
      *  @param String
      */
-    public SaveGame(PowerPlant physicalModel, SinglePlayerFailureModel failureModel, String userName) {
-        this.powerPlant = physicalModel;
+    public SaveGame(SinglePlayerFailureModel failureModel, String userName) {
         this.failureModel = failureModel;
         this.userName = userName;
     }
@@ -63,10 +65,6 @@ public class SaveGame {
     public String getUserName() {
         return userName;
     }
-
-    public PowerPlant getPowerPlant() {
-        return powerPlant;
-    }
     
     public SinglePlayerFailureModel getFailureModel() {
         return failureModel;
@@ -79,6 +77,6 @@ public class SaveGame {
      */
     private String fileName() {
         Calendar cal = Calendar.getInstance();
-        return "DaBAR" + userName + "." + cal.getTimeInMillis() + ".sav";
+        return "sepr.DaBAR." + userName + "." + cal.getTimeInMillis() + ".sav";
     }
 }

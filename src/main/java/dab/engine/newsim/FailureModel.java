@@ -1,8 +1,14 @@
 package dab.engine.newsim;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dab.engine.newsim.interfaces.FailableObject;
 import dab.engine.newsim.utils.Constants;
+import dab.engine.newsim.utils.Difficulty;
+import dab.engine.newsim.utils.OptionsHolder;
+import dab.engine.newsim.utils.RandomBuffer;
 import dab.engine.newsim.utils.RandomGenerator;
 import dab.engine.simulator.FailMode;
 import dab.engine.simulator.GameOverException;
@@ -39,47 +45,26 @@ import java.util.Random;
  *
  * @author Marius Dumitrescu
  */
+
 public abstract class FailureModel {
+    
     protected SoftFailReport lastFailReport = new SoftFailReport();
-    protected RandomGenerator dice;
+    
+    protected RandomGenerator dice = new RandomGenerator();
+    
+    @JsonProperty
     protected PowerPlant powerPlant;
     
- 
-    private int difficulty;
+    
+    protected FailureModel() {
+        
+    }
 
     public FailureModel(PowerPlant plant) {
         this.powerPlant = plant;
-        this.dice = new RandomGenerator();
     }
 
-
-    protected final void setDamagesToComponents(int maxDamage, int damageIncrease) {
-        for(FailableObject component : powerPlant.getFailableComponents()){
-            component.getFailureController().setDamageValues(maxDamage, damageIncrease);
-        }     
-    }
-    
-    protected double getDifficultyModifier() {
-        return difficulty;
-    }
-    
-    protected abstract double getHardwareFailChance();
-    
-    /**
-     * Method to determine failures
-     *
-     */
-    private void failStateCheck() {
-        ArrayList<FailableObject> components = powerPlant.getFailableComponents();
-        
-        if ( dice.rollTrueFalse(getHardwareFailChance() / Constants.TICKS_PER_SECOND) ) {
-            // fail one of the components at random
-            components.get(dice.rollInt(0, components.size() - 1)).getFailureController().fail();
-        }
-    }
-
-    
-    /**
+     /**
      * Step the PhysicalModel and determine any failures.
      *
      * Also implements reactor safety rules.
@@ -87,11 +72,41 @@ public abstract class FailureModel {
      */
     public void step() throws GameOverException {
         powerPlant.step();
-        // remove, used for debugging
-        //failStateCheck();
-        checkTurbineFailure();
         
+        // implement turbine safety rules
+        if (powerPlant.getTurbine().hasFailed()) {
+            powerPlant.getReactor().setEmergencyOff(true);
+        } else {
+            powerPlant.getReactor().setEmergencyOff(false);
+        }
     }
+    
+    PowerPlant getPowerPlant() {
+        return powerPlant;
+    }
+    
+    protected final void setDamagesToComponents(int maxDamage, int damageIncrease) {
+        for(FailableObject component : powerPlant.getFailableComponents()){
+            component.getFailureController().setDamageValues(maxDamage, damageIncrease);
+        }     
+    }
+    
+    protected double getDifficultyModifier() {
+        return (OptionsHolder.getInstance().getDifficulty().asDouble());
+    }
+    
+    public void setDifficulty(int difficulty) {
+        if (difficulty == 1) {
+            OptionsHolder.getInstance().setDifficulty(Difficulty.EASY);
+        } else if (difficulty == 2) {
+            OptionsHolder.getInstance().setDifficulty(Difficulty.MEDIUIM);
+        } else {
+            OptionsHolder.getInstance().setDifficulty(Difficulty.HARD);
+        }
+    }
+
+    protected abstract FailMode getSoftwareFailureMode();
+    public abstract SoftFailReport generateSoftwareReport(UserCommands targetCommand, double targetParameter);
     
     // names of failed components
     public ArrayList<String> listFailedComponents() {
@@ -108,34 +123,10 @@ public abstract class FailureModel {
     }
 
     /**
-     * Set control rods to 0 if turbine has failed
-     */
-    private void checkTurbineFailure() {
-        if (powerPlant.getTurbine().hasFailed()) {
-            powerPlant.getReactor().moveControlRods(percent(0));
-        }
-    }
-
-    /**
-     * @param UserCommand
-     * @param double target
-     * @return boolean (whether a software failure has occurred)
-     */
-    public abstract boolean softFailCheck(UserCommands targetCommand, double targetParameter); 
-    
-    public SoftFailReport generateSoftwareReport(UserCommands targetCommand, double targetParameter) {
-        if (softFailCheck(targetCommand, targetParameter) == false) {
-            return lastFailReport;
-        } else {
-            return new SoftFailReport(FailMode.WORKING, targetCommand, targetParameter);
-        }
-    }
-
-    /**
      * @param UserCommand
      * @return double (a random failure for each command)
      */
-    public double generateFailedParameter(UserCommands command) {
+    protected double generateFailedParameter(UserCommands command) {
         Random rand = new Random();
         switch (command) {
             case TURNON:
@@ -152,53 +143,5 @@ public abstract class FailureModel {
         }
     }
 
-    /**
-     * @param UserCommand
-     * @param double paramater Execute the failed command to the command
-     * specified with the parameter specified
-     */
-    /*public void doFailedCommand(UserCommands command, double parameter) {
-        try {
-            switch (command) {
-                case TURNON:
-                    controller.changePumpState((int) parameter, true);
-                    break;
-                case TURNOFF:
-                    controller.changePumpState((int) parameter, false);
-                    break;
-                case OPEN:
-                    controller.changeValveState((int) parameter, true);
-                    break;
-                case CLOSE:
-                    controller.changeValveState((int) parameter, false);
-                    break;
-                case MOVE:
-                    try {
-                        controller.moveControlRods(new Percentage(parameter));
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-            }
-        } catch (KeyNotFoundException e) {
-            e.printStackTrace();
-        } catch (CannotControlException e) {
-            //TODO:Might need to do something more here, not sure.
-        }
-    }*/
-
-    /**
-     * @return Software failure report
-     */
-    public SoftFailReport getSoftFailReport() {
-        return lastFailReport.getCopy();
-    }
-    
-    public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
-    }
-    
-    /*public void setPlayerMode(boolean onePlayerMode){
-        this.onePlayerMode = onePlayerMode;
-    }*/
+ 
 }

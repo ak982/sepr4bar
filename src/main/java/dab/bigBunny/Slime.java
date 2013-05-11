@@ -12,16 +12,22 @@ import java.awt.Point;
  */
 public class Slime extends TemporaryObject {
     
-    private int initialTimeToLive;
+    private int    initialTimeToLive;
+    private double rotation;
     
-    public Slime(int x, int y, int ttl) {
+    public Slime(int x, int y, int ttl, double rotation) {
         this(new Point(x, y), ttl);
+        this.rotation = rotation;
     }
     
     public Slime(Point p, int ttl) {
         super(p, ttl);
         initialTimeToLive = ttl;
     } 
+    
+    public double getRotation() {
+        return rotation;
+    }
     
     /**
      * @return a double from 0 (old) to 1 (new) \\

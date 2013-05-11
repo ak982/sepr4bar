@@ -4,6 +4,7 @@
  */
 package dab.bigBunny;
 
+import dab.engine.newsim.utils.Constants;
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.Random;
@@ -47,13 +48,14 @@ public class Environment {
 
     // idea: keep them sorted them by freshness
     public void step() {
+
         stepSoftwareFailure();
         stepHeadache();
         Random rnd = new Random();
-        if (rnd.nextDouble() < 0.01 && slimes.size() < 10) { // 1% chance
+        if (rnd.nextDouble() < 0.035) { // 1% chance
             int x = rnd.nextInt(width);
             int y = rnd.nextInt(height);
-            slimes.add(new Slime(x, y, 3000));
+            slimes.add(new Slime(x, y, 8 * 30, rnd.nextDouble() * Math.PI));
             //System.out.println("new slime " + x + " " + y);
         }
         slimes.step();
@@ -124,7 +126,7 @@ public class Environment {
             headacheTime--;
             if (headacheTime <= 0) {
                 headache = false;
-                System.out.println("stoping the headache");
+                System.out.println("stopping the headache");
             }
         }
     }

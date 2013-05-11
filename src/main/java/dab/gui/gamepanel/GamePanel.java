@@ -50,12 +50,14 @@ public abstract class GamePanel extends JLayeredPane {
         setLayout(null);
         
         
-        uiComponents.add(new UIPump(this, simulator.getPumps().get(1),   new Point(664, 437),"pump.png" , "pump_broken.png", "pump_working.png"));
-        uiComponents.add(new UIPump(this, simulator.getPumps().get(0),   new Point(298, 433), "pump.png" , "pump_broken.png", "pump_working.png"));
-        uiComponents.add(new UIComponent(this, simulator.getReactor(),   new Point(67, 220), "reactor.png", "reactor.png"));
+        uiComponents.add(new UIPump(this, simulator.getPumps().get(1),   new Point(664, 437),"pumpOff.png" , "pump_broken.png", "pumps.gif"));
+        uiComponents.add(new UIPump(this, simulator.getPumps().get(0),   new Point(298, 433), "pumpOff.png" , "pump_broken.png", "pumps.gif"));
+        uiComponents.add(new UIReactor(this, simulator.getReactor(),   new Point(67, 220), "reactor.png", "reactor_broken.png", "controlrods.png"));
         uiComponents.add(new UIComponent(this, simulator.getCondenser(), new Point(480, 348), "condenser.png", "condenser_broken.png"));
         uiComponents.add(new UIComponent(this, simulator.getTurbine(),   new Point(367, 64), "turbine.png", "turbine_broken.png"));
         uiComponents.add(new UIComponent(this, simulator.getCondenser(), new Point(798, 389), "coolant.png", "coolant_broken.png"));
+        uiComponents.add(new UIValve(this, simulator.getValve(2), new Point(513,235), "valveClosedReactor.png" ,"valveOpenReactor.png"));
+        uiComponents.add(new UIValve(this, simulator.getValve(1), new Point(247,99), "valveClosed.png" ,"valveOpen.png"));       
         
         for (UIComponent c : uiComponents) {
             add(c, PALETTE_LAYER);

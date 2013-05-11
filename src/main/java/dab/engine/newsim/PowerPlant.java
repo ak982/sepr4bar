@@ -6,6 +6,7 @@ package dab.engine.newsim;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dab.engine.newsim.components.Condenser;
@@ -23,18 +24,16 @@ import java.util.ArrayList;
  * Excuse my seemingly duplication of code, but all of the components are 
  * sufficiently different and thus can not be grouped together
  */
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class PowerPlant {
     
     @JsonProperty
-    private ArrayList<Reactor> reactors;
+    private Reactor reactor;
     
     @JsonProperty
-    private ArrayList<Condenser> condensers;
+    private Condenser condenser;
     
     @JsonProperty
-    private ArrayList<Turbine> turbines;
+    private Turbine turbine;
     
     @JsonProperty
     private ArrayList<Pump> pumps;
@@ -44,16 +43,14 @@ public class PowerPlant {
     
     public PowerPlant() {
         // setup the arrayLists
-        reactors   = new ArrayList<>(1);
-        condensers = new ArrayList<>(1);
-        turbines   = new ArrayList<>(1);
         pumps      = new ArrayList<>(2);
         valves     = new ArrayList<>(2);
         
         // setup the components
-        Reactor reactor = new Reactor("Reactor", 10, 1);
-        Condenser condenser = new Condenser("Condenser", 10, 0.7);
-        Turbine turbine = new Turbine("Turbine");
+        reactor = new Reactor("Reactor", 10, 1);
+        condenser = new Condenser("Condenser", 10, 0.7);
+        turbine = new Turbine("Turbine");
+        
         Pump pump = new Pump("Condenser to Reactor Pump", 0.3);
         Valve reactorToTurbine = new Valve("Valve 1");
         Valve condenserToPump  = new Valve("Valve 2");
@@ -67,35 +64,38 @@ public class PowerPlant {
         pump.setOutputComponent(reactor);
         
         // add them to the array lists
-        reactors.add(reactor);
-        condensers.add(condenser);
-        turbines.add(turbine);
         pumps.add(pump);
         valves.add(reactorToTurbine);
         valves.add(condenserToPump);
     }
     
+    // FIXME: massive hack to fix loading (jackson and cycled-abstract)
+    public void resetConnections() {
+        reactor.setOutputComponent(valves.get(0));
+        valves.get(0).setOutputComponent(turbine);
+        turbine.setOutputComponent(condenser);
+        condenser.setOutputComponent(valves.get(1));
+        valves.get(1).setOutputComponent(pumps.get(0));
+        pumps.get(0).setOutputComponent(reactor);
+    }
+    
     public void step() throws GameOverException {
-        for (Reactor r : reactors) {
-            r.step();
-        }
-        
-        for (Condenser c : condensers) {
-            c.step();
-        }
+        reactor.step();
+        condenser.step();
+        turbine.step();
     }
     
     //<editor-fold desc="getters">
     public Reactor getReactor() {
-        return reactors.get(0);
+        return reactor;
     }
     
     public Condenser getCondenser() {
-        return condensers.get(0);
+        return condenser;
     }
     
     public Turbine getTurbine() {
-        return turbines.get(0);
+        return turbine;
     }
     
     public ArrayList<Pump> getPumps() {
@@ -108,11 +108,9 @@ public class PowerPlant {
     
     protected ArrayList<FailableObject> getFailableComponents() {
         ArrayList<FailableObject> failables = new ArrayList<>();
-        for (Condenser c : condensers) {
-            failables.add(c);
-            failables.add(c.getHeatSink());
-        }
-        failables.addAll(turbines);
+        failables.add(condenser);
+        failables.add(condenser.getHeatSink());
+        failables.add(turbine);
         failables.addAll(pumps);
         
         return failables;

@@ -1,8 +1,8 @@
 package dab.gui.auxpanels;
 
 import dab.engine.newsim.AbstractSimulator;
-import dab.engine.newsim.SinglePlayerSimulator;
-import dab.gui.mainpanels.GameInterface;
+import dab.engine.newsim.components.Reactor;
+import dab.engine.newsim.utils.Constants;
 import java.awt.Color;
 import java.awt.Font;
 
@@ -19,29 +19,20 @@ import javax.swing.SwingConstants;
  * @author Team Haddock
  *
  */
-public class ObamaPanel extends JPanel {
+public abstract class ObamaPanel extends JPanel {
 
-    SinglePlayerSimulator simulator;
-    JLabel lblObama;
-    JLabel lblSpeech;
-    JLabel lblWords;
+    protected JLabel lblObama;
+    protected JLabel lblSpeech;
+    protected JLabel lblWords;
+    AbstractSimulator simulator;
+    
 
-    // FIXME: this should be abstract since we're using it in the other interface also.
-    public ObamaPanel(AbstractSimulator simulator) {
-        this.simulator = (SinglePlayerSimulator)simulator;
+    public ObamaPanel(AbstractSimulator sim) {
+        this.simulator = sim;
         
         setBackground(Color.WHITE);
-        setLayout(null);
-        lblObama = new JLabel();
-        lblObama.setFont(new Font("Bookman Old Style", Font.BOLD, 14));
-        lblObama.setForeground(Color.BLACK);
-        lblObama.setVerticalAlignment(SwingConstants.TOP);
-        lblObama.setBounds(0, -5, 657, 154);
-        lblObama.setBackground(Color.WHITE);
-        lblObama.setIcon(new ImageIcon("resources/mainInterface/littleObama.png"));
-        lblObama.setHorizontalAlignment(SwingConstants.LEFT);
-        lblObama.setHorizontalTextPosition(SwingConstants.RIGHT);
-        add(lblObama);
+        setLayout(null);        
+        
 
         lblWords = new JLabel();
         lblWords.setFont(new Font("Bookman Old Style", Font.BOLD, 14));
@@ -49,47 +40,51 @@ public class ObamaPanel extends JPanel {
         lblWords.setVerticalAlignment(SwingConstants.TOP);
         lblWords.setHorizontalAlignment(SwingConstants.LEFT);
         lblWords.setHorizontalTextPosition(SwingConstants.RIGHT);
-        lblWords.setBounds(210, 30, 400, 400);
-        lblWords.setText("!!!!!!!!!!!!!!!!");
+        lblWords.setBounds(210, 30, 800, 800);
         add(lblWords);
 
         lblSpeech = new JLabel();
         lblSpeech.setFont(new Font("Bookman Old Style", Font.BOLD, 14));
-        lblSpeech.setBounds(140, -75, 1000, 300);
+        lblSpeech.setBounds(0, -80, 1000, 300);
         lblSpeech.setIconTextGap(50);
-        lblSpeech.setIcon(new ImageIcon("resources/mainInterface/ObamaSpeechBubble.png"));
+        lblSpeech.setIcon(new ImageIcon("src/main/resources/dab/gui/auxpanels/speech.png"));
         add(lblSpeech);
     }
-
-    // update the panel with warnings and stuff
-    public void update() {
-        String temp = "<html>";
-        
-        if (simulator.reactorTemperature().inCelsius() > 150) {
-            temp += "WARNING, " + simulator.getUsername() + ": REACTOR TEMPERATURE TOO HIGH" + "<br>";
-        }
-
-        if (simulator.condenserPressure().greaterThan(GameInterface.CONDENSER_WARNING_PRESSURE)) {
-            temp += "WARNING, " + simulator.getUsername() + ": CONDENSER PRESSURE TOO HIGH" + "<br>";
-        }
-
-        for (String failedComponent : simulator.listFailedComponents()) {
-            if (failedComponent.equals("Pump 1")) {
-                temp += "WARNING, " + simulator.getUsername() + ": The Water pump HAS FAILED<br>";
-
-            } else if (failedComponent.equals("Pump 2")) {
-                temp += "WARNING, " + simulator.getUsername() + ": The coolant pump HAS FAILED<br>";
-
-            } else {
-                temp += "WARNING, " + simulator.getUsername() + ": " + failedComponent + " HAS FAILED<br>";
-            }
-        }
-
-        if (!simulator.getSoftFailReport().getFailBool()) {
-            temp += "WARNING, " + simulator.getUsername() + ": A software failure has occured!";
-        }
-        temp += "</html>";
-        
-        lblWords.setText(temp);
+    
+    protected void setText(String text) {
+        lblWords.setText("<html>" + text + "</html>");
     }
+    
+    protected final String makeWarning(String playerName, String message) {
+        return "WARNING, " + playerName + ": " + message + "<br>";
+    }
+
+    protected String getWarningMessages(String playerName) {
+        String temp = "";
+        
+        if (simulator.getReactor().coreTemperature().inKelvin() > 550) {
+            temp += makeWarning(playerName, "REACTOR CORE TEMPERATURE TOO HIGH! QUENCH IT!");
+        }
+        
+        if (simulator.getReactor().pressure().inPascals() > 80 * Constants.ATMOSPHERIC_PRESSURE) {
+            temp += makeWarning(playerName, "Reactor pressure dagerously high.");
+        }
+        
+        if (simulator.getReactor().waterLevel().ratio() >= Reactor.EXCESSWATER_THRESHOLD) {
+            temp += makeWarning(playerName, "Water level in reactor too high, discarding some of it.");
+        }
+        
+        if (simulator.getReactor().waterLevel().ratio() < Reactor.CORE_MAX_HEIGHT_RATIO) {
+            temp += makeWarning(playerName, "Water level too low in reactor, core will start heating up.");
+        }
+
+         for (String failedComponent : simulator.listFailedComponents()) {
+            temp += makeWarning(playerName, "The " + failedComponent + " HAS FAILED");
+         }
+         
+         return temp;
+    }
+
+    // update the panel with reactor warnings and stuff
+    public abstract void update();
 }
