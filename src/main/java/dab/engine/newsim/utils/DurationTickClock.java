@@ -18,6 +18,10 @@ public class DurationTickClock extends TickClock {
     @JsonProperty
     private int lastActiveTime;
     
+    protected DurationTickClock() {
+        
+    }
+    
     public DurationTickClock(double initialTimer, double initialDuration) {
         super(initialTimer);
         this.timeLeftActive = (int)(initialDuration * Constants.TICKS_PER_SECOND);

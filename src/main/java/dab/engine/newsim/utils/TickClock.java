@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * The client must make sure to reset the clock one it reaches 0
  * @author eduard
  */
+
 public class TickClock {
     protected double SECONDS_PER_TICK = 1.0 / Constants.TICKS_PER_SECOND;
     
@@ -20,6 +21,10 @@ public class TickClock {
     
     @JsonProperty
     private int lastInterval;
+    
+    protected TickClock() {
+        
+    }
     
     public TickClock(double initialTimer) {
         ticksUntilNextEvent = (int)(initialTimer * Constants.TICKS_PER_SECOND);

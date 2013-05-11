@@ -12,29 +12,56 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class RadioactiveMatterTest {
-  /*  @Test
+    
+    RadioactiveMatter matter;
+    double initialTemperature;
+    
+    public RadioactiveMatterTest() {
+        matter = null;
+        initialTemperature = 0;
+    }
+    
+    @Before
+    public void setUp() {
+        matter = new RadioactiveMatter(new Kilograms(1000));
+        initialTemperature = matter.getTemperature();
+    }
+    
+    @Test
     public void testSameTemperature() {
-        RadioactiveMatter matter = new RadioactiveMatter(new Kilograms(10));
-        double otherTemperature = 300; double temperature = matter.getTemperature();
-        Ratio ratio = new Ratio(0.7);
-        matter.equilibrateTemperature(ratio, otherTemperature);
-        assertEquals(300, matter.getTemperature());
-    }*/
+        matter.equilibrateTemperature(1, initialTemperature);
+        assertEquals(initialTemperature, matter.getTemperature(), 0.0001);
+    }
     @Test
     public void testLowerTemperature() {
-        RadioactiveMatter matter = new RadioactiveMatter(new Kilograms(10));
-        double otherTemperature = 100; double temperature = matter.getTemperature();
-        Ratio ratio = new Ratio(0.7);
-        matter.equilibrateTemperature(ratio, otherTemperature);
-        assertTrue(temperature > matter.getTemperature());
+        matter.equilibrateTemperature(1, initialTemperature - 100);
+        assertEquals(initialTemperature - 1, matter.getTemperature(), 0.0001);
+    }
+    
+    @Test
+    public void testTransferSpeed() {
+        for (double i = -1; i <= 1; i += 0.1) {
+            matter = new RadioactiveMatter(new Kilograms(1000));
+            matter.equilibrateTemperature(Math.abs(i), initialTemperature + i);
+            assertEquals(initialTemperature + i, matter.getTemperature(), 0.0001);
+        }
     }
     
     @Test
     public void testHigherTemperature() {
-        RadioactiveMatter matter = new RadioactiveMatter(new Kilograms(10));
-        double otherTemperature = 400; double temperature = matter.getTemperature();
-        Ratio ratio = new Ratio(0.7);
-        matter.equilibrateTemperature(ratio, otherTemperature);
-        assertTrue(temperature < matter.getTemperature());
+        matter.equilibrateTemperature(1, initialTemperature + 100);
+        assertEquals(initialTemperature + 1, matter.getTemperature(), 0.0001);
+    }
+    
+    @Test
+    public void testSpecificHeat() {
+        matter.addEnergy(2000); // 2kj
+        assertEquals(initialTemperature + 1, matter.getTemperature(), 0.0001);
+    }
+    
+    @Test
+    public void testTemperatureIncrease() {
+        matter.addEnergy(matter.getSpecificHeat() * 5 * 1000);
+        assertEquals(initialTemperature + 5, matter.getTemperature(), 0.0001);
     }
 }

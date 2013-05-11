@@ -6,7 +6,6 @@ package dab.engine.newsim.components;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dab.engine.newsim.interfaces.ReactorView;
-import dab.engine.newsim.utils.AverageBuffer;
 import dab.engine.newsim.utils.BlockedHydroState;
 import dab.engine.newsim.utils.Constants;
 import dab.engine.newsim.utils.Steam;
@@ -16,10 +15,8 @@ import dab.engine.newsim.utils.ContainerHydroState;
 import dab.engine.newsim.utils.Water;
 import dab.engine.newsim.utils.Kilograms;
 import dab.engine.newsim.utils.Matter;
-import dab.engine.simulator.CannotRepairException;
 import dab.engine.simulator.GameOverException;
 import dab.engine.utilities.Percentage;
-import dab.engine.utilities.Pressure;
 import dab.engine.utilities.Temperature;
 
 /**

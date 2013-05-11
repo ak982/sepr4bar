@@ -34,4 +34,8 @@ public final class Ratio {
     public double getOppositeValue() {
         return 1 - value;
     }
+    
+    public Ratio getOppositeRatio() {
+        return new Ratio(getOppositeValue());
+    }
 }

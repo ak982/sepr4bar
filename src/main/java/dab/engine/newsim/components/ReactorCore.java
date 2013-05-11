@@ -21,12 +21,14 @@ import dab.engine.utilities.Percentage;
  */
 public class ReactorCore {
 
-    private static final double MIN_POWER = 10000;
-    private static final double MAX_POWER = 500000;
+    protected static final double MIN_POWER =  10000;
+    protected static final double MAX_POWER = 500000;
     // transfer ease is just how much of the rod's temperature is going to DROP
     // every second, if the rods are fully submersed, their temperature will be an averaged with that of water's
-    private static final double MAXIMUM_TRANSFER_EASE_PER_TICK = 0.5 / Constants.TICKS_PER_SECOND;
-    private static final double MELTING_TEMPERATURE = 700;
+    //protected static final double MAXIMUM_TRANSFER_EASE_PER_TICK = 0.5 / Constants.TICKS_PER_SECOND;
+    protected static final double COOLING_SPEED_PER_TICK = 3.0 / Constants.TICKS_PER_SECOND;
+    protected static final double MELTING_TEMPERATURE = 700;
+    
     
     @JsonProperty
     private double controlRodPosition;
@@ -47,16 +49,12 @@ public class ReactorCore {
     // allow cooling down of submersed part
     // calculate rodTemperature as weighted average between submersed and nonsubmersed
     public void step(Ratio submersed, Water water) throws GameOverException {
-        Ratio exposed = new Ratio(submersed.getOppositeValue());
-        // if rods aren't fully submerged then they cool down less
-        double transferEase = submersed.getValue() * MAXIMUM_TRANSFER_EASE_PER_TICK;
-        Ratio transferDifficulty = new Ratio(1 - transferEase);
 
         // any exposed fuelRods are heated
-        fuelRods.addEnergy(getEnergyPerTick(exposed));
+        fuelRods.addEnergy(getEnergyPerTick(submersed.getOppositeRatio()));
 
         // submersed fuelRods are cooled down (by the water surrounding them)
-        fuelRods.equilibrateTemperature(transferDifficulty, water.getTemperature());
+        fuelRods.equilibrateTemperature(COOLING_SPEED_PER_TICK * submersed.getValue(), water.getTemperature());
         
         if (fuelRods.getTemperature() > MELTING_TEMPERATURE) {
             throw new GameOverException("core meltdown");

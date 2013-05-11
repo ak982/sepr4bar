@@ -10,6 +10,8 @@ package dab.engine.newsim.utils;
  */
 public class RadioactiveMatter extends Matter {
 
+    public final static double SPECIFIC_HEAT = 5;
+    
     protected RadioactiveMatter() {
         super();
     }
@@ -22,7 +24,7 @@ public class RadioactiveMatter extends Matter {
     // if you're curious, uranium has a very small one, so we didn't want to use it.
     @Override
     double getSpecificHeat() {
-        return 2;
+        return SPECIFIC_HEAT;
     }
 
     
@@ -38,8 +40,14 @@ public class RadioactiveMatter extends Matter {
         super.addEnergy(energy);
     }
     
-    public void equilibrateTemperature(Ratio transferDifficulty, double otherTemp) {
-        temperature = temperature * transferDifficulty.getValue() + otherTemp * transferDifficulty.getOppositeValue();
+    public void equilibrateTemperature(double speed, double otherTemp) {
+        double difference = temperature - otherTemp;
+        double change = Math.min(speed, Math.abs(difference));
+        if (difference > 0) { // we are hoter, therefore cooldown
+            temperature -= change;
+        } else {
+            temperature += change;
+        }
     }
     
     

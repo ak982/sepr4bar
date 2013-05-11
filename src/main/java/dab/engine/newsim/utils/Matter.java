@@ -93,8 +93,8 @@ public abstract class Matter {
 
     abstract double getSpecificHeat();
 
-    public final int getParticlesPerKilo() {
-        return (int) (Constants.AVOGADRO_NUMBER / getMolarMass());
+    public final double getParticlesPerKilo() {
+        return Constants.AVOGADRO_NUMBER / getMolarMass();
     }
 
     public final double getMass() {

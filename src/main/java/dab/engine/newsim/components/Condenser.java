@@ -91,7 +91,7 @@ public class Condenser extends Container implements FailableObject, CondenserVie
                 break;
             } else {
                 if (hs.getPressure() < getBottomPressure()) { // if our pressure is larger than the other one
-                    Water deltaWater = new Water(getWater().getTemperature(), Math.min(3 * getWater().getParticlesPerKilo(), getWater().getParticleNr()));
+                    Water deltaWater = new Water(getWater().getTemperature(), Math.min((int)(3 * getWater().getParticlesPerKilo()), getWater().getParticleNr()));
                     //System.out.println("C: Before: " + outputComponent.getHydroState().pressure() + " " + getBottomPressure());
                     send(deltaWater); // send 3 kg of water
                     getWater().remove(deltaWater.getParticleNr());
