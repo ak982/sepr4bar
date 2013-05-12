@@ -45,7 +45,7 @@ public final class OptionsHolder {
     public void setSoundOn(boolean soundOn) {
         this.soundOn = soundOn;    
         restartSound();
-        music.mute(!soundOn);     
+        music.mute(!soundOn);
     }
     
     public void restartSound(){

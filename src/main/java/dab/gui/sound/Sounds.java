@@ -1,5 +1,6 @@
 package dab.gui.sound;
 
+import dab.engine.newsim.utils.OptionsHolder;
 import java.io.File;
 import java.io.IOException;
 
@@ -31,6 +32,9 @@ public class Sounds extends Thread {
     public Sounds(String filePath, boolean loop){
         this.filePath = filePath;
         this.loop = loop;       
+        
+        
+        
         
     }
 
@@ -74,7 +78,9 @@ public class Sounds extends Thread {
                 clip = AudioSystem.getClip();
                 clip.addLineListener(listener);
                 clip.open(audioInputStream);
+                control = (BooleanControl)clip.getControl(BooleanControl.Type.MUTE);
                 clip.start();
+                mute(!OptionsHolder.getInstance().isSoundOn());
                 try{
                     listener.waitUntilDone();
                 } catch (InterruptedException e) {
@@ -126,10 +132,8 @@ public class Sounds extends Thread {
      */
     
     public void mute(boolean mute){  
-        control = (BooleanControl)clip.getControl(BooleanControl.Type.MUTE);
+        
         control.setValue(mute);
     }
-
-   
     
 }
