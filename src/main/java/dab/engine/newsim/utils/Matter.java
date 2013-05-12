@@ -74,6 +74,10 @@ public abstract class Matter {
     public double getTemperature() {
         return temperature;
     }
+    
+    public void setTemperature(double temperature) {
+        this.temperature = temperature;
+    }
 
     protected void addEnergy(double energy) {
         // specific heat = ammount of *energy* required to raise it by 1 degree / mole = energy / (mol * temp)

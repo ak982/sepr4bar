@@ -32,9 +32,7 @@ public class SinglePlayerSimulator extends AbstractSimulator {
     
     public final void setUsername(String userName) {
         this.userName = userName;
-        if (userName.equals("glados")) {
-            OptionsHolder.getInstance().setGodModeOn(true);
-        }
+        OptionsHolder.getInstance().setGodModeOn(userName.equals("glados"));
     }
     
     /**
