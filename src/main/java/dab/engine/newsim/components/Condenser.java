@@ -76,7 +76,7 @@ public class Condenser extends Container implements FailableObject, CondenserVie
             }        
     }
     
-    private void equalizePressure() {
+    private void equalizePressure(double hackNumber) {
          /*
          * otherPres + (dm * g) / otherA = ourPres - (dm * g) / ourA
          * dm = deltaP / g * (1 / otherA + 1 / ourA)
@@ -90,7 +90,7 @@ public class Condenser extends Container implements FailableObject, CondenserVie
             if (hs instanceof BlockedHydroState) { // we can't send anything
                 break;
             } else {
-                if (hs.getPressure() < getBottomPressure()) { // if our pressure is larger than the other one
+                if (hs.getPressure() * hackNumber < getBottomPressure()) { // if our pressure is larger than the other one
                     Water deltaWater = new Water(getWater().getTemperature(), Math.min((int)(3 * getWater().getParticlesPerKilo()), getWater().getParticleNr()));
                     //System.out.println("C: Before: " + outputComponent.getHydroState().pressure() + " " + getBottomPressure());
                     send(deltaWater); // send 3 kg of water
@@ -109,14 +109,15 @@ public class Condenser extends Container implements FailableObject, CondenserVie
     public void step() {
         // update heatsink
         heatSink.step();
-
+        
         if (!hasFailed()) {
             // use heatsink to cooldown stuff
+            equalizePressure(1.5);
             heatSink.coolSteam(steam);
             heatSink.coolWater(water);
             condenseSteam();
         }
-        equalizePressure();
+        equalizePressure(1);
     }
     
     @Override

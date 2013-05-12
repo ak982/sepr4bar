@@ -45,6 +45,9 @@ public class Reactor extends Container implements ReactorView {
     
     @JsonProperty
     private ReactorCore core;
+    
+    @JsonProperty
+    private int highPressureInARow = 0;
    
     private Reactor() {
         super();
@@ -173,8 +176,8 @@ public class Reactor extends Container implements ReactorView {
         double apparentTargetPosition;
         // when we're in emergency mode, the rods drop back down to 0
         // when we're not in emergency mode, they pop back up.
-        if (emergencyOff) {
-            apparentTargetPosition = 0;
+        if (emergencyOff && targetRodPosition > 0.3) {
+            apparentTargetPosition = 0.3;
         } else {
             apparentTargetPosition = targetRodPosition;
         }
@@ -213,7 +216,12 @@ public class Reactor extends Container implements ReactorView {
         
         
         if (getPressure() > MAX_PRESSURE) {
-            throw new GameOverException("presure too high");
+            highPressureInARow++;
+            if (highPressureInARow > 10) {
+                throw new GameOverException("presure too high");
+            }
+        } else {
+            highPressureInARow = 0;
         }
         
         // heatup the core (only in case of low water level. eg. not fully submersed)
