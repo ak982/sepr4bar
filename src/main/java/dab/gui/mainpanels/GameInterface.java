@@ -19,7 +19,6 @@ import javax.swing.Timer;
 
 public abstract class GameInterface extends JPanel implements KeyListener {
 
-    private Sounds music;
     private Timer animator;
     private int counter;
     protected MainWindow mainWindow;
@@ -30,7 +29,7 @@ public abstract class GameInterface extends JPanel implements KeyListener {
 
         counter = 0;
         //FIXME: play music
-        music = new Sounds("resources/music/backgroundSound.wav", true);
+        
 
         ActionListener taskStep = new ActionListener() {
             @Override
@@ -40,7 +39,6 @@ public abstract class GameInterface extends JPanel implements KeyListener {
                 } catch (GameOverException e) {
                     // stop the game loop when game over
                     animator.stop();
-                    music.interrupt();
                     mainWindow.setGameOver(true);
                     showGameOverMenu();
                 }
@@ -127,43 +125,21 @@ public abstract class GameInterface extends JPanel implements KeyListener {
             getButtonPanel().update();
             counter = 0;
         }
-        handleMusic();
         counter++;
         requestFocusInWindow();
 
 
     }
 
-    public void handleMusic() {
-        try {
-            if (music.isAlive() && !mainWindow.getMusic()) {
-                music.stopIt();
-            } else if (!music.isAlive() && mainWindow.getMusic() && animator.isRunning()) {
-                music.start();
-
-            }
-        } catch (IllegalThreadStateException e) {
-            //do nothing
-        }
-    }
-
     private void handelEscape() {
         // pause the game loop when esc is pressed
 
         animator.stop();
-        music.stopIt();
         mainWindow.changeMenu(new MainMenu(mainWindow, getGamePanel()));
 
     }
 
-    public void stopMusic() {
-        music.interrupt();
-    }
-
     public void resume() {
-        System.out.println("resume");
         animator.start();
-
-        //      handleMusic();
     }
 }

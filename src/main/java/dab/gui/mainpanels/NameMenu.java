@@ -6,7 +6,9 @@ package dab.gui.mainpanels;
 
 import dab.engine.newsim.SinglePlayerSimulator;
 import dab.engine.newsim.TwoPlayerSimulator;
+import dab.engine.newsim.utils.OptionsHolder;
 import dab.gui.application.MainWindow;
+import dab.gui.gamepanel.GamePanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -35,9 +37,11 @@ public class NameMenu extends MenuHandler{
     private boolean onePlayerMode;
     private int theWidth;
     private BufferedImage background;
+    private JLayeredPane invoker;
    
     public NameMenu(MainWindow mw, final JLayeredPane invoker, String singlePlayerName) {
         this(mw, invoker, true, singlePlayerName, "");
+        this.invoker = invoker;
     }
     
     public NameMenu(MainWindow mw, final JLayeredPane invoker, String singlePlayerName, String dualPlayerName) {
@@ -160,6 +164,9 @@ public class NameMenu extends MenuHandler{
             } else {
                 TwoPlayerSimulator sim = new TwoPlayerSimulator(enter_name.getText(), enter_name2.getText());
                 mainWindow.startTwoPlayerGame(sim);
+            }
+            if(invoker instanceof GamePanel){
+                OptionsHolder.getInstance().restartSound();
             }
         }
     }

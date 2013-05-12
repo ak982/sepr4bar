@@ -4,6 +4,8 @@
  */
 package dab.engine.newsim.utils;
 
+import dab.gui.sound.Sounds;
+
 /**
  * Singleton class
  * @author eduard
@@ -18,11 +20,14 @@ public final class OptionsHolder {
     private Difficulty difficulty;
     private boolean soundOn;
     private boolean godModeOn;
+    private Sounds music;
     
     private OptionsHolder() {
         difficulty = Difficulty.EASY;
         soundOn = true;
         godModeOn = false;
+        music = new Sounds("resources/music/backgroundSound.wav", true);
+        music.start();
     }
     
     public Difficulty getDifficulty() {
@@ -38,7 +43,15 @@ public final class OptionsHolder {
     }
 
     public void setSoundOn(boolean soundOn) {
-        this.soundOn = soundOn;
+        this.soundOn = soundOn;    
+        restartSound();
+        music.mute(!soundOn);     
+    }
+    
+    public void restartSound(){
+        if(soundOn){
+            music.stopIt();
+        }
     }
 
     public boolean isGodModeOn() {

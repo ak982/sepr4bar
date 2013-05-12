@@ -14,6 +14,7 @@ import dab.gui.mainpanels.GameInterface;
 import dab.gui.mainpanels.MenuHandler;
 import dab.gui.mainpanels.SinglePlayerInterface;
 import dab.gui.mainpanels.TwoPlayerInterface;
+import dab.gui.sound.Sounds;
 import java.awt.Component;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -45,7 +46,6 @@ public class MainWindow extends JFrame {
    // private DaMMenu menu;
     private Component currentComponent = null;
     private int difficulty;
-    private boolean music;
     private GameInterface gameInterface = null;
     private JPanel currentMenu = null;
     private String oldUserName=null; 
@@ -59,9 +59,7 @@ public class MainWindow extends JFrame {
         gameOver = false;
         difficulty = DEFAULT_DIFFICULTY;
         currentSimulator = null;
-        // create the menu
-        
-        music = true;      
+        // create the menu    
     }
     
     public void showIntro() {
@@ -154,23 +152,6 @@ public class MainWindow extends JFrame {
     
     public int getDifficulty(){
         return difficulty;
-    }
-    
-    public void setMusic() {
-        music = !music;
-        if(gameInterface!=null) {
-            gameInterface.handleMusic();
-        }
-    }
-    
-    public boolean getMusic(){
-        return music;
-    }
-    
-    public void stopMusic(){
-        if(gameInterface != null) {
-            gameInterface.stopMusic();
-        }
     }
     
     public void resume() {

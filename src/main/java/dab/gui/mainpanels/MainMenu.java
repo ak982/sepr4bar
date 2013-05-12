@@ -201,7 +201,6 @@ public class MainMenu extends MenuHandler{
     }
     
     private void startGame(boolean playerMode){
-         mainWindow.stopMusic();
          if (playerMode == true) {
              startSinglePlayerGame();
          } else {

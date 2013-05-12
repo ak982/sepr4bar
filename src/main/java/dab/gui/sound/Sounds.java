@@ -5,12 +5,14 @@ import java.io.IOException;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineEvent.Type;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import oracle.jrockit.jfr.tools.ConCatRepository;
 
 /**
  *
@@ -20,6 +22,7 @@ public class Sounds extends Thread {
     private String filePath;
     private boolean loop;
     private Clip clip;
+    BooleanControl control;
 
     /**
      *@param string filePath
@@ -28,7 +31,8 @@ public class Sounds extends Thread {
      */
     public Sounds(String filePath, boolean loop){
         this.filePath = filePath;
-        this.loop = loop;
+        this.loop = loop;       
+        
     }
 
     /**
@@ -117,5 +121,16 @@ public class Sounds extends Thread {
     public void play() {
         clip.start();
     }
+    
+    /**
+     * sets Mute of the clip to true or false
+     */
+    
+    public void mute(boolean mute){  
+        control = (BooleanControl)clip.getControl(BooleanControl.Type.MUTE);
+        control.setValue(mute);
+    }
 
+   
+    
 }

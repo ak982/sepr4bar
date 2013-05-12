@@ -4,6 +4,7 @@
  */
 package dab.gui.mainpanels;
 
+import dab.engine.newsim.utils.OptionsHolder;
 import dab.gui.application.MainWindow;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -80,12 +81,12 @@ public class Options extends MenuHandler{
         sound.setSelectedIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/music.png"));
         sound.setIcon(new ImageIcon("src/main/resources/dab/gui/Buttons/musicOff.png"));
         sound.setBackground(Color.black);
-        sound.setSelected(mainWindow.getMusic());
+        sound.setSelected(OptionsHolder.getInstance().isSoundOn());
         sound.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e){
-                mainWindow.setMusic();
+                OptionsHolder.getInstance().setSoundOn(!OptionsHolder.getInstance().isSoundOn());
             }
         });
            
