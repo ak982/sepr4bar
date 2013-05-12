@@ -17,7 +17,7 @@ import javax.naming.Name;
  * @author eduard
  */
 public class HeatSink implements FailableObject, PumpView {
-    private static final int STEAM_PARTICLES = Constants.NORMAL_PARTICLES_PER_VOLUME_STEAM * 1; // around 0.6 kg of steam
+    private static final int STEAM_PARTICLES = Constants.NORMAL_PARTICLES_PER_VOLUME_STEAM * 5; // around 0.6 kg of steam
     private static final int WATER_PARTICLES = Constants.WATER_PARTICLES_PER_KILOGRAM * 3;
     private static final double COOLING_EASE = 0.8 / Constants.TICKS_PER_SECOND;      // how much to change the temperature each step
     
@@ -55,25 +55,32 @@ public class HeatSink implements FailableObject, PumpView {
     }
 
     public void step() {
-        if (hasFailed() || getStatus() == false) {
+        /*if (hasFailed() || getStatus() == false) {
             return;
         } else {
-            steamTemp = steamTemp * (1 - COOLING_EASE) + Constants.ROOM_TEMP * COOLING_EASE;
-            waterTemp = waterTemp * (1 - COOLING_EASE) + Constants.ROOM_TEMP * COOLING_EASE;
-        }
+            steamTemp = 
+            waterTemp = 
+        }*/
     }
     
     
     public void coolWater(Water toBeCooled) {
-        toBeCooled.add(new Water(waterTemp, WATER_PARTICLES));
+        double waterTemp = toBeCooled.getTemperature();
+        if (hasFailed() || getStatus() == false) return;
+        toBeCooled.setTemperature(waterTemp * (1 - COOLING_EASE) + Constants.ROOM_TEMP * COOLING_EASE);
+        /*toBeCooled.add(new Water(waterTemp, WATER_PARTICLES));
         waterTemp = toBeCooled.getTemperature();
-        toBeCooled.remove(WATER_PARTICLES);
+        toBeCooled.remove(WATER_PARTICLES);*/
     }
     
     public void coolSteam(Steam toBeCooled) {
-        toBeCooled.add(new Steam(steamTemp, STEAM_PARTICLES));
+        double steamTemp = toBeCooled.getTemperature();
+        if (hasFailed() || getStatus() == false) return;
+        // weighted average
+        toBeCooled.setTemperature(steamTemp * (1 - COOLING_EASE) + Constants.ROOM_TEMP * COOLING_EASE);
+        /*toBeCooled.add(new Steam(steamTemp, STEAM_PARTICLES));
         steamTemp = toBeCooled.getTemperature();
-        toBeCooled.remove(STEAM_PARTICLES);
+        toBeCooled.remove(STEAM_PARTICLES);*/
     }
     
     //<editor-fold desc="Implemented interfaces">

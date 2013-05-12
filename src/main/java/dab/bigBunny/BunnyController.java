@@ -544,7 +544,7 @@ public class BunnyController {
     
            
     public void hasBeenShot(){
-        health --;
+        health -= 3;
     }
     
  

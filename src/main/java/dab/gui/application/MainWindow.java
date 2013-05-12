@@ -37,8 +37,8 @@ public class MainWindow extends JFrame {
                 mw.setExtendedState(MainWindow.MAXIMIZED_BOTH);
                 mw.setVisible(true);
                 //mw.showMenu();
-                mw.showIntro();
-                //mw.startSinglePlayerGame(new SinglePlayerSimulator("edd"));
+                //mw.showIntro();
+                mw.startSinglePlayerGame(new SinglePlayerSimulator("glados"));
                 //mw.startTwoPlayerGame(new TwoPlayerSimulator("edd", "miniedd"));
             }
         });

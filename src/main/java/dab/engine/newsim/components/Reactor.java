@@ -146,12 +146,10 @@ public class Reactor extends Container implements ReactorView {
             // (equivalent of a valve basically)
             if (equalPressure < getPressure()) { // send stuff
                 int qty = steam.getParticlesAtState(equalPressure, getCompressibleVolume());
-                int deltaAmmount = steam.getParticleNr() - qty;
-                //System.out.println(String.format("R: Before P: %f\tOP: %f", getPressure(), equalPressure));
+                int deltaAmmount = Math.min(500000, steam.getParticleNr() - qty);
+                //System.out.println(deltaAmmount);
                 outputComponent.receiveMatter(new Steam(steam.getTemperature(), deltaAmmount));
                 steam.remove(deltaAmmount);
-                //System.out.println(String.format("R: After P: %f\tOP: %f", getPressure(), getEqualizedSteamPressure(getOutputComponent().getHydroState())));
-                //System.out.println(getPressure());
             } else {
                 break;
             }
@@ -191,10 +189,12 @@ public class Reactor extends Container implements ReactorView {
     public void step() throws GameOverException {
         updateRodPosition();
         // condense any cold steam
-        condenseSteam();
+        // condenseSteam();
         
         // heatup water, convert some of it into steam
+        //for (int i = 0; i < 10; ++i) {
         steam.add(getWater().addEnergy(core.getEnergyPerTick(getCoreSubmersedLevel()), steam.getPressure(getCompressibleVolume())));
+        //}
 
         if (quenchedQueued) {
             // water at 280 degrees. That should settle things.
@@ -207,10 +207,13 @@ public class Reactor extends Container implements ReactorView {
         }
         
         discardExcessWater();
+        System.out.println("Before: " + getPressure());
         equalizePressure();
+        System.out.println("After:  " + getPressure());
+        
         
         if (getPressure() > MAX_PRESSURE) {
-            throw new GameOverException();
+            throw new GameOverException("presure too high");
         }
         
         // heatup the core (only in case of low water level. eg. not fully submersed)

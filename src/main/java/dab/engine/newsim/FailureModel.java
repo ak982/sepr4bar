@@ -74,11 +74,11 @@ public abstract class FailureModel {
         powerPlant.step();
         
         // implement turbine safety rules
-        if (powerPlant.getTurbine().hasFailed()) {
+        /*if (powerPlant.getTurbine().hasFailed()) {
             powerPlant.getReactor().setEmergencyOff(true);
         } else {
             powerPlant.getReactor().setEmergencyOff(false);
-        }
+        }*/
     }
     
     PowerPlant getPowerPlant() {
