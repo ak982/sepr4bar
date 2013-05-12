@@ -13,7 +13,7 @@ import dab.engine.utilities.Percentage;
  * @author eduard
  */
 public class FailureController {
-    private static final int THE_BIGGEST_DAMAGE = 20;
+    private static final int THE_BIGGEST_DAMAGE = 10;
     private static final int THE_MAX_DAMAGE = 15;
     
     @JsonProperty

@@ -40,7 +40,7 @@ public class SinglePlayerInterface extends GameInterface{
     @Override
     protected void showGameOverMenu() {
         mainWindow.changeMenu(new GameOverMenu(mainWindow, getGamePanel(),
-                true, true, simulator.energyGenerated().toString()));
+                true, false, simulator.energyGenerated().toString()));
     }
 
     @Override
